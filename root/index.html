@@ -1,8 +1,97 @@
 <html>
 	<head>
-		<title>Test</title>
+		<title>
+			Chat
+		</title>
+		<script>
+			var ws = new WebSocket("ws://" + location.host, []);
+			function enterPress() {
+				if (event.keyCode == 13) {
+					send();
+				}
+			}
+			
+			function send() {
+				var htmlName = document.getElementById("name");
+				var htmlMessage = document.getElementById("message");
+				var htmlChat = document.getElementById("chat");
+				var sender = "";
+				if (htmlName.value == "") {
+					sender = "Anonymous";
+				} else {
+					sender = htmlName.value;
+				}
+				if (htmlMessage.value != "") {
+					htmlChat.innerHTML += sender + " : " + htmlMessage.value + "<br>";
+					htmlMessage.value = "";
+					ws.send("@" + sender);
+					ws.send(":" + htmlMessage.value);
+				}
+			}
+		</script>
+		<style>
+			body {
+				background-color : #cccccc;
+				margin : 0px;
+			}
+			.title {
+				color : #008000;
+				font-size : 250%;
+				text-align : center;
+				margin : 20px;
+				height : 50px;
+			}
+			.chat {
+				padding : 5px;
+				margin : 10px;
+				font-size : 10px;
+				border : 2px;
+				border-color : #000000;
+				border-style : solid;
+				display : inline-block;
+				width : calc(100% - 34px);
+				background-color : #ffffff;
+				height : calc(100% - 200px);
+				overflow : scroll;
+			}
+			#message {
+				width : calc(85% - 170px);
+			}
+			#name {
+				width : 15%;
+			}
+			#nameText {
+				width : 47px;
+			}
+			#messageText {
+				width : 65px;
+			}
+			#button {
+				width : 50px;
+			}
+			#send {
+				margin : 10px;
+				height : 10px;
+			}
+			span {
+				display : inline-block;
+			}
+			* {
+				white-space: nowrap;
+				font-family : Monospace;
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Test</h1>
+		<h1 class = "title" >
+			Chat
+		</h1>
+		<div class = "chat" id = "chat">
+		</div>
+		<div id = "send">
+			<span id = "nameText">Name: </span><input type = "text" name = "name" id = "name" placeholder = "Type your Name here">
+			<span id = "messageText">Message: </span><input type = "text" name = "message" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress();"> 
+			<button type = "button" onclick = "send();" id = "button">Send</button>
+		</div>
 	</body>
 </html>
