@@ -4,6 +4,11 @@
 			Chat
 		</title>
 		<script>
+			function send() {
+				if () {
+				}else
+			}
+		
 			var ws = new WebSocket("ws://192.168.1.89", []);
 			ws.send("test");
 		</script>
@@ -19,7 +24,32 @@
 			}
 			.chat {
 				padding : 10px;
-				font-size : 80%;
+				font-size : 60%;
+			}
+			#message {
+				width : calc(85% - 170px);
+			}
+			#name {
+				width : 15%;
+			}
+			#nameText {
+				width : 47px;
+			}
+			#messageText {
+				width : 65px;
+			}
+			#button {
+				width : 50px;
+			}
+			form {
+				padding : 10px;
+				bottom : ;
+			}
+			span {
+				display : inline-block;
+			}
+			* {
+				white-space: nowrap;
 			}
 		</style>
 	</head>
@@ -30,5 +60,10 @@
 		<div class = "chat">
 			CHAT TEXT
 		</div>
+		<form>
+			<span id = "nameText">Name: </span><input type = "text" name = "name" id = "name">
+			<span id = "messageText">Message: </span><input type = "text" name = "message" id = "message"> 
+			<button type = "button" onclick = "send();" id = "button">Send</button>
+		</form>
 	</body>
 </html>
