@@ -4,7 +4,7 @@
 			Chat
 		</title>
 		<script>
-			var ws = new WebSocket("ws://" + location.host, []);
+			var ws = new WebSocket("ws://" + location.host, "chat");
 			function enterPress() {
 				if (event.keyCode == 13) {
 					send();
@@ -23,9 +23,9 @@
 				}
 				if (htmlMessage.value != "") {
 					htmlChat.innerHTML += sender + " : " + htmlMessage.value + "<br>";
-					htmlMessage.value = "";
 					ws.send("@" + sender);
 					ws.send(":" + htmlMessage.value);
+					htmlMessage.value = "";
 				}
 			}
 		</script>
