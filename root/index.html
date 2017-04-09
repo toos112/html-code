@@ -5,8 +5,8 @@
 		</title>
 		<script>
 			var ws = new WebSocket("ws://" + location.host, "chat");
-			function enterPress() {
-				if (event.keyCode == 13) {
+			function enterPress(e) {
+				if (e.keyCode == 13) {
 					send();
 				}
 			}
@@ -37,7 +37,7 @@
 			}
 			.title {
 				color : #008000;
-				font-size : 250%;
+				font-size : 30pt;
 				text-align : center;
 				margin : 20px;
 				height : 50px;
@@ -45,7 +45,7 @@
 			.chat {
 				padding : 5px;
 				margin : 10px;
-				font-size : 10px;
+				font-size : 10pt;
 				border : 2px;
 				border-color : #000000;
 				border-style : solid;
@@ -91,7 +91,7 @@
 		</div>
 		<div id = "send">
 			<span id = "nameText">Name: </span><input type = "text" name = "name" id = "name" placeholder = "Type your Name here">
-			<span id = "messageText">Message: </span><input type = "text" name = "message" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress();"> 
+			<span id = "messageText">Message: </span><input type = "text" name = "message" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);"> 
 			<button type = "button" onclick = "send();" id = "button">Send</button>
 		</div>
 	</body>
