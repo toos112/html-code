@@ -23,6 +23,7 @@
 				}
 				if (htmlMessage.value != "") {
 					htmlChat.innerHTML += sender + " : " + htmlMessage.value + "<br>";
+					htmlChat.scrollTo(0, htmlChat.scrollHeight);
 					ws.send("@" + sender);
 					ws.send(":" + htmlMessage.value);
 					htmlMessage.value = "";
