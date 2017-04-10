@@ -25,6 +25,11 @@ _.event("ws.new", function(e) {
 			message: ee.getMessage()
 		});
 	});
+	e.getWS().event("close", function(ee) {
+		websocket._trigger("close", { 
+			timeout: ee.getTimeout()
+		});
+	});
 	$event._trigger("ws_new", {
 		ws: websocket
 	});
