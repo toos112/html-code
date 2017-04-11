@@ -8,9 +8,8 @@
 			var ws = new WebSocket("ws://" + location.host, "chat");
 			ws.onmessage = function(e) {
 				var htmlChat = document.getElementById("chat");
-				var chatSpan = htmlChat.getElementsByTagName("span")[0];
-				chatSpan.innerHTML += e.data + "<br/>";
-				chatSpan.scrollTop = chatSpan.scrollHeight;
+				htmlChat.innerHTML += e.data + "<br/>";
+				htmlChat.scrollTop = htmlChat.scrollHeight;
 			};
 			
 			function enterPress(e) {
@@ -22,7 +21,6 @@
 			function send() {
 				var htmlName = document.getElementById("name");
 				var htmlMessage = document.getElementById("message");
-				var htmlChat = document.getElementById("chat");
 				var sender = "";
 				var senderOld = "";
 				if (htmlName.value == "") {
@@ -44,31 +42,27 @@
 		</script>
 		<link rel = "stylesheet" type = "text/css" href = "index.css">
 	</head>
-	<body style = "padding : 5px; background-color : linear-gradiant(bottom, #000, #fff);">
-		<div style = "padding : 5px; background-color : #000;">
-			<span class = "big center" style = "width : 100%; color : #f00; background-color : #000;">
-				Chat
-			</span><br/>
-		</div>
-		<div style = "width : calc(100%); height : calc(100% - 92px) " id = "chat">
-			<span style = "width: 100%; height: 100%; overflow: auto;">
-				(js:
-					_.I("_scripts/file.js");
-					ret = $file.read("data/chat.txt").join("<br/>") + "<br/>";
-				:js)
-			</span>
-		</div><br/>
-		<div id = "send" style = "width: 100%; height: 24px;">
+	<body style = "padding : 5px; background : linear-gradient(to bottom, #222, #666);">
+		<span class = "big center" style = "width : 100%; color : #f00; margin-bottom: 5px;">
+			Chat
+		</span><br/>
+		<span style = "padding: 5px; width: calc(100% - 20px); height: calc(100% - 102px); overflow: auto; background-color: #222;" id = "chat">
+			(js:
+				_.I("_scripts/file.js");
+				ret = $file.read("data/chat.txt").join("<br/>") + "<br/>";
+			:js)
+		</span><br/>
+		<div id = "send" style = "margin-top: 5px; width: calc(100% - 10px); height: 24px;">
 			<span class = "center" id = "nameText" style = "width : 80px;">
 				Name: 
 			</span>
-			<input type = "text" id = "name" placeholder = "Type your Name here" style = "width: 256px;"/>
-			<span class = "center" id = "messageText" style = "width : 128px;">
+			<input type = "text" id = "name" placeholder = "Type your Name here" style = "width: 256px; margin-left: 5px;"/>
+			<span class = "center" id = "messageText" style = "width : 128px; margin-left: 5px;">
 				Message: 
 			</span>
-			<input type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);" style = "width: calc(100% - 592px);"/> 
-			<button type = "button" onclick = "send();" id = "button">
-				<span style = "background-color : #fff;">
+			<input type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);" style = "width: calc(100% - 612px); margin-left: 5px;"/> 
+			<button type = "button" onclick = "send();" id = "button" style = "margin-left: 5px;">
+				<span>
 					Send
 				</span>
 			</button>
