@@ -20,7 +20,7 @@ body {
 	display : inline-block;
 	width : calc(100% - 34px);
 	background-color : #ffffff;
-	height : calc(95% - 200px);
+	height : calc(95% - 140px);
 	overflow-y : auto;
 }
 #message {
