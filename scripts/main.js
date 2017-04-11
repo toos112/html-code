@@ -10,6 +10,8 @@ $event.handler("ws_new", function(e) {
 	if (e.ws.protocol == "chat") {
 		chatList.push(e.ws);
 		e.ws.handler("message", function(ee) {
+			ee.message = ee.message.replaceAll("<", "&lt;");
+			ee.message = ee.message.replaceAll(">", "&gt;");
 			var file = $file.read("data/chat.txt");
 			file.push(ee.message);
 			if (file.length > 16)
