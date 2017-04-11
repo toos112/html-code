@@ -7,8 +7,9 @@
 			var ws = new WebSocket("ws://" + location.host, "chat");
 			ws.onmessage = function(e) {
 				var htmlChat = document.getElementById("chat");
-				htmlChat.innerHTML += e.data + "<br/>";
-				htmlChat.scrollTop = htmlChat.scrollHeight;
+				var chatSpan = htmlChat.getElementsByTagName("span")[0];
+				chatSpan.innerHTML += e.data + "<br/>";
+				chatSpan.scrollTop = chatSpan.scrollHeight;
 			};
 			
 			function enterPress(e) {
@@ -43,17 +44,17 @@
 		<link rel = "stylesheet" type = "text/css" href = "index.css">
 	</head>
 	<body>
-		<h1 class = "title" >
+		<span class = "big center" style = "width: 100%">
 			Chat
-		</h1>
-		<div class = "chat" id = "chat"> (js:
+		</span><br>
+		<div style = "width: 100%; height: calc(100% - 72px)" id = "chat"><span style = "width: 100%; height: 100%; overflow: auto;">(js:
 			_.I("_scripts/file.js");
 			ret = $file.read("data/chat.txt").join("<br/>") + "<br/>";
-		:js)</div>
-		<div id = "send">
-			<span id = "nameText">Name: </span><input type = "text" name = "name" id = "name" placeholder = "Type your Name here">
-			<span id = "messageText">Message: </span><input type = "text" name = "message" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);"> 
-			<button type = "button" onclick = "send();" id = "button">Send</button>
+		:js)</span></div><br>
+		<div id = "send" style = "width: 100%; height: 24px;">
+			<span class = "center" id = "nameText" style = "width: 80px;">Name: </span><input type = "text" id = "name" placeholder = "Type your Name here" style = "width: 256px;">
+			<span class = "center" id = "messageText" style = "width: 128px;">Message: </span><input type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);" style = "width: calc(100% - 592px);"> 
+			<button type = "button" onclick = "send();" id = "button"><span>Send</span></button>
 		</div>
 	</body>
 </html>
