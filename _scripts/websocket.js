@@ -19,10 +19,16 @@ _.event("ws.new", function(e) {
 		this.write = function(string) {
 			this._ws.out(string);
 		};
+		this.protocol = "" + this._ws.getProtocol();
 	};
 	e.getWS().event("receive", function(ee) {
 		websocket._trigger("message", {
-			message: ee.getMessage()
+			message: "" + ee.getMessage()
+		});
+	});
+	e.getWS().event("close", function(ee) {
+		websocket._trigger("close", { 
+			timeout: ee.getTimeout() ? true : false
 		});
 	});
 	$event._trigger("ws_new", {
