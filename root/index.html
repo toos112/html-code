@@ -22,19 +22,19 @@
 				var htmlMessage = document.getElementById("message");
 				var htmlChat = document.getElementById("chat");
 				var sender = "";
-				var senderOld = ""
+				var senderOld = "";
 				if (htmlName.value == "") {
 					sender = "Anonymous";
 				} else {
 					sender = htmlName.value;
 				}
 				if (htmlMessage.value != "") {
-					if (sender = senderOld) {
+					if (sender == senderOld) {
 						ws.send(":" + htmlMessage.value);
 					} else {
-						sender = senderOld;
-						ws.send("@" + sender)
-						ws.send(":" + htmlMessage.value)
+						senderOld = sender;
+						ws.send("@" + sender);
+						ws.send(":" + htmlMessage.value);
 					}
 					htmlMessage.value = "";
 				}
