@@ -42,25 +42,25 @@
 		</script>
 		<link rel = "stylesheet" type = "text/css" href = "index.css">
 	</head>
-	<body style = "padding : 5px; background : linear-gradient(to bottom, #222, #666);">
-		<span class = "big center" style = "width : 100%; color : #f00; margin-bottom: 5px;">
+	<body style = "padding : 10px; background : linear-gradient(to bottom, #000, #fff);">
+		<span class = "big center" style = "width : calc(100% - 20px); color : #f00; margin-bottom: 5px;">
 			Chat
 		</span><br/>
-		<span style = "padding: 5px; width: calc(100% - 20px); height: calc(100% - 102px); overflow: auto; background-color: #222;" id = "chat">
+		<span class = "scroll" style = "padding: 5px; width: calc(100% - 40px); height: calc(100% - 120px); overflow: auto; background-color: #333; border : 4px; border-color : #f00; border-style : solid; color : #fff;" id = "chat">
 			(js:
 				_.I("_scripts/file.js");
 				ret = $file.read("data/chat.txt").join("<br/>") + "<br/>";
 			:js)
 		</span><br/>
-		<div id = "send" style = "margin-top: 5px; width: calc(100% - 10px); height: 24px;">
+		<div id = "send" style = "margin-top: 5px; width: calc(100% - 10px); height: 24px; padding : 2px;">
 			<span class = "center" id = "nameText" style = "width : 80px;">
 				Name: 
 			</span>
-			<input type = "text" id = "name" placeholder = "Type your Name here" style = "width: 256px; margin-left: 5px;"/>
+			<input type = "text" id = "name" placeholder = "Type your Name here" style = "width: 15%; margin-left: 5px;"/>
 			<span class = "center" id = "messageText" style = "width : 128px; margin-left: 5px;">
 				Message: 
 			</span>
-			<input type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);" style = "width: calc(100% - 612px); margin-left: 5px;"/> 
+			<input type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);" style = "width: calc(85% - 370px); margin-left: 5px;"/> 
 			<button type = "button" onclick = "send();" id = "button" style = "margin-left: 5px;">
 				<span>
 					Send
