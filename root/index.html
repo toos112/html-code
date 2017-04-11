@@ -28,23 +28,74 @@
 					sender = htmlName.value;
 				}
 				if (htmlMessage.value != "") {
+					htmlChat.scrollTo(0, htmlChat.scrollHeight);
 					ws.send(sender + " : " + htmlMessage.value);
 					htmlMessage.value = "";
 				}
 			}
 		</script>
-		<link rel = "stylesheet" type = "text/css" href = "styleSheets/Index.css"/>
+		<style>
+			body {
+				background-color : #cccccc;
+				margin : 0px;
+				height : 100%;
+			}
+			.title {
+				color : #008000;
+				font-size : 30pt;
+				text-align : center;
+				margin : 20px;
+				height : 50px;
+			}
+			.chat {
+				padding : 5px;
+				margin : 10px;
+				font-size : 10pt;
+				border : 2px;
+				border-color : #000000;
+				border-style : solid;
+				display : inline-block;
+				width : calc(100% - 34px);
+				background-color : #ffffff;
+				height : calc(100% - 200px);
+				overflow : scroll;
+			}
+			#message {
+				width : calc(85% - 170px);
+			}
+			#name {
+				width : 15%;
+			}
+			#nameText {
+				width : 47px;
+			}
+			#messageText {
+				width : 65px;
+			}
+			#button {
+				width : 50px;
+			}
+			#send {
+				margin : 10px;
+				height : 10px;
+			}
+			span {
+				display : inline-block;
+			}
+			* {
+				white-space: nowrap;
+				font-family : Monospace;
+			}
+		</style>
 	</head>
 	<body>
 		<h1 class = "title" >
 			Chat
 		</h1>
-		<div class = "chat" id = "chat">
-			(js:
-				_.I("_scripts/file.js");
-				ret = $file.read("data/chat.txt").join("<br/>") + "<br/>";
-			:js)
-		</div>
+		<div class = "chat" id = "chat"> (js:
+			_.I("_scripts/file.js");
+			ret = $file.read("data/chat.txt").join("<br>") + "<br>";
+		:js)</div>
 		<div id = "send">
 			<span id = "nameText">Name: </span><input type = "text" name = "name" id = "name" placeholder = "Type your Name here">
 			<span id = "messageText">Message: </span><input type = "text" name = "message" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);"> 
