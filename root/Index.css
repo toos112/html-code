@@ -1,7 +1,7 @@
 body {
 	background-color : #cccccc;
 	margin : 0px;
-	height : 80%;
+	height : 100%;
 }
 .title {
 	color : #008000;
@@ -21,10 +21,10 @@ body {
 	width : calc(100% - 34px);
 	background-color : #ffffff;
 	height : calc(80% - 200px);
-	overflow : scroll;
+	overflow-y : auto;
 }
 #message {
-	width : calc(85% - 170px);
+	width : calc(85% - 180px);
 }
 #name {
 	width : 15%;
