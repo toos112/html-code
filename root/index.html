@@ -7,14 +7,9 @@
 			var ws = new WebSocket("ws://" + location.host, "chat");
 			ws.onmessage = function(e) {
 				var htmlChat = document.getElementById("chat");
-<<<<<<< HEAD
-				htmlChat.innerHTML += e.data + "<br/>";
 				htmlChat.scrollTop = htmlChat.scrollHeight;
-			}
-=======
 				htmlChat.innerHTML += e.data + "<br>";
 			};
->>>>>>> refs/remotes/origin/server
 			
 			function enterPress(e) {
 				if (e.keyCode == 13) {
