@@ -26,7 +26,7 @@ function ChatClient(ws) {
 				file.splice(0, file.length - 16);
 			$file.write("data/chat.txt", file);
 			for (var i = 0; i < chatList.length; i++)
-				$.write(chatList[i].username);
+				chatList[i].ws.write(message);
 		}
 	});
 }
@@ -35,10 +35,8 @@ $ws.addProtocol("chat");
 $event.handler("ws_new", null, function(e) {
 	if (e.ws.protocol == "chat")
 		chatList.push(new ChatClient(e.ws));
-	$.write(chatList.length);
 });
 $event.handler("ws_close", null, function(e) {
-	$.write("close");
 	if (e.ws.protocol == "chat") {
 		for (var i = 0; i < chatList.length; i++) {
 			if (chatList[i].ws.equals(e.ws)) {
