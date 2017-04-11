@@ -13,20 +13,17 @@ function ChatClient(ws) {
 		e.message = e.message.replaceAll("<", "&lt;");
 		e.message = e.message.replaceAll(">", "&gt;");
 		
-		var prefix = e.message.substr(0, 1);
 		var payload = e.message.substr(1, e.message.length - 1);
-		
-		if (prefix.startsWith("@")) {
+		if (e.message.startsWith("@")) {
 			this.username = payload;
-		} else if (prefix.startsWith(":")) {
-			var message = this.username + " : " + payload;
+		} else if (e.message.startsWith(":")) {
 			var file = $file.read("data/chat.txt");
-			file.push(message);
+			file.push(this.username + ": " + payload);
 			if (file.length > 16)
 				file.splice(0, file.length - 16);
 			$file.write("data/chat.txt", file);
 			for (var i = 0; i < chatList.length; i++)
-				chatList[i].ws.write(message);
+				chatList[i].ws.write(this.username + ">" + payload);
 		}
 	});
 }
