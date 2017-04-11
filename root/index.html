@@ -5,6 +5,11 @@
 		</title>
 		<script>
 			var ws = new WebSocket("ws://" + location.host, "chat");
+			ws.onmessage = function(e) {
+				var htmlChat = document.getElementById("chat");
+				htmlChat.innerHTML += e.data + "<br>";
+			}
+			
 			function enterPress(e) {
 				if (e.keyCode == 13) {
 					send();
@@ -22,10 +27,8 @@
 					sender = htmlName.value;
 				}
 				if (htmlMessage.value != "") {
-					htmlChat.innerHTML += sender + " : " + htmlMessage.value + "<br>";
 					htmlChat.scrollTo(0, htmlChat.scrollHeight);
-					ws.send("@" + sender);
-					ws.send(":" + htmlMessage.value);
+					ws.send(sender + " : " + htmlMessage.value);
 					htmlMessage.value = "";
 				}
 			}
@@ -88,8 +91,10 @@
 		<h1 class = "title" >
 			Chat
 		</h1>
-		<div class = "chat" id = "chat">
-		</div>
+		<div class = "chat" id = "chat"> (js:
+			_.I("_scripts/file.js");
+			ret = $file.read("data/chat.txt").join("<br>") + "<br>";
+		:js)</div>
 		<div id = "send">
 			<span id = "nameText">Name: </span><input type = "text" name = "name" id = "name" placeholder = "Type your Name here">
 			<span id = "messageText">Message: </span><input type = "text" name = "message" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);"> 
