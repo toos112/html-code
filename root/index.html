@@ -14,8 +14,13 @@
 		<div class = "scroll" style = "padding: 5px; width: calc(100% - 34px); height: calc(100% - 108px); overflow: auto; background: linear-gradient(to bottom, #333, #111); border: 2px solid; border-color: #444;" id = "chat">
 			<span style = "color: #888; height: auto;">
 				(js:
+					_.I("_scripts/std.js");
 					_.I("_scripts/file.js");
-					ret = $file.read("data/chat.txt").join("<br/>") + "<br/>";
+					_.I("scripts/auth.js");
+					
+					var qs = $.getQS();
+					if ($auth.check(qs.user, qs.uuid))
+						ret = $file.read("data/chat.txt").join("<br/>") + "<br/>";
 				:js)
 			</span><br>
 		</div><br/>
