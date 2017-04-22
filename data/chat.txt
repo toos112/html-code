@@ -1,4 +1,3 @@
-Chen: 2
 Chen: test
 Chen: yay
 Anonymous: test
@@ -14,3 +13,4 @@ Gidion: nou wil ik je vermoorden\
 Gidion: Morgen ofzo
 DutChen18: ik jou ook hoor
 Gidion: O ben je er weer
+DutChen18: test
