@@ -4,11 +4,11 @@ ws.onmessage = function(e) {
 	if (e.data.startsWith("<")) {
 		var message = e.data.substr(1);
 		if (message.startsWith("+")) {
-			var message = e.data.substr(1);
-			htmlChat.innerHTML += "<span style = 'color: #eee;'>" + message + " has joined.</span><br/>";
+			var joinMessage = e.data.substr(1);
+			htmlChat.innerHTML += "<span style = 'color: #eee;'>" + joinMessage + " has joined.</span><br/>";
 		}else if (message.startsWith("-")) {
-			var message = e.data.substr(1);
-			htmlChat.innerHTML += "<span style = 'color: #eee;'>" + message + " has left.</span><br/>";
+			var leaveMessage = e.data.substr(1);
+			htmlChat.innerHTML += "<span style = 'color: #eee;'>" + leaveMessage + " has left.</span><br/>";
 		}
 	}else {
 		var message = e.data.split(">");
