@@ -5,6 +5,14 @@ _.I("_scripts/websocket.js");
 
 var chatList = [];
 
+function addToCache(str) {
+	var file = $file.read("data/chat.txt");
+	file.push(str);
+	if (file.length > 16)
+		file.splice(0, file.length - 16);
+	$file.write("data/chat.txt", file);
+}
+
 function ChatClient(ws) {
 	this.ws = ws;
 	this.username = "Anonymous";
@@ -17,11 +25,7 @@ function ChatClient(ws) {
 		if (e.message.startsWith("@")) {
 			this.username = payload;
 		} else if (e.message.startsWith(":")) {
-			var file = $file.read("data/chat.txt");
-			file.push(this.username + ": " + payload);
-			if (file.length > 16)
-				file.splice(0, file.length - 16);
-			$file.write("data/chat.txt", file);
+			addToCache(this.username + ": " + payload);
 			for (var i = 0; i < chatList.length; i++)
 				chatList[i].ws.write(this.username + ">" + payload);
 		}
