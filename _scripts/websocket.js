@@ -19,6 +19,7 @@ function _WebSocketWrapper(e) {
 		this._ws.out(string);
 	};
 	this.protocol = "" + this._ws.getProtocol();
+	this.address = "" + this._ws.getAddress();
 	this.equals = function(other) {
 		return this._ws == other._ws;
 	}
