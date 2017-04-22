@@ -3,10 +3,10 @@ var loggedIn;
 function setLoggedIn() {
 	var div = document.getElementById("nameInput");
 	div.innerHTML = "\
-		<span class = \"center\" id = \"nameText\" style = \"width : calc(100% - 4px); color: #ccc;\">\
+		<span class = \"center\" id = \"nameText\" style = \"width: 250px; color: #ccc;\">\
 			You have logged in.\
 		</span>\
-		<button onclick = \"logout();\" style \"margin-left: 6px; width: 96px;\">\
+		<button onclick = \"logout();\" style \"width: 96px;\">\
 			<span>\
 				Logout\
 			</span>\
