@@ -13,9 +13,11 @@ function getCookie(name) {
 }
 
 function setCookie(name, worth) {
-	var cookies = document.cookie.split("; ");
+	var cookies = getCookies();
 	for (var i = 0; i < cookies.length; i++)
 		if (cookies[i][0] == name) cookies[i][1] = worth;
+	for (var i = 0; i < cookies.length; i++)
+		cookies[i] = cookies[i].join("=");
 	document.cookie = cookies.join("; ");
 }
 
