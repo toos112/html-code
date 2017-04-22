@@ -1,3 +1,15 @@
+var loggedIn;
+
+function() {
+	xmlhttp.open("GET", "auth/check.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), "true");
+	xmlhttp.send();
+	xmlhttp.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			loggedIn = this.responseText == "true";
+		}
+	}
+}();
+
 function getCookies() {
 	var cookies = document.cookie.split("; ");
 	for (var i = 0; i < cookies.length; i++)
@@ -29,16 +41,24 @@ function createCookie (name, worth) {
 	}
 }
 
+function enterPress(e) {
+	if (e.keyCode == 13 && loggedIn == false) {
+		send();
+	}
+}
+
 function send() {
 	var htmlName = document.getElementById("name");
 	var htmlPassword = document.getElementById("password");
 	var div = document.getElementById("nameInput");
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("GET", "auth.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, "true");
+	xmlhttp.open("GET", "auth/auth.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, "true");
 	xmlhttp.send();
 	xmlhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
+			createCookie("user", htmlName.value);
 			createCookie("UUID", this.responseText);
+			loggedIn = true;
 			div.innerHTML = "<span class = \"center\" id = \"nameText\" style = \"width : calc(100% - 4px); color: #ccc;\">You have logged in.</span><br/><button onclick = \"goToChat();\" style = \"margin-top: 6px; width: 96px;\"><span>Chat</span></button>";
 		}
 	}
