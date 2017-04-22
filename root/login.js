@@ -56,14 +56,17 @@ function send() {
 	var htmlName = document.getElementById("name");
 	var htmlPassword = document.getElementById("password");
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("GET", "auth/auth.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, "true");
-	xmlhttp.send();
-	xmlhttp.onreadystatechange = function () {
-		if (this.readyState == 4 && this.status == 200) {
-			setCookie("user", htmlName.value);
-			setCookie("UUID", this.responseText);
-			loggedIn = true;
-			setLoggedIn();
+	var name = htmlName.value;
+	if (name != "") {
+		xmlhttp.open("GET", "auth/auth.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, "true");
+		xmlhttp.send();
+		xmlhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				setCookie("user", name);
+				setCookie("UUID", this.responseText);
+				loggedIn = true;
+				setLoggedIn();
+			}
 		}
 	}
 }
