@@ -1,37 +1,59 @@
-var ws = new WebSocket("ws://" + location.host, "chat");
-function check() {
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("GET", "auth/check.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), "true");
-	xmlhttp.send();
-	xmlhttp.onreadystatechange = function () {
-		if (this.readyState == 4 && this.status == 200) {
-			if (this.responseText.trim() == "false") {
-				location.href = "login.html"
-			}
-		}
-	}
-};
-check();
+if (loggedIn) {
+	setLoggedIn();
+}
 
-ws.onmessage = function(e) {
-	var htmlChat = document.getElementById("chat");
-	if (e.data.startsWith("<")) {
-		var message = e.data.substr(2) + " has " + (e.data.startsWith("<+") ? "joined." : "left.");
-		htmlChat.innerHTML += "<span style = 'color: #eee;'>" + message + "</span><br/>";
-	} else {
-		var message = e.data.split(">");
-		htmlChat.innerHTML += "<span style = 'color: #48c;'>" + message[0] + "</span><span style = 'color: #ccc;'>: " + message[1] + "</span><br/>";
-	}
-	htmlChat.scrollTop = htmlChat.scrollHeight;
-};
+function setLoggedIn() {
+	var div = document.getElementById("nameInput");
+	div.innerHTML = "\
+		<span class = \"center\" id = \"nameText\" style = \"width: 250px; color: #ccc;\">\
+			You have logged in.\
+		</span>\
+		<button onclick = \"logout();\" style \"width: 96px;\">\
+			<span>\
+				Logout\
+			</span>\
+		</button><br/>\
+		<button onclick = \"goToChat();\" style = \"margin-top: 6px; width: 96px;\">\
+			<span>\
+				Chat\
+			</span>\
+		</button>";
+}
 
 function enterPress(e) {
-	if (e.keyCode == 13) {
+	if (e.keyCode == 13 && loggedIn == false) {
 		send();
 	}
 }
 
 function send() {
-	var htmlMessage = document.getElementById("message");
-	ws.send(htmlMessage.value);
+	var htmlName = document.getElementById("name");
+	var htmlPassword = document.getElementById("password");
+	var xmlhttp = new XMLHttpRequest();
+	var name = htmlName.value;
+	if (name != "") {
+		xmlhttp.open("GET", "auth/auth.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, "true");
+		xmlhttp.send();
+		xmlhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				setCookie("user", name);
+				setCookie("UUID", this.responseText);
+				loggedIn = true;
+				setLoggedIn();
+			}
+		}
+	}
+}
+
+function goToChat() {
+	location.href = "chat.html?user=" + getCookie("user") + "&uuid=" + getCookie("UUID");
+}
+
+function logout() {
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("GET", "auth/logout.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), "true");
+	xmlhttp.send();
+	setCookie("user", "null");
+	setCookie("UUID", "null");
+	location.href = "index.html"
 }
