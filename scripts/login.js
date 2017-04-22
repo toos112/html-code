@@ -1,5 +1,6 @@
 _.I("_scripts/json.js");
 _.I("_scripts/std.js");
+_.I("_scripts/file.js");
 
 function _genID(length) {
 	var text = "";
@@ -12,9 +13,9 @@ function _genID(length) {
 var $auth = {
 	login: function(user) {
 		var uuid = _genID(16);
-		var users = $json.parse($file.read("data/users.txt"));
-		users[user]["uuid"] = uuid;
-		$file.write($json.stringify(users));
+		var users = $json.parse($file.read("data/sessions.txt")[0]);
+		users[user] = { "uuid" : uuid };
+		$file.write("data/sessions.txt", [$json.stringify(users)]);
 		return uuid;
 	}
 }

@@ -7,5 +7,7 @@ var $ = {
 	writeObj: function(obj) {
 		_.out(JSON.stringify(obj));
 	},
-	qs: $json.parse(_qs);
+	getQS: function() {
+		return JSON.parse(_qs);
+	}
 };
