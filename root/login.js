@@ -1,5 +1,5 @@
 function getCookies() {
-	var cookies = document.cookies.split("; ");
+	var cookies = document.cookie.split("; ");
 	for (var i = 0; i < cookies.length; i++)
 		cookies[i] = cookies[i].split("=");
 	return cookies;
@@ -13,10 +13,10 @@ function getCookie(name) {
 }
 
 function setCookie(name, worth) {
-	var cookies = document.cookies.split("; ");
+	var cookies = document.cookie.split("; ");
 	for (var i = 0; i < cookies.length; i++)
 		if (cookies[i][0] == name) cookies[i][1] = worth;
-	document.cookies = cookies.join("; ");
+	document.cookie = cookies.join("; ");
 }
 
 function createCookie (name, worth) {
@@ -36,7 +36,7 @@ function send() {
 	xmlhttp.send();
 	xmlhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
-			createCookie("UUId", this.responsText);
+			createCookie("UUID", this.responseText);
 			div.innerHTML = "<span class = \"center\" id = \"nameText\" style = \"width : calc(100% - 4px); color: #ccc;\">You have logged in.</span>";
 		}
 	}
