@@ -30,16 +30,21 @@ function ChatClient(ws) {
 
 $ws.addProtocol("chat");
 $event.handler("ws_new", null, function(e) {
-	if (e.ws.protocol == "chat")
+	if (e.ws.protocol == "chat") {
 		chatList.push(new ChatClient(e.ws));
+	}
 });
 $event.handler("ws_close", null, function(e) {
 	if (e.ws.protocol == "chat") {
+		var name = "";
 		for (var i = 0; i < chatList.length; i++) {
 			if (chatList[i].ws.equals(e.ws)) {
+				name = chatList[i].username;
 				chatList.splice(i, 1);
 				break;
 			}
 		}
+		for (var i = 0; i < chatList.length; i++)
+			chatList[i].ws.write("<-" + name);
 	}
 });
