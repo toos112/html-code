@@ -2,7 +2,20 @@ var loggedIn;
 
 function setLoggedIn() {
 	var div = document.getElementById("nameInput");
-	div.innerHTML = "<span class = \"center\" id = \"nameText\" style = \"width : calc(100% - 4px); color: #ccc;\">You have logged in.</span><br/><button onclick = \"goToChat();\" style = \"margin-top: 6px; width: 96px;\"><span>Chat</span></button>";
+	div.innerHTML = "\
+		<span class = \"center\" id = \"nameText\" style = \"width : calc(100% - 4px); color: #ccc;\">\
+			You have logged in.\
+		</span>\
+		<button onclick = \"logout();\" style \"margin-left: 6px; width: 96px;\">\
+			<span>\
+				Logout\
+			</span>\
+		</button><br/>\
+		<button onclick = \"goToChat();\" style = \"margin-top: 6px; width: 96px;\">\
+			<span>\
+				Chat\
+			</span>\
+		</button>";
 }
 
 function check() {
@@ -57,4 +70,13 @@ function send() {
 
 function goToChat() {
 	location.href = "index.html"
+}
+
+function logout() {
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("GET", "auth/logout.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), "true");
+	xmlhttp.send();
+	setCookie("user", "null");
+	setCookie("UUID", "null");
+	location.href = "login.html"
 }
