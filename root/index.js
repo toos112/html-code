@@ -1,4 +1,18 @@
 var ws = new WebSocket("ws://" + location.host, "chat");
+function check() {
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("GET", "auth/check.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), "true");
+	xmlhttp.send();
+	xmlhttp.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			if (this.responseText.trim() == "false") {
+				location.href = "login.html"
+			}
+		}
+	}
+};
+check();
+
 ws.onmessage = function(e) {
 	var htmlChat = document.getElementById("chat");
 	if (e.data.startsWith("<")) {
@@ -18,23 +32,6 @@ function enterPress(e) {
 }
 
 function send() {
-	var htmlName = document.getElementById("name");
 	var htmlMessage = document.getElementById("message");
-	var sender = "";
-	var senderOld = "";
-	if (htmlName.value == "") {
-		sender = "Anonymous";
-	} else {
-		sender = htmlName.value;
-	}
-	if (htmlMessage.value != "") {
-		if (sender == senderOld) {
-			ws.send(":" + htmlMessage.value);
-		} else {
-			senderOld = sender;
-			ws.send("@" + sender);
-			ws.send(":" + htmlMessage.value);
-		}
-		htmlMessage.value = "";
-	}
+	ws.send(htmlMessage.value);
 }
