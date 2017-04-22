@@ -1,6 +1,8 @@
-if (loggedIn) {
-	setLoggedIn();
-}
+check(function(success) {
+	if (success) {
+		setLoggedIn();
+	}
+});
 
 function setLoggedIn() {
 	var div = document.getElementById("nameInput");
