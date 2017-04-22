@@ -72,7 +72,7 @@ function send() {
 }
 
 function goToChat() {
-	location.href = "index.html"
+	location.href = "index.html?user=" + getCookie("user") + "&uuid=" + getCookie("UUID")";
 }
 
 function logout() {
