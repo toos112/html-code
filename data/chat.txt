@@ -1,6 +1,3 @@
-Chen: test
-Chen: yay
-Anonymous: test
 DutChen18: test
 DutChen18: Hallo
 Gidion: Hi
@@ -14,3 +11,6 @@ Gidion: Morgen ofzo
 DutChen18: ik jou ook hoor
 Gidion: O ben je er weer
 DutChen18: test
+DutChen18: test
+DutChen18: hallo
+Gidion: Hi

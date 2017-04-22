@@ -1,18 +1,17 @@
-var loggedIn;
-
-function check() {
+function check(func) {
+	var success = false;
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("GET", "auth/check.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), "true");
 	xmlhttp.send();
 	xmlhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			if (this.responseText.trim() == "true") {
-				loggedIn = true;
-			} else loggedIn = false;
+				success = true;
+			}
+			func(success);
 		}
 	}
 };
-check();
 
 function getCookie(name) {
 	var cookies = document.cookie.split("; ");

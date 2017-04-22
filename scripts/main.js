@@ -19,17 +19,20 @@ function ChatClient(ws) {
 	this.username = "";
 	
 	this.ws.handler("message", this, function(e) {
-		e.message = $.escape(e.message);
-		
-		var payload = e.message.substr(1, e.message.length - 1);
+		var payload = e.message.substr(1);
 		if (e.message.startsWith("@")) {
 			payload = payload.split(">");
-			if ($auth.check(payload[0], payload[1])
+			if ($auth.check(payload[0], payload[1]) && this.username == "") {
 				this.username = payload[0];
+				for (var i = 0; i < chatList.length; i++)
+					chatList[i].ws.write("<+" + $.escape(this.username));
+			}
 		} else if (e.message.startsWith(":") && this.username != "") {
-			addToCache(this.username + ": " + payload);
+			var user = $.escape(this.username);
+			payload = $.escape(payload);
+			addToCache(user + ": " + payload);
 			for (var i = 0; i < chatList.length; i++)
-				chatList[i].ws.write(this.username + ">" + payload);
+				chatList[i].ws.write(user + ">" + payload);
 		}
 	});
 }
