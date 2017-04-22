@@ -21,5 +21,10 @@ var $auth = {
 	check: function(user, uuid) {
 		var users = $json.parse($file.read("data/sessions.txt")[0]);
 		return users[user] == uuid;
+	},
+	logout: function(user) {
+		var users = $json.parse($file.read("data/sessions.txt")[0]);
+		delete users[user];
+		$file.write("data/sessions.txt", [$json.stringify(users)]);
 	}
 }
