@@ -32,7 +32,7 @@ function send() {
 	var htmlPassword = document.getElementById("password");
 	var div = document.getElementById("nameInput");
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("GET", "verifyUser.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, "true");
+	xmlhttp.open("GET", "auth.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, "true");
 	xmlhttp.send();
 	xmlhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
