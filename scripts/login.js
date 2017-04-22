@@ -20,10 +20,12 @@ var $auth = {
 	},
 	check: function(user, uuid) {
 		var users = $json.parse($file.read("data/sessions.txt")[0]);
+		if (users[user] == undefined) return false;
 		return users[user] == uuid;
 	},
 	logout: function(user) {
 		var users = $json.parse($file.read("data/sessions.txt")[0]);
+		if (users[user] == undefined) return;
 		delete users[user];
 		$file.write("data/sessions.txt", [$json.stringify(users)]);
 	}
