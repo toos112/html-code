@@ -13,9 +13,9 @@ function _genID(length) {
 var $auth = {
 	login: function(user) {
 		var uuid = _genID(16);
-		var users = $json.parse($file.read("data/users.txt")[0]);
+		var users = $json.parse($file.read("data/sessions.txt")[0]);
 		users[user] = { "uuid" : uuid };
-		$file.write("data/users.txt", [$json.stringify(users)]);
+		$file.write("data/sessions.txt", [$json.stringify(users)]);
 		return uuid;
 	}
 }
