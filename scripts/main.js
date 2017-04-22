@@ -18,8 +18,7 @@ function ChatClient(ws) {
 	this.username = "Anonymous";
 	
 	this.ws.handler("message", this, function(e) {
-		e.message = e.message.replaceAll("<", "&lt;");
-		e.message = e.message.replaceAll(">", "&gt;");
+		e.message = $.escape(e.message);
 		
 		var payload = e.message.substr(1, e.message.length - 1);
 		if (e.message.startsWith("@")) {

@@ -9,5 +9,10 @@ var $ = {
 	},
 	getQS: function() {
 		return JSON.parse(_qs);
+	},
+	escape: function(str) {
+		str = str.replaceAll("<", "&lt;");
+		str = str.replaceAll(">", "&gt;");
+		return str;
 	}
 };
