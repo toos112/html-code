@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Chat
+		</title>
+		<script src = "main.js"></script>
+		<script src = "chat.js"></script>
+		<link rel = "stylesheet" type = "text/css" href = "index.css">
+	</head>
+	<body style = "padding: 10px; background: linear-gradient(to bottom, #234, #222);">
+		<span class = "big center" style = "width: calc(100% - 20px); color: #48c; margin-bottom: 5px;">
+			Chat
+		</span><br/>
+		<div class = "scroll" style = "padding: 5px; width: calc(100% - 34px); height: calc(100% - 108px); overflow: auto; background: linear-gradient(to bottom, #333, #111); border: 2px solid; border-color: #444;" id = "chat">
+			<span style = "color: #888; height: auto;">
+				(js:
+					_.I("_scripts/std.js");
+					_.I("_scripts/file.js");
+					_.I("scripts/login.js");
+					
+					var qs = $.getQS();
+					if ($auth.check(qs.user, qs.uuid))
+						ret = $file.read("data/chat.txt").join("<br/>") + "<br/>";
+				:js)
+			</span><br>
+		</div><br/>
+		<div id = "send" style = "margin-top: 5px; width: calc(100% - 24px); height: 20px; padding: 2px; background-color: #666;">
+			<span class = "center" id = "messageText" style = "width: 100px; color: #ccc;">
+				Message: 
+			</span>
+			<input type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);" style = "width: calc(100% - 204px); margin-left: 2px;"/> 
+			<button type = "button" onclick = "send();" id = "button" style = "margin-left: 2px; width: 96px;">
+				<span>
+					Send
+				</span>
+			</button>
+		</div>
+	</body>
+</html>
