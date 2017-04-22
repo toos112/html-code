@@ -39,7 +39,11 @@ function send() {
 	xmlhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			createCookie("UUID", this.responseText);
-			div.innerHTML = "<span class = \"center\" id = \"nameText\" style = \"width : calc(100% - 4px); color: #ccc;\">You have logged in.</span><br/><button onclick = \"location.href = \"index.html\";\" id = \"button\" style = \"margin-top: 6px; width: 96px;\"><span>Chat</span></button>";
+			div.innerHTML = "<span class = \"center\" id = \"nameText\" style = \"width : calc(100% - 4px); color: #ccc;\">You have logged in.</span><br/><button onclick = \"goToChat();\" style = \"margin-top: 6px; width: 96px;\"><span>Chat</span></button>";
 		}
 	}
+}
+
+function goToChat() {
+	location.href = "index.html"
 }
