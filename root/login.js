@@ -68,8 +68,6 @@ function send() {
 				setLoggedIn();
 			}
 		}
-	} else {
-		alert(Please enter your name.);
 	}
 }
 
