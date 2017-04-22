@@ -1,8 +1,19 @@
 var ws = new WebSocket("ws://" + location.host, "chat");
 ws.onmessage = function(e) {
-	var message = e.data.split(">");
 	var htmlChat = document.getElementById("chat");
-	htmlChat.innerHTML += "<span style = 'color: #48c;'>" + message[0] + "</span><span style = 'color: #ccc;'>: " + message[1] + "</span><br/>";
+	if (e.data.startsWith("<")) {
+		var message = e.data.substr(1);
+		if (message.startsWith("+")) {
+			var message = e.data.substr(1);
+			htmlChat.innerHTML += "<span style = 'color: #eee;'>" + message + " has joined.</span><br/>";
+		}else if (message.startsWith("-")) {
+			var message = e.data.substr(1);
+			htmlChat.innerHTML += "<span style = 'color: #eee;'>" + message + " has left.</span><br/>";
+		}
+	}else {
+		var message = e.data.split(">");
+		htmlChat.innerHTML += "<span style = 'color: #48c;'>" + message[0] + "</span><span style = 'color: #ccc;'>: " + message[1] + "</span><br/>";
+	}
 	htmlChat.scrollTop = htmlChat.scrollHeight;
 };
 
