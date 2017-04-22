@@ -20,6 +20,6 @@ var $auth = {
 	},
 	check: function(user, uuid) {
 		var users = $json.parse($file.read("data/sessions.txt")[0]);
-		return users[user] = uuid;
+		return users[user] == uuid;
 	}
 }
