@@ -2,6 +2,7 @@ _.I("_scripts/std.js");
 _.I("_scripts/file.js");
 _.I("_scripts/event.js");
 _.I("_scripts/websocket.js");
+_.I("scripts/login.js");
 
 var chatList = [];
 
@@ -15,15 +16,17 @@ function addToCache(str) {
 
 function ChatClient(ws) {
 	this.ws = ws;
-	this.username = "Anonymous";
+	this.username = "";
 	
 	this.ws.handler("message", this, function(e) {
 		e.message = $.escape(e.message);
 		
 		var payload = e.message.substr(1, e.message.length - 1);
 		if (e.message.startsWith("@")) {
-			this.username = payload;
-		} else if (e.message.startsWith(":")) {
+			payload = payload.split(">");
+			if ($auth.check(payload[0], payload[1])
+				this.username = payload[0];
+		} else if (e.message.startsWith(":") && this.username != "") {
 			addToCache(this.username + ": " + payload);
 			for (var i = 0; i < chatList.length; i++)
 				chatList[i].ws.write(this.username + ">" + payload);
