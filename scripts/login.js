@@ -24,11 +24,23 @@ var $auth = {
 			return uuid;
 		} else return "";
 	},
-	register: function(user, pass) {
-		var users = $json.parse($file.read("data/users.txt")[0]);
-		var newSalt = _genID(32);
-		users[user] = { salt : newSalt, pass : $encode.sha256(pass + newSalt) };
-		$file.write("data/users.txt", [$json.stringify(users)]);
+	register: function(user, pass, email) {
+		if (user.length > 5  && user.length <= 16 && pass.length > 6 && pass.length <= 24) {
+			var users = $json.parse($file.read("data/users.txt")[0]);
+			
+			if (users[user] != undefined) return "2";
+			for (var key in users)
+				if (users[key].email == email) return "3";
+			
+			var newSalt = _genID(32);
+			users[user] = {
+				salt : newSalt,
+				pass : $encode.sha256(pass + newSalt),
+				email : email
+			};
+			$file.write("data/users.txt", [$json.stringify(users)]);
+		} else return "1";
+		return "0";
 	},
 	check: function(user, uuid) {
 		var sessions = $json.parse($file.read("data/sessions.txt")[0]);
