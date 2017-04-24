@@ -13,7 +13,7 @@
 	padding: 0px;
 	cursor: default;
 	overflow: hidden;
-	position: relative;
+	position: static;
 }
 
 html, body { width: 100%; height: 100%; }

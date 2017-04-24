@@ -18,32 +18,31 @@ function ChatClient(ws) {
 	this.ws = ws;
 	this.username = "";
 	
-	this.ws.handler("message", this, function(e) {
+	this.ws.handler("message", new EventListener(function(e) {
 		var payload = e.message.substr(1);
 		if (e.message.startsWith("@")) {
 			payload = payload.split(">");
 			if ($auth.check(payload[0], payload[1]) && this.username == "") {
 				this.username = payload[0];
 				for (var i = 0; i < chatList.length; i++)
-					chatList[i].ws.write("<+" + $.escape(this.username));
+					chatList[i].ws.write("<+" + this.username);
 			}
 		} else if (e.message.startsWith(":") && this.username != "") {
-			var user = $.escape(this.username);
 			payload = $.escape(payload);
-			addToCache(user + ": " + payload);
+			addToCache(this.username + ": " + payload);
 			for (var i = 0; i < chatList.length; i++)
-				chatList[i].ws.write(user + ">" + payload);
+				chatList[i].ws.write(this.username + ">" + payload);
 		}
-	});
+	}, this));
 }
 
 $ws.addProtocol("chat");
-$event.handler("ws_new", null, function(e) {
+$event.handler("ws_new", new EventListener(function(e) {
 	if (e.ws.protocol == "chat") {
 		chatList.push(new ChatClient(e.ws));
 	}
-});
-$event.handler("ws_close", null, function(e) {
+}, null));
+$event.handler("ws_close", new EventListener(function(e) {
 	if (e.ws.protocol == "chat") {
 		var name = "";
 		for (var i = 0; i < chatList.length; i++) {
@@ -53,7 +52,8 @@ $event.handler("ws_close", null, function(e) {
 				break;
 			}
 		}
-		for (var i = 0; i < chatList.length; i++)
-			chatList[i].ws.write("<-" + name);
+		if (name != "")
+			for (var i = 0; i < chatList.length; i++)
+				chatList[i].ws.write("<-" + name);
 	}
-});
+}, null));
