@@ -1,10 +1,3 @@
-DutChen18: test
-DutChen18: Hallo
-Gidion: Hi
-DutChen18: Doei
-Gidion: Hoe gaat het?
-Gidion: verdomme
-Gidion: ophangen op me hge
 Gidion: verdommenis
 Gidion: nou wil ik je vermoorden\
 Gidion: Morgen ofzo
@@ -14,3 +7,10 @@ DutChen18: test
 DutChen18: test
 DutChen18: hallo
 Gidion: Hi
+Ed: test
+DutChen18: test
+DutChen18: test
+DutChen18: test
+DutChen18: test
+DutChen18: Hallo
+DutChen18: hallo
