@@ -136,6 +136,7 @@ function commit() {
 					wrongInput("Internal server error");
 				}
 			}
+		}
 	} else if (name == "") {
 		wrongInput("Please enter your username");
 	} else if (name.length < 5) {
