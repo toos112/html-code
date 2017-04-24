@@ -40,10 +40,14 @@ function send() {
 		xmlhttp.send();
 		xmlhttp.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
-				setCookie("user", name);
-				setCookie("UUID", this.responseText);
-				loggedIn = true;
-				setLoggedIn();
+				if (this.responseText.trim() != "") {
+					setCookie("user", name);
+					setCookie("UUID", this.responseText);
+					loggedIn = true;
+					setLoggedIn();
+				} else {
+					wrongInput("Your username or password was incorrect");
+				}
 			}
 		}
 	}
@@ -118,6 +122,20 @@ function commit() {
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("GET", "auth/register.js?user=" + name + "&email=" + email + "&password=" + password1, true);
 		xmlhttp.send();
+		xmlhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				if (this.responseText.trim() != "0") {
+					location.replace("index.html");
+				} else if (this.responseText.trim() != "1") {
+					wrongInput("An error accoured.<br/>Please try again.");
+				} else if (this.responseText.trim() != "2") {
+					wrongInput("Username is already in use");
+				} else if (this.responseText.trim() != "3") {
+					wrongInput("Email is already in use");
+				} else {
+					wrongInput("Internal server error");
+				}
+			}
 	} else if (name == "") {
 		wrongInput("Please enter your username");
 	} else if (name.length < 5) {
