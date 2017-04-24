@@ -17,6 +17,7 @@ var $auth = {
 			return "";
 		var sessions = $json.parse($file.read("data/sessions.txt")[0]);
 		var users = $json.parse($file.read("data/users.txt")[0]);
+		if (users[user] == undefined) return "";
 		if (users[user].pass == $encode.sha256(pass + users[user].salt)) {
 			var uuid = _genID(32);
 			sessions[user] = uuid;
