@@ -68,30 +68,30 @@ function register() {
 	title.innerHTML = "Register";
 	div.innerHTML = "\
 		<div id = \"errorPlace\">\
-		</div>\
+		</div><br/>\
 		<div class = \"center\" style = \"margin-top: 5px; width: calc(40% + 84px); padding: 2px; border : 2px solid #444;\">\
 			<span class = \"center\" style = \"width : 160px; color: #ccc;\">\
 				Username: \
 			</span>\
 			<input type = \"text\" id = \"name\" placeholder = \"Type your Username here\" style = \"width: calc(100% - 164px);\"/><br/>\
-			<span class = \"center\" id = \"nameText\" style = \"width : 160px; color: #ccc;\">\
+			<span class = \"center\" id = \"nameText\" style = \"margin-top: 6px; width : 160px; color: #ccc;\">\
 				Email: \
 			</span>\
-			<input type = \"text\" id = \"email\" placeholder = \"Type your Email here\" style = \"width: calc(100% - 164px);\"/><br/>\
-			<span class = \"center\" id = \"nameText\" style = \"width : 160px; color: #ccc;\">\
+			<input type = \"text\" id = \"email\" placeholder = \"Type your Email here\" style = \"margin-top: 6px; width: calc(100% - 164px);\"/><br/>\
+			<span class = \"center\" id = \"nameText\" style = \"margin-top: 6px; width : 160px; color: #ccc;\">\
 				Password: \
 			</span>\
-			<input type = \"password\" id = \"password1\" placeholder = \"Type your Password here\" style = \"width: calc(100% - 164px);\"/><br/>\
-			<span class = \"center\" id = \"nameText\" style = \"width : 160px; color: #ccc;\">\
+			<input type = \"password\" id = \"password1\" placeholder = \"Type your Password here\" style = \"margin-top: 6px; width: calc(100% - 164px);\"/><br/>\
+			<span class = \"center\" id = \"nameText\" style = \"margin-top: 6px; width : 160px; color: #ccc;\">\
 				Repeat password: \
 			</span>\
-			<input type = \"password\" id = \"password2\" placeholder = \"Repeat your Password\" style = \"width: calc(100% - 164px);\"/><br/>\
+			<input type = \"password\" id = \"password2\" placeholder = \"Repeat your Password\" style = \"margin-top: 6px; width: calc(100% - 164px);\"/><br/>\
 			<button onclick = \"home();\" id = \"button\" style = \"margin-top: 6px; width: 96px;\">\
 				<span>\
 					Cancel\
 				</span>\
 			</button>\
-			<button onclick = \"commit();\" id = \"button\" style = \"margin-top: 6px; width: 96px;\">\
+			<button onclick = \"commit();\" id = \"button\" style = \"margin-left: 6px; margin-top: 6px; width: 96px;\">\
 				<span>\
 					Commit\
 				</span>\
@@ -106,19 +106,19 @@ function wrongInput(text) {
 	div.style.width = "calc(40% + 84px)";
 	div.style.padding = "2px";
 	div.style.border = "2px solid #444";
-	div.innerHTML = text;
+	div.innerHTML = "<span style = \"height: auto;\">" + text + "</span>";
 }
 
 function commit() {
-	var name = document.getElementById("name");
-	var email = document.getElementById("email");
-	var password1 = document.getElementById("password1");
-	var password2 = document.getElementById("password2");
-	if (name.length > 5  && name.length <= 16 && email.indexOf("@") != -1 && email.indexOf(".") > email.indexOf("@") && password1.length > 6 && password1.length <= 24 && password1.value == password2.value) {
+	var name = document.getElementById("name").value;
+	var email = document.getElementById("email").value;
+	var password1 = document.getElementById("password1").value;
+	var password2 = document.getElementById("password2").value;
+	if (name.length > 5  && name.length <= 16 && email.indexOf("@") != -1 && email.indexOf(".") > email.indexOf("@") && password1.length > 6 && password1.length <= 24 && password1 == password2) {
 		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("GET", "auth/register.js?user=" + name.value + "&email=" + email.value + "&password=" + password1.value, true);
+		xmlhttp.open("GET", "auth/register.js?user=" + name + "&email=" + email + "&password=" + password1, true);
 		xmlhttp.send();
-	} else if (name.value == "") {
+	} else if (name == "") {
 		wrongInput("Please enter your username");
 	} else if (name.length < 5) {
 		wrongInput("Please enter a longer username");
@@ -132,7 +132,7 @@ function commit() {
 		wrongInput("Please enter a longer password");
 	} else if (password1.length >= 24) {
 		wrongInput("Please enter a shorter password");
-	} else if (password1.value == password2.value) {
+	} else if (password1 != password2) {
 		wrongInput("Please repeat your password");
 	} else {
 		wrongInput("An error accoured.<br/>Please try again.");
