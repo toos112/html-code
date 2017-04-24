@@ -34,7 +34,7 @@ function send() {
 	var xmlhttp = new XMLHttpRequest();
 	var name = htmlName.value;
 	if (name != "") {
-		xmlhttp.open("GET", "auth/auth.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, "true");
+		xmlhttp.open("GET", "auth/login.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, true);
 		xmlhttp.send();
 		xmlhttp.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
@@ -48,14 +48,14 @@ function send() {
 }
 
 function goToChat() {
-	location.href = "chat.html?user=" + getCookie("user") + "&uuid=" + getCookie("UUID");
+	location.replace("chat.html");
 }
 
 function logout() {
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("GET", "auth/logout.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), "true");
+	xmlhttp.open("GET", "auth/logout.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), true);
 	xmlhttp.send();
 	setCookie("user", "null");
 	setCookie("UUID", "null");
-	location.href = "index.html"
+	location.replace("index.html");
 }

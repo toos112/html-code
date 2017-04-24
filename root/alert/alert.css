@@ -1,0 +1,19 @@
+.alert {
+	background: linear-gradient(to bottom, #223, #222);
+	border: solid 1px #369;
+	box-shadow: -3px -3px 3px #246, 3px -3px 3px #246, -3px 3px 3px #246, 3px 3px 3px #246;
+}
+
+.alert .bar {
+	height: 20px;
+	background: repeating-linear-gradient(-45deg, #234 0%, #234 2%, #224 3%, #224 7%, #234 8%, #234 10%);
+	box-shadow: 0px 2px 2px #323;
+	text-align: right;
+}
+
+.alert .bar button {
+	width: 16px;
+	height: 16px;
+	margin-top: 2px;
+	margin-right: 2px;
+}

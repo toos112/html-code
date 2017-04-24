@@ -1,7 +1,7 @@
 var ws;
 check(function(success) {
 	if (!success) {
-		location.href = "index.html";
+		location.replace("index.html");
 	} else {
 		ws = new WebSocket("ws://" + location.host, "chat");
 		
@@ -19,6 +19,16 @@ check(function(success) {
 		
 		ws.onopen = function(e) {
 			ws.send("@" + getCookie("user") + ">" + getCookie("UUID"));
+		}
+		
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("GET", "server/getChat.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), true);
+		xmlhttp.send();
+		xmlhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				var htmlHistory = document.getElementById("history");
+				htmlHistory.innerHTML = this.responseText;
+			}
 		}
 	}
 });
