@@ -12,14 +12,17 @@ var _genID = function(length) {
 }
 		
 var $auth = {
-	login: function(user) {
+	login: function(user, pass) {
 		if (user == "" || user.indexOf("%") !== -1)
 			return "";
-		var uuid = _genID(32);
-		var users = $json.parse($file.read("data/sessions.txt")[0]);
-		users[user] = uuid;
-		$file.write("data/sessions.txt", [$json.stringify(users)]);
-		return uuid;
+		var sessions = $json.parse($file.read("data/sessions.txt")[0]);
+		var users = $json.parse($file.read("data/users.txt")[0]);
+		if (users[user].pass == $encode.sha256(pass + users[user].salt)) {
+			var uuid = _genID(32);
+			sessions[user] = uuid;
+			$file.write("data/sessions.txt", [$json.stringify(sessions)]);
+			return uuid;
+		} else return "";
 	},
 	register: function(user, pass) {
 		var users = $json.parse($file.read("data/users.txt")[0]);
@@ -28,14 +31,14 @@ var $auth = {
 		$file.write("data/users.txt", [$json.stringify(users)]);
 	},
 	check: function(user, uuid) {
-		var users = $json.parse($file.read("data/sessions.txt")[0]);
-		if (users[user] == undefined) return false;
-		return users[user] == uuid;
+		var sessions = $json.parse($file.read("data/sessions.txt")[0]);
+		if (sessions[user] == undefined) return false;
+		return sessions[user] == uuid;
 	},
 	logout: function(user) {
-		var users = $json.parse($file.read("data/sessions.txt")[0]);
-		if (users[user] == undefined) return;
-		delete users[user];
-		$file.write("data/sessions.txt", [$json.stringify(users)]);
+		var sessions = $json.parse($file.read("data/sessions.txt")[0]);
+		if (sessions[user] == undefined) return;
+		delete sessions[user];
+		$file.write("data/sessions.txt", [$json.stringify(sessions)]);
 	}
 }
