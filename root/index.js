@@ -36,7 +36,7 @@ function send() {
 	var xmlhttp = new XMLHttpRequest();
 	var name = htmlName.value;
 	if (name != "") {
-		xmlhttp.open("GET", "auth/login.js?user=" + htmlName.value /*+ "&password=" + htmlPassword.value*/, true);
+		xmlhttp.open("GET", "auth/login.js?user=" + htmlName.value + "&password=" + htmlPassword.value, true);
 		xmlhttp.send();
 		xmlhttp.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
@@ -83,7 +83,7 @@ function register() {
 			</span>\
 			<input type = \"password\" id = \"password1\" placeholder = \"Type your Password here\" style = \"margin-top: 6px; width: calc(100% - 164px);\"/><br/>\
 			<span class = \"center\" id = \"nameText\" style = \"margin-top: 6px; width : 160px; color: #ccc;\">\
-				Repeat password: \
+				Password: \
 			</span>\
 			<input type = \"password\" id = \"password2\" placeholder = \"Repeat your Password\" style = \"margin-top: 6px; width: calc(100% - 164px);\"/><br/>\
 			<button onclick = \"home();\" id = \"button\" style = \"margin-top: 6px; width: 96px;\">\
