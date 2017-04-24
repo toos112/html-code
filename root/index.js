@@ -127,7 +127,7 @@ function commit() {
 				if (this.responseText.trim() == "0") {
 					location.replace("index.html");
 				} else if (this.responseText.trim() == "1") {
-					wrongInput("An error accoured.<br/>Please try again");
+					wrongInput("An error accoured.<br/>Please try again.");
 				} else if (this.responseText.trim() == "2") {
 					wrongInput("Username is already in use");
 				} else if (this.responseText.trim() == "3") {
