@@ -14,6 +14,8 @@
 			Login
 		</span><br/>
 		<div id = "input" class = "center" style = "width : calc(100% - 20px);">
+			<div id = "errorPlace">
+			</div><br/>
 			<div id = "nameInput" class = "center" style = "margin-top: 5px; width: calc(40% + 84px); padding: 2px; border : 2px solid; border-color : #444;">
 				<span class = "center" id = "nameText" style = "width : 120px; color: #ccc;">
 					Username: 
@@ -22,7 +24,7 @@
 				<span class = "center" id = "nameText" style = "margin-top: 6px; width : 120px; color: #ccc;">
 					Password: 
 				</span>
-				<input type = "text" id = "password" placeholder = "Type your Password here" style = "margin-top: 6px; width: calc(100% - 124px);"/><br/>
+				<input type = "password" id = "password" placeholder = "Type your Password here" style = "margin-top: 6px; width: calc(100% - 124px);"/><br/>
 				<button onclick = "send();" style = "margin-top: 6px; width: 96px;">
 					<span>
 						Send
