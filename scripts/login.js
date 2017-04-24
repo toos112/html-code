@@ -1,6 +1,7 @@
 _.I("_scripts/json.js");
 _.I("_scripts/std.js");
 _.I("_scripts/file.js");
+_.I("_scripts/encode.js");
 
 var _genID = function(length) {
 	var text = "";
@@ -19,6 +20,12 @@ var $auth = {
 		users[user] = uuid;
 		$file.write("data/sessions.txt", [$json.stringify(users)]);
 		return uuid;
+	},
+	register: function(user, pass) {
+		var users = $json.parse($file.read("data/users.txt")[0]);
+		var newSalt = _genID(32);
+		users[user] = { salt : newSalt, pass : $encode.sha256(pass + newSalt) };
+		$file.write("data/users.txt", [$json.stringify(users)]);
 	},
 	check: function(user, uuid) {
 		var users = $json.parse($file.read("data/sessions.txt")[0]);
