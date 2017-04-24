@@ -124,7 +124,7 @@ function commit() {
 		xmlhttp.send();
 		xmlhttp.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
-				if (this.responseText.trim() != "0") {
+				if (this.responseText.trim() == "0") {
 					location.replace("index.html");
 				} else if (this.responseText.trim() == "1") {
 					wrongInput("An error accoured.<br/>Please try again");
@@ -145,7 +145,7 @@ function commit() {
 		wrongInput("Please enter a shorter username");
 	} else if (email.indexOf("@") == -1) {
 		wrongInput("Please enter a  valid email");
-	} else if (email.indexOf(".") < email.indexOf("@")) {
+	} else if (email.indexOf(".") <= email.indexOf("@")) {
 		wrongInput("Please enter a valid email");
 	} else if (password1.length <= 6) {
 		wrongInput("Please enter a longer password");
