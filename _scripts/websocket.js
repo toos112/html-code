@@ -9,8 +9,8 @@ var $ws = {
 function _WebSocketWrapper(e) {
 	this._ws = e.getWS();
 	this._dispatcher = new EventDispatcher();
-	this.handler = function(type, context, func) {
-		this._dispatcher.handler(type, context, func);
+	this.handler = function(type, listener) {
+		this._dispatcher.handler(type, listener);
 	};
 	this._trigger = function(type, ee) {
 		this._dispatcher.trigger(type, ee);

@@ -1,7 +1,7 @@
 function check(func) {
 	var success = false;
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("GET", "auth/check.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), "true");
+	xmlhttp.open("GET", "auth/check.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), true);
 	xmlhttp.send();
 	xmlhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {

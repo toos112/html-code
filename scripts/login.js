@@ -4,7 +4,7 @@ _.I("_scripts/file.js");
 
 var _genID = function(length) {
 	var text = "";
-	var possible = "0123456789ABCDEF";
+	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/-";
 	for(var i = 0; i < length; i++)
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
 	return text;
@@ -12,7 +12,9 @@ var _genID = function(length) {
 		
 var $auth = {
 	login: function(user) {
-		var uuid = _genID(16);
+		if (user == "" || user.indexOf("%") !== -1)
+			return "";
+		var uuid = _genID(32);
 		var users = $json.parse($file.read("data/sessions.txt")[0]);
 		users[user] = uuid;
 		$file.write("data/sessions.txt", [$json.stringify(users)]);
