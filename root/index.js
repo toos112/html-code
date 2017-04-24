@@ -118,7 +118,7 @@ function commit() {
 	var email = document.getElementById("email").value;
 	var password1 = document.getElementById("password1").value;
 	var password2 = document.getElementById("password2").value;
-	if (name.length > 5  && name.length <= 16 && email.indexOf("@") != -1 && email.indexOf(".") > email.indexOf("@") && password1.length > 6 && password1.length <= 24 && password1 == password2) {
+	if (name.length >= 6  && name.length <= 16 && email.indexOf("@") != -1 && email.indexOf(".") > email.indexOf("@") && password1.length > 6 && password1.length <= 24 && password1 == password2) {
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("GET", "auth/register.js?user=" + name + "&email=" + email + "&password=" + password1, true);
 		xmlhttp.send();
