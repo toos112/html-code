@@ -25,3 +25,7 @@ function getCookie(name) {
 function setCookie(name, worth) {
 	document.cookie = name + "=" + worth;
 }
+
+function home() {
+	location.replace("index.html");
+}

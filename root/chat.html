@@ -7,6 +7,7 @@
 		<script src = "main.js"></script>
 		<script src = "chat.js"></script>
 		<link rel = "stylesheet" type = "text/css" href = "index.css">
+		<link rel = "stylesheet" type = "text/css" href = "alert/alert.css">
 	</head>
 	<body style = "padding: 10px; background: linear-gradient(to bottom, #234, #222);">
 		<span class = "big center" style = "width: calc(100% - 20px); color: #48c; margin-bottom: 5px;">
@@ -20,10 +21,15 @@
 			<span class = "center" id = "messageText" style = "width: 100px; color: #ccc;">
 				Message: 
 			</span>
-			<input type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);" style = "width: calc(100% - 204px); margin-left: 2px;"/> 
-			<button type = "button" onclick = "send();" id = "button" style = "margin-left: 2px; width: 96px;">
+			<input type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);" style = "width: calc(100% - 302px); margin-left: 2px;"/> 
+			<button onclick = "send();" style = "margin-left: 2px; width: 96px;">
 				<span>
 					Send
+				</span>
+			</button>
+			<button onclick = "home;" style = "margin-left: 2px; width: 96px;">
+				<span>
+					Home
 				</span>
 			</button>
 		</div>
