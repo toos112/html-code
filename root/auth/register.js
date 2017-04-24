@@ -2,5 +2,5 @@
 	_.I("scripts/login.js");
 	
 	var qs = $.getQS()
-	$auth.register(qs.user, qs.password);
+	ret = $auth.register(qs.user, qs.password, qs.email);
 :js)
