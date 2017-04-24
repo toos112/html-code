@@ -118,7 +118,7 @@ function commit() {
 	var email = document.getElementById("email").value;
 	var password1 = document.getElementById("password1").value;
 	var password2 = document.getElementById("password2").value;
-	if (name.length > 5  && name.length <= 16 && email.indexOf("@") != -1 && email.indexOf(".") > email.indexOf("@") && password1.length > 6 && password1.length <= 24 && password1 == password2) {
+	if (name.length >= 6  && name.length <= 16 && email.indexOf("@") != -1 && email.indexOf(".") > email.indexOf("@") && password1.length > 6 && password1.length <= 24 && password1 == password2) {
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("GET", "auth/register.js?user=" + name + "&email=" + email + "&password=" + password1, true);
 		xmlhttp.send();
@@ -126,11 +126,11 @@ function commit() {
 			if (this.readyState == 4 && this.status == 200) {
 				if (this.responseText.trim() != "0") {
 					location.replace("index.html");
-				} else if (this.responseText.trim() != "1") {
-					wrongInput("An error accoured.<br/>Please try again.");
-				} else if (this.responseText.trim() != "2") {
+				} else if (this.responseText.trim() == "1") {
+					wrongInput("An error accoured.<br/>Please try again");
+				} else if (this.responseText.trim() == "2") {
 					wrongInput("Username is already in use");
-				} else if (this.responseText.trim() != "3") {
+				} else if (this.responseText.trim() == "3") {
 					wrongInput("Email is already in use");
 				} else {
 					wrongInput("Internal server error");
@@ -147,7 +147,7 @@ function commit() {
 		wrongInput("Please enter a  valid email");
 	} else if (email.indexOf(".") < email.indexOf("@")) {
 		wrongInput("Please enter a valid email");
-	} else if (password1.length < 6) {
+	} else if (password1.length <= 6) {
 		wrongInput("Please enter a longer password");
 	} else if (password1.length >= 24) {
 		wrongInput("Please enter a shorter password");
