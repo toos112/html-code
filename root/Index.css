@@ -39,20 +39,20 @@ span.big {
 	text-align: center;
 }
 
-input {
+input, textarea {
 	line-height: 20px;
 	font-size: 20px;
 	color: #eee;
 	padding-left: 2px;
 	padding-right: 2px;
 }
-input, button {
+input, button, textarea {
     height: 20px;
 	width: 128px;
 	background-color: #444;
 }
-input:hover, button:hover { background-color: #474747; }
-input:active, button:active { background-color: #555; }
+textarea:hover, input:hover, button:hover { background-color: #474747; }
+textarea:active, input:active, button:active { background-color: #555; }
 
 ::-webkit-input-placeholder { color: #666; }
 :-ms-input-placeholder { color: #666; }
