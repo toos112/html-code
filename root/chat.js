@@ -12,7 +12,13 @@ check(function(success) {
 				htmlChat.innerHTML += "<span style = 'color: #eee;'>" + message + "</span><br/>";
 			} else {
 				var message = e.data.split(">");
-				htmlChat.innerHTML += "<span style = 'color: #48c;'>" + message[0] + "</span><span style = 'color: #ccc;'>: " + message[1] + "</span><br/>";
+				var height = 1;
+				while (-1 != message[1].indexOf("\n")) {
+					message[1] = message[1].replace("\n", "<br/>  ");
+					height++;
+				}
+				height = height * 20;
+				htmlChat.innerHTML += "<span style = 'color: #48c;'>" + message[0] + "</span><span style = 'white-space: pre; color: #ccc; height: " + height + "px;'>: " + message[1] + "</span><br/>";
 			}
 			htmlChat.scrollTop = htmlChat.scrollHeight;
 		};
@@ -33,14 +39,31 @@ check(function(success) {
 	}
 });
 
+var p = false;
+function onShiftDown(e) {
+	if (e.keyCode == 16) {
+		p = true;
+	}	
+}
+
+function onShiftUp(e) {
+	if (e.keyCode == 16) {
+		p = false;
+	}
+}
+
 function enterPress(e) {
-	if (e.keyCode == 13) {
+	if (e.keyCode == 13 && p == true) {
 		send();
 	}
 }
 
 function send() {
-	var htmlMessage = document.getElementById("message");
-	ws.send(":" + htmlMessage.value);
-	htmlMessage.value = "";
+	var htmlMessage = document.getElementById("message").value;
+	if (htmlMessage.startsWith("/") == true) {
+		ws.send(htmlMessage);
+	} else {
+		ws.send(":" + htmlMessage);
+	}
+	setTimeout(function() {document.getElementById("message").value = "";},1);
 }
