@@ -1,3 +1,5 @@
+_.I("_scripts/bigint.js")
+
 var _strToBits = function(str) {
 	var data = new Array(str.length * 8);
 	for (var i = 0; i < str.length; i++) {
@@ -40,6 +42,20 @@ var _intToHex = function(d, p) {
     while (hex.length < p)
         hex = "0" + hex;
     return hex;
+}
+
+var _prime = function(val) {
+	for (var i = new BigUInt([2]); i.lt(val); i.inc())
+		if (val.mod(i).eq(new BigUInt([])))
+			return false;
+	return true;
+}
+
+var _rprime = function(min, max) {
+	var prime;
+	do { prime = randomBigUInt(min, max);
+	} while (!_prime(prime));
+	return prime;
 }
 
 var $hash = {
