@@ -10,17 +10,20 @@ var handShakeDone = false;
 function handShake(func) {
 	var ws = new WebSocket("ws://" + location.host, "enc_setup");
 	ws.onmessage = function(e) {
+		var arr = e.data.split(":");
+		arr[0] = strToBigUInt(arr[0]);
 		func(key);
 	}
 	handShakeDone = true;
 }
 
-function encrypt() {
+function encrypt(str) {
 	if (handShakeDone == false) {
 		handShake(function(key) {
 			
 		});
 	}
+	
 }
 
 function check(func) {
