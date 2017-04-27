@@ -45,15 +45,15 @@ var _intToHex = function(d, p) {
 }
 
 var _prime = function(val) {
-	for (var i = new BigUInt([2]); i.lt(val); i.inc())
-		if (val.mod(i).eq(new BigUInt([])))
-			return false;
+	if (val.mod(new BigUInt([2])).eq(new BigUInt([]))) return false;
+	for (var i = new BigUInt([3]); i.lt(val); i = i.add(new BigUInt([2])))
+		if (val.mod(i).eq(new BigUInt([]))) return false;
 	return true;
 }
 
 var _rprime = function(min, max) {
 	var prime;
-	do { prime = randomBigUInt(min, max);
+	do { prime = bigUInt.rand(min, max);
 	} while (!_prime(prime));
 	return prime;
 }
@@ -123,8 +123,21 @@ var $hash = {
 
 var $encrypt = {
 	rsa: {
-		key: function(len) {
-			
+		key: function(size) {
+			var e = new BigUInt([1, 1]);
+			var p, q, l;
+			var min = new BigUInt([2]).pow(new BigUInt([size / 2]).sub(new BigUInt([1])));
+			var max = new BigUInt([2]).pow(new BigUInt([size / 2])).sub(new BigUInt([1]));
+			do {
+				p = _rprime(min, max);
+				q = _rprime(min, max);
+				l = bigUInt.lcm(p.sub(new BigUInt([1])), q.sub(new BigUInt([1])));
+			} while (bigUInt.gcd(e, l).neq(new BigUInt([1])) || bigUInt.dif(p, q) < new BigUInt([2]).pow(new BigUInt([size / 2 - 100])));
+			return {
+				n: p.mul(q),
+				e: e,
+				d: e.modInv(l)
+			};
 		}
 	}
 }

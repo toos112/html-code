@@ -2,7 +2,11 @@ _.I("_scripts/std.js");
 _.I("_scripts/file.js");
 _.I("_scripts/event.js");
 _.I("_scripts/websocket.js");
+_.I("_scripts/encode.js");
 _.I("scripts/login.js");
+
+$.write("test");
+$.writeObj(_rprime(new BigUInt([0, 1]), new BigUInt([0, 2])));
 
 var chatList = [];
 
