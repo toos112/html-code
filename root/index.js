@@ -90,10 +90,9 @@ function register() {
 				Password: \
 			</span>\
 			<input type = \"password\" id = \"password2\" placeholder = \"Repeat your Password\" style = \"margin-top: 6px; width: calc(100% - 164px);\"/><br/>\
-			<span class = \"center\" id = \"nameText\" style = \"margin-top: 6px; width : 940px; color: #ccc;\">\
-				By checking this you agree to our terms of service and agree for us using cookies.\
-			</span>\
-			<input type = \"checkbox\"/><br/>\
+			<span class = \"center\" id = \"nameText\" style = \"margin-top: 6px; width : calc(100% - 4px); color: #ccc; height: 42px;\">\
+				By creating a account you agree to<br/>our <span onclick = \"service();\">terms of service</span> & the use of cookies.\
+			</span><br/>\
 			<button onclick = \"home();\" id = \"button\" style = \"margin-top: 6px; width: 96px;\">\
 				<span>\
 					Cancel\
@@ -105,6 +104,20 @@ function register() {
 				</span>\
 			</button>\
 		</div>";
+}
+
+function service() {
+	var service = new WindowAlert(640, 740);
+	service.getTitleBar().insert(new AlertButton("close", function () {service.close();}));
+	service.insert(toElemArray("\
+	<div style = 'height: 720px; width: 640px; padding: 2px;'>\
+	<span class = 'big'>Terms of service</span>\
+	<div style = 'overflow: scroll;'>\
+	\
+	</div>\
+	</div>\
+	"));
+	service.open();
 }
 
 function wrongInput(text) {
