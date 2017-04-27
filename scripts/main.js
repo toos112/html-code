@@ -2,6 +2,7 @@ _.I("_scripts/std.js");
 _.I("_scripts/file.js");
 _.I("_scripts/event.js");
 _.I("_scripts/websocket.js");
+_.I("_scripts/bigint.js");
 _.I("scripts/login.js");
 
 var chatList = [];

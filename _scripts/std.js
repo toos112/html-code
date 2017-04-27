@@ -11,8 +11,8 @@ var $ = {
 		return JSON.parse(_qs);
 	},
 	escape: function(str) {
-		str = str.replaceAll("<", "&lt;");
-		str = str.replaceAll(">", "&gt;");
+		str = str.replace("<", "&lt;");
+		str = str.replace(">", "&gt;");
 		return str;
 	}
 };
