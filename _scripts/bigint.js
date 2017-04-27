@@ -139,3 +139,16 @@ var bigUIntToStr = function(val) {
 		result += val.ints[i] + (i == val.ints.length - 1 ? "" : ",");
 	return result;
 }
+
+var randomBigUInt = function(min, max) {
+	var result = new BigUInt([]);
+	var range = max.sub(min);
+	var restricted = true;
+	for (var i = range.ints.length - 1; i >= 0; i--) {
+		var top = restricted ? range.ints[i] : base;
+		var digit = Math.floor(Math.random() * top);
+        result.ints.unshift(digit);
+		if (digit < top) restricted = false;
+	}
+	return result;
+}
