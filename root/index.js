@@ -90,6 +90,10 @@ function register() {
 				Password: \
 			</span>\
 			<input type = \"password\" id = \"password2\" placeholder = \"Repeat your Password\" style = \"margin-top: 6px; width: calc(100% - 164px);\"/><br/>\
+			<span class = \"center\" id = \"nameText\" style = \"margin-top: 6px; width : 940px; color: #ccc;\">\
+				By checking this you agree to our terms of service and agree for us using cookies.\
+			</span>\
+			<input type = \"checkbox\"/><br/>\
 			<button onclick = \"home();\" id = \"button\" style = \"margin-top: 6px; width: 96px;\">\
 				<span>\
 					Cancel\
