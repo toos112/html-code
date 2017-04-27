@@ -13,25 +13,32 @@
 		<span class = "big center" style = "width: calc(100% - 20px); color: #48c; margin-bottom: 5px;">
 			Chat
 		</span><br/>
-		<div class = "scroll" style = "padding: 5px; width: calc(100% - 34px); height: calc(100% - 108px); overflow: auto; background: linear-gradient(to bottom, #333, #111); border: 2px solid; border-color: #444;" id = "chat">
+		<div class = "scroll" style = "padding: 5px; width: calc(100% - 34px); height: calc(100% - 148px); overflow: auto; background: linear-gradient(to bottom, #333, #111); border: 2px solid; border-color: #444;" id = "chat">
 			<span id = "history" style = "color: #888; height: auto;">
 			</span><br>
 		</div><br/>
-		<div id = "send" style = "margin-top: 5px; width: calc(100% - 24px); height: 20px; padding: 2px; background-color: #666;">
+		<div id = "send" style = "margin-top: 5px; width: calc(100% - 24px); height: 64px; padding: 2px; background-color: #666;">
 			<span class = "center" id = "messageText" style = "width: 100px; color: #ccc;">
 				Message: 
 			</span>
-			<input type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "enterPress(event);" style = "width: calc(100% - 302px); margin-left: 2px;"/> 
-			<button onclick = "send();" style = "margin-left: 2px; width: 96px;">
-				<span>
-					Send
-				</span>
-			</button>
-			<button onclick = "home();" style = "margin-left: 2px; width: 96px;">
-				<span>
-					Home
-				</span>
-			</button>
+			<textarea type = "text" id = "message" placeholder = "Type your Message here" onkeydown = "onShiftDown(event)" onkeyup = "onShiftUp(event)" onkeypress = "enterPress(event);" style = "width: calc(100% - 204px); margin-left: 2px; height: 64px;"></textarea> 
+			<div style = "margin-left: 2px;">
+				<button onclick = "send();" style = "width: 96px;">
+					<span>
+						Send
+					</span>
+				</button><br/>
+				<button onclick = "home();" style = "margin-top: 2px; width: 96px;">
+					<span>
+						Home
+					</span>
+				</button><br/>
+				<button onclick = "rules();" style = "margin-top: 2px; width: 96px;">
+					<span>
+						Rules
+					</span>
+				</button>
+			</div>
 		</div>
 	</body>
 </html>
