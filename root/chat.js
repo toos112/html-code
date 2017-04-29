@@ -61,7 +61,14 @@ function enterPress(e) {
 function send() {
 	var htmlMessage = document.getElementById("message").value;
 	if (htmlMessage.startsWith("/") == true) {
-		ws.send(htmlMessage);
+		if (htmlMessage.startsWith("/disconnect") == true) {
+			ws.close();
+		} else if (htmlMessage.startsWith("/clear") == true) {
+			var htmlChat = document.getElementById("chat");
+			htmlChat.innerHTML = "";
+		} else {
+			ws.send(htmlMessage);
+		}
 	} else {
 		ws.send(":" + htmlMessage);
 	}
