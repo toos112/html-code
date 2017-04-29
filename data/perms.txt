@@ -51,7 +51,7 @@
 			"chat.warn":{"has":"true","users":["user","trusted","moderator","admin"]},
 			"chat.slow":{"has":"true","users":["user","trusted","moderator","admin"],"time":-1},
 			"chat.ban":{"has":"true","users":["user","trusted","moderator","admin"],"time":-1},
-			"chat.ipban":{"has":"true","users"["user","trusted","moderator","admin"],"time":-1},
+			"chat.ipban":{"has":"true","users":["user","trusted","moderator","admin"],"time":-1},
 			"chat.group":{"has":"true","users":["user","trusted","moderator","admin"],"groups":["user","trusted","moderator","admin"]}
 		}
 	}
