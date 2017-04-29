@@ -103,9 +103,9 @@ var command = function(cc, cmd) {
 		for (var key in _help) {
 			var perm2 = $perm.uPerm(cc.username, key);
 			if (perm2.has) {
-				if (perm2.level == undefined)
-					result += _help[key] + "\n";
-				else result += _help[key + ":" + perm2.level] + "\n";
+				if (perm2.level != undefined)
+					result += _help[key][perm2.level - 1] + "\n";
+				else result += _help[key] + "\n";
 			}
 		}
 		if (result.endsWith("\n"))
@@ -127,7 +127,7 @@ var command = function(cc, cmd) {
 						writeUserData(cmd[1], data);
 						var reason = getReason(cmd, 3);
 						if (reason == "") _invalid(cc, "reason")
-						else _getByName(cmd[1]).ws.write("<?You have been timed for " + cmd[2] + "! reason: " + cmd[3]);
+						else _getByName(cmd[1]).ws.write("<?You have been timed out for " + cmd[2] + "! reason: " + cmd[3]);
 					}
 				}
 			}
@@ -153,5 +153,22 @@ var command = function(cc, cmd) {
 		if (result.endsWith(","))
 			result = result.substring(0, result.length - 1);
 		cc.ws.write(result);
+	} else if (cmd[0] == "ghost") {
+		if (perm.level == 1 || cmd.length == 1) {
+			var data = getUserData(cc.username);
+			data.ghost = !data.ghost;
+			writeUserData(cc.username, data);
+			if (data.ghost) cc.ws.write("<?You are now a ghost!");
+			else cc.ws.write("<?You are no longer a ghost!");
+		} else if (perm.level == 2) {
+			if (!_online(cmd[1])) _invalid(cc, "offline," + cmd[1]);
+			else {
+				var data = getUserData(cmd[1]);
+				data.ghost = !data.ghost;
+				writeUserData(cmd[1], data);
+				if (data.ghost) cc.ws.write("<?" + cmd[1] + " is now a ghost!");
+				else  cc.ws.write("<?" + cmd[1] + " is no longer a ghost!");
+			}
+		}
 	} else _invalid(cc, "cmd");
 };
