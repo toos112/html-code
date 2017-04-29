@@ -2,17 +2,14 @@ _.I("_scripts/std.js");
 _.I("_scripts/file.js");
 _.I("_scripts/event.js");
 _.I("_scripts/websocket.js");
-_.I("_scripts/encode.js");
 _.I("scripts/login.js");
-
-$.write("test");
-$.writeObj(_rprime(new BigUInt([0, 1]), new BigUInt([0, 2])));
 
 var chatList = [];
 
-function addToCache(str) {
+function addToCache(user, str) {
 	var file = $file.read("data/chat.txt");
-	file.push(str);
+	var text = str.replaceAll("\n", new Array(user.length + 2));
+	file.push(user + ": " + str);
 	if (file.length > 16)
 		file.splice(0, file.length - 16);
 	$file.write("data/chat.txt", file);
@@ -33,7 +30,7 @@ function ChatClient(ws) {
 			}
 		} else if (e.message.startsWith(":") && this.username != "") {
 			payload = $.escape(payload);
-			addToCache(this.username + ": " + payload);
+			addToCache(this.username, payload);
 			for (var i = 0; i < chatList.length; i++)
 				chatList[i].ws.write(this.username + ">" + payload);
 		}
