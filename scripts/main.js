@@ -22,8 +22,9 @@ function ChatClient(ws) {
 	
 	this.ws.handler("message", new EventListener(function(e) {
 		var payload = e.message.substr(1);
+		
 		if (e.message.startsWith("/")) {
-			
+			command(this, e.message.substr(1).split(" "));
 		} else if (e.message.startsWith("@")) {
 			payload = payload.split(">");
 			if ($auth.check(payload[0], payload[1]) && this.username == "") {
@@ -32,10 +33,13 @@ function ChatClient(ws) {
 					chatList[i].ws.write("<+" + this.username);
 			}
 		} else if (e.message.startsWith(":") && this.username != "") {
-			payload = $.escape(payload);
-			addToCache(this.username, payload);
-			for (var i = 0; i < chatList.length; i++)
-				chatList[i].ws.write(this.username + ">" + payload);
+			var udata = getUserData(this.username);
+			if ($.time() > udata.timeout) {
+				payload = $.escape(payload);
+				addToCache(this.username, payload);
+				for (var i = 0; i < chatList.length; i++)
+					chatList[i].ws.write(this.username + ">" + payload);
+			}
 		}
 	}, this));
 }
