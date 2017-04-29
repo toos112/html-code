@@ -1,20 +1,55 @@
 {
-	"groups":{
-		"0":"user",
-		"1":"moderator",
-		"2":"admin"
+	"user":{
+		"inherit":[],
+		"perms":{
+			"chat.help":{"has":true},
+			"chat.list":{"has":true,"level":1},
+			"chat.disconnect":{"has":true},
+			"chat.clear":{"has":true}
+		}
 	},
-	"perms":{
-		"1":{
-			"inherit":["0"],
-			"perms":{
-				"chat.ban":0
-			}
-		},
-		"2":{
-			"inherit":["0", "1"],
-			"perms":{
-			}
+	"trusted":{
+		"inherit":["user"],
+		"perms":{
+			"chat.info":{"has":true,"users":["user"],"level":1},
+			"chat.timeout":{"has":"true","users":["user"],"time":300000},
+			"chat.warn":{"has":"true""users":["user"]}
+		}
+	},
+	"moderator":{
+		"inherit":["trusted","user"],
+		"perms":{
+			"chat.kick":{"has":true,"users":["user","trusted"]},
+			"chat.timeout":{"has":"true","users":["user","trusted"],"time":3600000},
+			"chat.warn":{"has":"true""users":["user","trusted"]},
+			"chat.slow":{"has":"true","users":["user"],"time":"2000"},
+			"chat.ban":{"has":"true","users":["user"],"time":"3600000"}
+		}
+	},
+	"admin":{
+		"inherit":["moderator","trusted","user"],
+		"perms":{
+			"chat.list":{"has";"true","level":2},
+			"chat.kick":{"has":true,"users":["user","trusted","moderator"]},
+			"chat.timeout":{"has":"true","users":["user","trusted","moderator"],"time":7200000},
+			"chat.warn":{"has":"true","users":["user","trusted","moderator"]},
+			"chat.slow":{"has":"true","users":["user"],"time":"5000"},
+			"chat.ban":{"has":"true","users":["user","trusted"],"time":"-1"},
+			"chat.unban":{"has":"true","users":["user","trusted","moderator","owner"]},
+			"chat.group":{"has":"true","users":["user","trusted"],"groups":["user","trusted"]}
+		}
+	},
+	"owner":{
+		"inherit":["admin","moderator","trusted","user"],
+		"perms":{
+			"chat.list":{"has":"true","level":3},
+			"chat.info":{"has":"true","level":2,"users":["user","trusted","admin","owner"]},
+			"chat.kick":{"has":true,"users":["user","trusted","moderator","admin"]},
+			"chat.timeout":{"has":"true","users":["user","trusted","moderator","admin"],"time":-1},
+			"chat.warn":{"has":"true","users":["user","trusted","moderator","admin"]},
+			"chat.slow":{"has":"true","users":["user","trusted","moderator","admin"],"time":"-1"},
+			"chat.ban":{"has":"true","users":["user","trusted","moderator","admin"],"time":"-1"},
+			"chat.group":{"has":"true","users":["user","trusted","moderator","admin"],"groups":["user","trusted","moderator","admin"]}
 		}
 	}
 }
