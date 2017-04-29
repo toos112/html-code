@@ -16,3 +16,6 @@
 [19:34:33] DutChen18: /kick Gidion
 [19:36:52] DutChen18: /help
 [19:37:42] DutChen18: /help
+[19:57:3] DutChen18: test
+[19:57:5] DutChen18: /help
+[19:57:45] DutChen18: /list
