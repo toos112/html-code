@@ -36,12 +36,24 @@ check(function(success) {
 					} else if (message.startsWith("?")) {
 						message = message.substr(1);
 						var height = 1;
+<<<<<<< HEAD
 						while (-1 != message.indexOf("\n")) {
+=======
+						while (-1 != message[1].indexOf("\n")) {
+>>>>>>> refs/remotes/origin/master
 							message = message.replace("\n", "<br/>");
 							height++;
 						}
 						height = height * 20;
 						htmlChat.innerHTML += "<span style = 'white-space: pre; color: #862; height: " + height + "px;'>" + message + "</span><br/>";
+					} else if (message.startsWith("@")) {
+						var fakeMessage = message.substr(1);
+						fakeMessage = fakeMessage.split(",");
+						var realMessage = "Users online: ";
+						for (i = 0; i < fakeMessage.length; i++) {
+							realMessage += fakeMessage[0] + ", ";
+						}
+						htmlChat.innerHTML += "<span style = 'color: #862;'>" + realMessage + ".</span><br/>";
 					}
 				}
 			} else {
