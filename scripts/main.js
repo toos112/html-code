@@ -58,3 +58,11 @@ $event.handler("ws_close", new EventListener(function(e) {
 				chatList[i].ws.write("<-" + name);
 	}
 }, null));
+
+_.loop(60000, function() {
+	var sessions = $json.parse($file.read("data/sessions.txt")[0]);
+	for (var key in sessions)
+		if (sessions[key].expire < $.time())
+			delete sessions[key];
+	$file.write("data/sessions.txt", [$json.stringify(sessions)]);
+});
