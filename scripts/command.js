@@ -136,19 +136,19 @@ var command = function(cc, cmd) {
 		var result = "<@";
 		if (perm.level == 1) {
 			for (var user in chatList) {
-				var data = getUserData(user.username);
+				var data = getUserData(chatList[user].username);
 				if (!data.ghost)
-					result += user.username + ",";
+					result += chatList[user].username + ",";
 			}
 		} else if (perm.level == 2) {
 			for (var user in chatList) {
-				var data = getUserData(user.username);
-				if (!data.ghost || $perm.group(user.username) != "owner")
-					result += user.username + ",";
+				var data = getUserData(chatList[user].username);
+				if (!data.ghost || $perm.group(chatList[user].username) != "owner")
+					result += chatList[user].username + ",";
 			}
 		} else if (perm.level == 3) {
 			for (var user in chatList)
-				result += user.username + ",";
+				result += chatList[user].username + ",";
 		}
 		if (result.endsWith(","))
 			result = result.substring(0, result.length - 1);
