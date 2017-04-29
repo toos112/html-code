@@ -3,7 +3,7 @@ _.I("_scripts/json.js");
 _.I("_scripts/file.js");
 _.I("scripts/perms.js");
 
-//var _help = $json.parse($file.read("data/help.txt").join(" "));
+var _help = $json.parse($file.read("data/help.txt").join(" "));
 
 var _invalid = function(cc, err) {
 	cc.ws.write("<!" + err);
@@ -83,6 +83,13 @@ var writeUserData = function(user, data) {
 	var udata = $json.parse($file.read("data/userdata.txt")[0]);
 	udata[user] = data;
 	$file.write("data/userdata.txt", [$json.stringify(udata)]);
+};
+
+var getReason = function(cmd, start) {
+	var reason = "";
+	for (var i = start; i < cmd.length; i++)
+		reason += cmd[i];
+	return reason.trim();
 }
 
 var command = function(cc, cmd) {
@@ -104,17 +111,20 @@ var command = function(cc, cmd) {
 	} else if (cmd[0] == "timeout") {
 		if (cmd.length < 3) _invalid(cc, "args");
 		else {
-			if (!_online(cmd[1])) _invalid(cc, "offline");
+			if (!_online(cmd[1])) _invalid(cc, "offline," + cmd[1]);
 			else {
-				if (perm.users.indexOf($perm.group(cmd[1])) == -1) _invalid(cc, "target");
+				if (perm.users.indexOf($perm.group(cmd[1])) == -1) _invalid(cc, "target," + cmd[1]);
 				else {
 					var time = _parseTime(cmd[2]);
-					if (time == -1) _invalid(cc, "time");
+					if (time == -1) _invalid(cc, "time," + cmd[2]);
+					else if (time > perm.time && !(perm.time == -1)) _invalid(cc, "long");
 					else {
 						var data = getUserData(cmd[1]);
-						data.timeout = $.time + _parseTime(cmd[2]);
-						writeUserData(cmd[0], data);
-						_getByName(user).ws.send("You have been timed out!");
+						data.timeout = $.time() + time;
+						writeUserData(cmd[1], data);
+						var reason = getReason(cmd, 3);
+						if (reason == "") _invalid(cc, "reason")
+						else _getByName(cmd[1]).ws.write("<?You have been timed for " + cmd[2] + "! reason: " + cmd[3]);
 					}
 				}
 			}
