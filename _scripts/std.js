@@ -11,8 +11,11 @@ var $ = {
 		return JSON.parse(_qs);
 	},
 	escape: function(str) {
-		str = str.replace("<", "&lt;");
-		str = str.replace(">", "&gt;");
+		str = str.replaceAll("<", "&lt;");
+		str = str.replaceAll(">", "&gt;");
 		return str;
+	},
+	time: function() {
+		return 0 + _.time();
 	}
 };

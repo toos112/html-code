@@ -1,4 +1,4 @@
-_.I("_scripts/bigint.js")
+//_.I("_scripts/bigint.js")
 
 var _strToBits = function(str) {
 	var data = new Array(str.length * 8);
@@ -45,15 +45,20 @@ var _intToHex = function(d, p) {
 }
 
 var _prime = function(val) {
-	if (val.mod(new BigUInt([2])).eq(new BigUInt([]))) return false;
-	for (var i = new BigUInt([3]); i.lt(val); i = i.add(new BigUInt([2])))
-		if (val.mod(i).eq(new BigUInt([]))) return false;
+	if (val.mod(2).eq(0)) return false;
+	for (var i = bigInt.parse(3); i.lt(val); i = i.add(2))
+		if (val.mod(i).eq(0)) return false;
 	return true;
 }
 
 var _rprime = function(min, max) {
 	var prime;
-	do { prime = bigUInt.rand(min, max);
+	do {
+		if (!prime || prime.add(bigInt.parse(2)).gt(max))
+			prime = bigInt.rand(min, max);
+		else if (prime.mod(bigInt.parse(2)).eq(bigInt.parse(0)))
+			prime.inc();
+		else prime = prime.add(bigInt.parse(2));
 	} while (!_prime(prime));
 	return prime;
 }
@@ -121,23 +126,36 @@ var $hash = {
 	}
 }
 
-var $encrypt = {
+/*var $encrypt = {
 	rsa: {
-		key: function(size) {
-			var e = new BigUInt([1, 1]);
+		key: function(length) {
+			var e = bigInt.parse(65537);
 			var p, q, l;
-			var min = new BigUInt([2]).pow(new BigUInt([size / 2]).sub(new BigUInt([1])));
-			var max = new BigUInt([2]).pow(new BigUInt([size / 2])).sub(new BigUInt([1]));
+			var min = bigInt.parse(2).pow(bigInt.parse(length).sub(1));
+			var max = bigInt.parse(2).pow(length).sub(1);
 			do {
 				p = _rprime(min, max);
 				q = _rprime(min, max);
-				l = bigUInt.lcm(p.sub(new BigUInt([1])), q.sub(new BigUInt([1])));
-			} while (bigUInt.gcd(e, l).neq(new BigUInt([1])) || bigUInt.dif(p, q) < new BigUInt([2]).pow(new BigUInt([size / 2 - 100])));
+				l = bigInt.lcm(p.sub(1), q.sub(1));
+			} while (bigInt.gcd(e, l).neq(1) || p.eq(q));
+			var n = p.mul(q);
 			return {
-				n: p.mul(q),
-				e: e,
-				d: e.modInv(l)
+				pb: { m : n, e : e },
+				pv: { m : n, e : e.modInv(l) }
 			};
+		},
+		encrypt: function(message, key) {
+			var chars = [];
+			for (var i = 0; i < message.length; i++)
+				chars.push(bigInt.toB64Str(bigInt.parse(message.charCodeAt(i)).powMod(key.e, key.m)));
+			return chars.join(",");
+		},
+		decrypt: function(message, key) {
+			var result = "";
+			var chars = message.split(",");
+			for (var i = 0; i < chars.length; i++)
+				result += bigInt.fromB64Str(chars[i]).powMod(key.e, key.m).ints[0] + " ";
+			return result;
 		}
 	}
-}
+}*/
