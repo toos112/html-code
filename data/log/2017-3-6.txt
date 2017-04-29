@@ -2,3 +2,17 @@
 [19:1:54] DutChen18: test
 [19:2:57] DutChen18: test2
 [19:4:30] /help: help
+[19:11:5] DutChen18: /help
+[19:12:15] DutChen18: /help
+[19:13:12] DutChen18: test
+[19:30:37] DutChen18: /help
+[19:31:10] DutChen18: /help
+[19:32:55] DutChen18: test
+[19:32:58] DutChen18: /help
+[19:33:19] Gidion: /help
+[19:34:8] Gidion: ?
+[19:34:10] Gidion: ?
+[19:34:12] Gidion: ?
+[19:34:33] DutChen18: /kick Gidion
+[19:36:52] DutChen18: /help
+[19:37:42] DutChen18: /help
