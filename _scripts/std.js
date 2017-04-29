@@ -10,9 +10,15 @@ var $ = {
 	getQS: function() {
 		return JSON.parse(_qs);
 	},
+	replaceAll: function(str, s1, s2) {
+		var copy = "" + str;
+		while (copy.indexOf(s1) != -1)
+			copy.replace(s1, s2);
+		return copy;
+	},
 	escape: function(str) {
-		str = str.replaceAll("<", "&lt;");
-		str = str.replaceAll(">", "&gt;");
+		str = $.replaceAll(str, "<", "&lt;");
+		str = $.replaceAll(str, ">", "&gt;");
 		return str;
 	},
 	time: function() {

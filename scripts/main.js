@@ -7,9 +7,18 @@ _.I("scripts/command.js");
 
 var chatList = [];
 
+function log(str) {
+	var date = new Date();
+	var filename = "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+	var file = $file.read("data/log/" + filename + ".txt");
+	var text = $.replaceAll(str, "\n", "\\n");
+	file.push("[" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "] " + str);
+	$file.write("data/log/" + filename + ".txt", file);
+}
+
 function addToCache(user, str) {
 	var file = $file.read("data/chat.txt");
-	var text = str.replaceAll("\n", new Array(user.length + 2));
+	var text = $.replaceAll(str, "\n", new Array(user.length + 2));
 	file.push(user + ": " + str);
 	if (file.length > 16)
 		file.splice(0, file.length - 16);
@@ -24,6 +33,7 @@ function ChatClient(ws) {
 		var payload = e.message.substr(1);
 		
 		if (e.message.startsWith("/")) {
+			log(this.username + ": " + e.message);
 			command(this, e.message.substr(1).split(" "));
 		} else if (e.message.startsWith("@")) {
 			payload = payload.split(">");
@@ -37,6 +47,7 @@ function ChatClient(ws) {
 			if ($.time() > udata.timeout) {
 				payload = $.escape(payload);
 				addToCache(this.username, payload);
+				log(this.username + ": " + payload);
 				for (var i = 0; i < chatList.length; i++)
 					chatList[i].ws.write(this.username + ">" + payload);
 			}

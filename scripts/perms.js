@@ -7,9 +7,11 @@ var $perm = {
 	gPerm: function(group, perm) {
 		if (_perms[group].perms[perm] != undefined)
 			return _perms[group].perms[perm];
-		for (var inherint in _perms[group].inherit)
+		for (var i = 0; i < _perms[group].inherit.length; i++) {
+			var inherit = _perms[group].inherit[i];
 			if (_perms[inherit].perms[perm] != undefined)
 				return _perms[inherit].perms[perm];
+		}
 		return {"has":false};
 	},
 	uPerm: function(user, perm) {
