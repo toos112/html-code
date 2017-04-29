@@ -45,9 +45,9 @@ check(function(success) {
 					} else if (message.startsWith("@")) {
 						var fakeMessage = message.substr(1);
 						fakeMessage = fakeMessage.split(",");
-						var realMessage = "Users online: ";
-						for (i = 0; i < fakeMessage.length; i++) {
-							realMessage += fakeMessage[0] + ", ";
+						var realMessage = "Users online: " + fakeMessage[0];
+						for (i = 1; i < fakeMessage.length; i++) {
+							realMessage += ", " + fakeMessage[i];
 						}
 						htmlChat.innerHTML += "<span style = 'color: #862;'>" + realMessage + ".</span><br/>";
 					}
