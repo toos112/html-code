@@ -31,20 +31,21 @@ function enterPress(e) {
 }
 
 function send() {
-	var htmlName = document.getElementById("name");
-	var htmlPassword = document.getElementById("password");
+	var htmlName = document.getElementById("name").value;
+	var htmlPassword = document.getElementById("password").value;
 	var xmlhttp = new XMLHttpRequest();
-	var name = htmlName.value;
-	if (name != "") {
-		xmlhttp.open("GET", "auth/login.js?user=" + htmlName.value + "&password=" + htmlPassword.value, true);
+	if (htmlName != "") {
+		xmlhttp.open("GET", "auth/login.js?user=" + htmlName + "&password=" + htmlPassword, true);
 		xmlhttp.send();
 		xmlhttp.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
 				if (this.responseText.trim() != "") {
-					setCookie("user", name);
+					var errorPlace = document.getElementById("errorPlace");
+					setCookie("user", htmlName);
 					setCookie("UUID", this.responseText);
 					loggedIn = true;
 					setLoggedIn();
+					errorPlace.parentElement.removeChild(errorPlace);
 				} else {
 					wrongInput("Your username or password was incorrect");
 				}
