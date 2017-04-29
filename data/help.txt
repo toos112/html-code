@@ -1,0 +1,17 @@
+{
+	"chat.help"			:	"/help (displays all possible commands)",
+	"chat.list:1"		:	"/list (displays all users)",
+	"chat.list:2"		:	"/list (displays all users including ghosts)",
+	"chat.list:3"		:	"/list (displays all users including ghosts)",
+	"chat.disconnect"	:	"/disconnect (disconnects you from chat)",
+	"chat.clear"		:	"/clear (clears your chat log)"
+	"chat.info:1"		:	"/info [user] (displays [user] info)"
+	"chat.info:2"		:	"/info [user] (displays [user] info)"
+	"chat.kick"			:	""
+	"chat.timeout"		:	"/timeout"
+	"chat.warn"			:	"/warn"
+	"chat.slow"			:	"/slow"
+	"chat.ban"			:	"/ban"
+	"chat.unban"		:	"/unban"
+	"chat.group"		:	"/group"
+}
