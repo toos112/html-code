@@ -38,7 +38,8 @@ var $auth = {
 			users[user] = {
 				salt : newSalt,
 				pass : $hash.sha256(pass + newSalt),
-				email : email
+				email : email,
+				group : "user"
 			};
 			$file.write("data/users.txt", [$json.stringify(users)]);
 		} else return "1";
