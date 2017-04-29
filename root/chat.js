@@ -36,11 +36,7 @@ check(function(success) {
 					} else if (message.startsWith("?")) {
 						message = message.substr(1);
 						var height = 1;
-<<<<<<< HEAD
 						while (-1 != message.indexOf("\n")) {
-=======
-						while (-1 != message[1].indexOf("\n")) {
->>>>>>> refs/remotes/origin/master
 							message = message.replace("\n", "<br/>");
 							height++;
 						}
