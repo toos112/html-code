@@ -1,0 +1,20 @@
+{
+	"groups":{
+		"0":"user",
+		"1":"moderator",
+		"2":"admin"
+	},
+	"perms":{
+		"1":{
+			"inherit":["0"],
+			"perms":{
+				"chat.ban":0
+			}
+		},
+		"2":{
+			"inherit":["0", "1"],
+			"perms":{
+			}
+		}
+	}
+}
