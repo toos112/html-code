@@ -3,6 +3,7 @@ _.I("_scripts/file.js");
 _.I("_scripts/event.js");
 _.I("_scripts/websocket.js");
 _.I("scripts/login.js");
+_.I("scripts/command.js");
 
 var chatList = [];
 
@@ -21,7 +22,9 @@ function ChatClient(ws) {
 	
 	this.ws.handler("message", new EventListener(function(e) {
 		var payload = e.message.substr(1);
-		if (e.message.startsWith("@")) {
+		if (e.message.startsWith("/")) {
+			
+		} else if (e.message.startsWith("@")) {
 			payload = payload.split(">");
 			if ($auth.check(payload[0], payload[1]) && this.username == "") {
 				this.username = payload[0];
