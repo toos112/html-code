@@ -16,6 +16,6 @@ var $ = {
 		return str;
 	},
 	time: function() {
-		return 0 + _.time();
+		return 0 + _.getTime();
 	}
 };
