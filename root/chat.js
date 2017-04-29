@@ -12,32 +12,32 @@ check(function(success) {
 					var message = e.data.substr(2) + " has " + (e.data.startsWith("<+") ? "joined." : "left.");
 					htmlChat.innerHTML += "<span style = 'color: #eee;'>" + message + "</span><br/>";
 				} else {
-					var message = message.data.substr(1);
+					var message = e.data.substr(1);
 					if (message.startsWith("!")) {
-						message = message.data.substr(1);
+						message = message.substr(1);
 						if (message.startsWith("cmd")) {
 							message = "Not a valid command.";
 						} else if (message.startsWith("args")) {
 							message = "Not enough arguments.";
 						} else if (message.startsWith("offline")) {
-							message = message.data.substr(8) + "is not online right now.";
+							message = message.substr(8) + "is not online right now.";
 						} else if (message.startsWith("target")) {
-							message = message.data.substr(7) + "is not a valid target.";
+							message = message.substr(7) + "is not a valid target.";
 						} else if (message.startsWith("time")) {
-							message = message.data.substr(5) + "is not a valid time.";
+							message = message.substr(5) + "is not a valid time.";
 						} else if (message.startsWith("long")) {
 							message = "The time you entered is to long";
-						} (message.startsWith("reason")) {
+						} else if (message.startsWith("reason")) {
 							message = "Please enter a valid reason.";
 						} else {
 							message = "An error occured";
 						}
 						htmlChat.innerHTML += "<span style = 'color: #c22;'>" + message + "</span><br/>";
 					} else if (message.startsWith("?")) {
-						message = message.data.substr(1);
+						message = message.substr(1);
 						var height = 1;
-						while (-1 != message[1].indexOf("\n")) {
-							message[1] = message[1].replace("\n", "<br/>  ");
+						while (-1 != message.indexOf("\n")) {
+							message = message.replace("\n", "<br/>");
 							height++;
 						}
 						height = height * 20;

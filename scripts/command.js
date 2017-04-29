@@ -72,7 +72,8 @@ var getUserData = function(user) {
 	var udata = $json.parse($file.read("data/userdata.txt")[0]);
 	if (udata[user] == undefined) {
 		udata[user] = {
-			timeout: $.time()
+			timeout: $.time(),
+			ghost: false
 		}
 		$file.write("data/userdata.txt", [$json.stringify(udata)]);
 	}
@@ -98,7 +99,7 @@ var command = function(cc, cmd) {
 	if (!perm.has) _invalid(cc, "cmd");
 	else if (cmd.length < 1) _invalid(cc, "args");
 	else if (cmd[0] == "help") {
-		var result = "<?\n";
+		var result = "<?";
 		for (var key in _help) {
 			var perm2 = $perm.uPerm(cc.username, key);
 			if (perm2.has) {
@@ -107,7 +108,9 @@ var command = function(cc, cmd) {
 				else result += _help[key + ":" + perm2.level] + "\n";
 			}
 		}
-		cc.ws.write(result.substring(0, result.length - 1));
+		if (result.endsWith("\n"))
+			result = result.substring(0, result.length - 1);
+		cc.ws.write(result);
 	} else if (cmd[0] == "timeout") {
 		if (cmd.length < 3) _invalid(cc, "args");
 		else {
@@ -129,5 +132,26 @@ var command = function(cc, cmd) {
 				}
 			}
 		}
+	} else if (cmd[0] == "list") {
+		var result = "<@";
+		if (perm.level == 1) {
+			for (var user in chatList) {
+				var data = getUserData(user.username);
+				if (!data.ghost)
+					result += user.username + ",";
+			}
+		} else if (perm.level == 2) {
+			for (var user in chatList) {
+				var data = getUserData(user.username);
+				if (!data.ghost || $perm.group(user.username) != "owner")
+					result += user.username + ",";
+			}
+		} else if (perm.level == 3) {
+			for (var user in chatList)
+				result += user.username + ",";
+		}
+		if (result.endsWith(","))
+			result = result.substring(0, result.length - 1);
+		cc.ws.write(result);
 	} else _invalid(cc, "cmd");
 };
