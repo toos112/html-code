@@ -1,0 +1,29 @@
+Levels groups
+
+0:	regular user		1 cmnd every 2,5 min	can do /help (display possible commands) + /list (display all non ghost) + /disconnect + /clear
+1:	moderator			1 cmnd every 2 min		can do all the above + /info (displays only names and earlier offences and notes) + /kick (level 0 only) + /timeout (max 5 min) + /warn
+2:	trusted moderator	1 cmnd every min		can do all the above + /timeout (only level 0 and max 1h) + /slow (only lvl 0 users and can't do all) + /ban (only level 0 and max 1M)
+3:	admin				1 cmnd every 10 sec		can do all the above + /list (display all and ghost with the same or lower level) + /info (also display ip) + /kick (till level 2) + /ghost + /slow (for all lower levels) + /perm (level 1 only) + /ban (till level 1 can do ip and max 1M) + /unban (can unban ip bans)
+4:	owner and so		unlimited				can do everything for everyone #noLimit #abuse
+
+Commands
+
+	/help (displays all the commands)
+	/list (displays users online at that moment)
+	/info [user] (displays [user] info including ip earlier names and earlier offences and UUID and possibly notes on the [user])
+	/kick [user] [reason] (kicks the [user] back to hub)
+	/timeout [user] [time] [reason] (makes it so that [user] can't send any chat messages for [time])
+	/ghost [user] (makes it you don't show up at list)
+	/slow [user] [time] [reason] (makes it [user] can only send 1 message in [time] if [user] = "all" do it for all level 0 [0] disables slow reason only needed when not for everybody)
+	/warn [user] [reason] (send message to [user] that he is warned for [reason])
+	/disconnect (disconnects you from chat)
+	/ban [user] [reason] [time] [sort] ([user] account will be disabled for [time] can be "perm" as time [sort] can be account is default or ip)
+	/unban [user] [reason] (unbans [user] also lifts ipban if high enough level)
+	/clear (clears your chat log)
+	/group [user] [level] (gives [user] [level] aan permissions)
+
+
+(/ignore , /unignore)
+add offences to users when a reason is given do add the possible punisment that was given aswell in order
+Typing in color with (/color [hexcode])?
+Time =(ms = milisecondes,s = seconds = 1000ms,m = minutes = 60000ms,h = hours = 3600000ms,d = days = 86400000ms,w = weeks = 604800000ms,f = fortnight = 2w = 1209600000ms,M = months = 30d = 2592000000ms,Y = years = 365d = 31536000000ms,D = decade = 10Y = 315360000000ms,C = century = 100Y = 3153600000000ms,MIL = millennium = 1000Y = 31536000000000ms)
