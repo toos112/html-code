@@ -11,9 +11,9 @@ var _makeAlert = function(w, h, x, y) {
 	e.style.position = "absolute";
 	e.style.width = w + "px";
 	e.style.height = h + "px";
-	if (x != -1) e.style.left = x + "px";
+	if (x != undefined) e.style.left = x + "px";
 	else e.style.left = window.innerWidth / 2 - w / 2 + "px";
-	if (y != -1) e.style.top = y + "px";
+	if (y != undefined) e.style.top = y + "px";
 	else e.style.top = window.innerHeight / 2 - h / 2 + "px";
 	e.style.opacity = 0;
 	return e;
@@ -39,7 +39,7 @@ var _makeContent = function(w) {
 	return e;
 };
 
-var _fade = function(e, f, func = undefined) {
+var _fade = function(e, f, func) {
 	if (f > 0) e.style.display = "block";
 	var op = f > 0 ? 0 : 1;
 	var timer = setInterval(function() {
@@ -93,13 +93,15 @@ function _AlertTitleBar(w) {
 	};
 }
 
-function Alert(w, h, x = -1, y = -1) {
+function Alert(w, h, x, y) {
 	this.element = _makeAlert(w, h, x, y);
 	this.content = _makeContent(w);
-	this.open = function(func = undefined, f = 0.5) {
+	this.open = function(func, f) {
+		if (f == undefined) f = 0.5;
 		_fade(this.element, f, func);
 	};
-	this.close = function(func = undefined, f = 0.5) {
+	this.close = function(func, f) {
+		if (f == undefined) f = 0.5;
 		_fade(this.element, -f, func);
 	};
 	this.insert = function(e) {
@@ -123,14 +125,16 @@ function AlertButton(id, func) {
 	});
 }
 
-function WindowAlert(w, h, x = -1, y = -1) {
+function WindowAlert(w, h, x, y) {
 	this.element = _makeAlert(w, h, x, y);
 	this.titleBar = new _AlertTitleBar(w);
 	this.content = _makeContent(w);
-	this.open = function(func = undefined, f = 0.5) {
+	this.open = function(func, f) {
+		if (f == undefined) f = 0.5;
 		_fade(this.element, f, func);
 	};
-	this.close = function(func = undefined, f = 0.5) {
+	this.close = function(func, f) {
+		if (f == undefined) f = 0.5;
 		_fade(this.element, -f, func);
 	};
 	this.insert = function(e) {

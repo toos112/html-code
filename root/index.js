@@ -42,7 +42,7 @@ function send() {
 				if (this.responseText.trim() != "") {
 					var errorPlace = document.getElementById("errorPlace");
 					setCookie("user", htmlName);
-					setCookie("UUID", this.responseText);
+					setCookie("UUID", this.responseText.trim());
 					loggedIn = true;
 					setLoggedIn();
 					errorPlace.parentElement.removeChild(errorPlace);
