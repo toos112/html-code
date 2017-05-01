@@ -31,7 +31,7 @@ check(function(success) {
 						} else if (message.startsWith("reason")) {
 							message = "Please enter a valid reason.";
 						} else if (message.startsWith("user")) {
-							message = mesage.substr(5) + " is not a user";
+							message = message.substr(5) + " is not a user";
 						} else {
 							message = "An error occured";
 						}
