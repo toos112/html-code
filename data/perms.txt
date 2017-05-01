@@ -30,8 +30,8 @@
 	"admin":{
 		"inherit":["moderator","trusted","user"],
 		"perms":{
-			"chat.info":{"has":true,"level":1,"users":["user","trusted","moderator","admin","dev","secret"],"ghosts":["user","trusted","moderator","admin","dev"]},
-			"chat.list":{"has":"true","ghosts":["user","trusted","moderator","admin","dev","secret"]},
+			"chat.info":{"has":true,"level":2,"users":["user","trusted","moderator","admin","dev","secret"],"ghosts":["user","trusted","moderator","admin","dev"]},
+			"chat.list":{"has":"true","ghosts":["user","trusted","moderator","admin","dev"]},
 			"chat.kick":{"has":true,"users":["user","trusted","moderator","secret"]},
 			"chat.ghost":{"has":true,"level":1},
 			"chat.timeout":{"has":"true","users":["user","trusted","moderator","secret"],"time":7200000},
@@ -48,8 +48,8 @@
 	"owner":{
 		"inherit":["dev","admin","moderator","trusted","user"],
 		"perms":{
-			"chat.list":{"has":"true","level":3},
-			"chat.info":{"has":"true","level":2,"users":["user","trusted","moderator","admin","dev","owner"],"ghosts":["user","trusted","moderator","admin","dev","owner","secret"]},
+			"chat.list":{"has":"true","ghosts":["user","trusted","moderator","admin","dev","owner","secret"]},
+			"chat.info":{"has":"true","level":3,"users":["user","trusted","moderator","admin","dev","owner"],"ghosts":["user","trusted","moderator","admin","dev","owner","secret"]},
 			"chat.kick":{"has":true,"users":["user","trusted","moderator","admin","dev","secret"]},
 			"chat.ghost":{"has":true,"level":2},
 			"chat.timeout":{"has":"true","users":["user","trusted","moderator","admin","dev","secret"],"time":-1},
