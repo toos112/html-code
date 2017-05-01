@@ -1,0 +1,70 @@
+* {
+	background: fixed #000;
+	display: inline-block;
+	line-height: 0px;
+	white-space: nowrap;
+	vertical-align: top;
+	font-family: Consolas;
+	font-size: 0px;
+	font-weight: 0;
+	border: none;
+	outline: none;
+	margin: 0px;
+	padding: 0px;
+	cursor: default;
+	overflow: hidden;
+	position: static;
+}
+
+html, body { width: 100%; height: 100%; }
+head { display: none; }
+body { background-color: #EEE; }
+
+br { line-height: 20px; }
+div { background-color: transparent; }
+i {
+	background-color: inherit;
+	color: inherit;
+	height: inherit;
+	line-height: inherit;
+	font-size: inherit
+}
+
+span {
+	background-color: transparent;
+	color: #888;
+	height: 20px;
+	line-height: 20px;
+	font-size: 20px;
+}
+span.big {
+	height: 40px;
+	line-height: 40px;
+	font-size: 38px;
+}
+.center {
+	text-align: center;
+}
+
+input, textarea {
+	line-height: 20px;
+	font-size: 20px;
+	color: #eee;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+input, button, textarea {
+    height: 20px;
+	width: 128px;
+	background-color: #444;
+}
+textarea:hover, input:hover, button:hover { background-color: #474747; }
+textarea:active, input:active, button:active { background-color: #555; }
+
+::-webkit-input-placeholder { color: #666; }
+:-ms-input-placeholder { color: #666; }
+:-moz-placeholder { color: #666; opacity: 1; }
+::-moz-placeholder { color: #666; opacity: 1; }
+
+::selection { background-color: transparent; }
+::-moz-selection { background-color: transparent; }
