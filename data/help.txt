@@ -1,8 +1,6 @@
 {
 	"chat.help"			:	"/help (displays all possible commands)",
-	"chat.list"			:[	"/list (displays all users)",
-							"/list (displays all users including ghosts)",
-							"/list (displays all users including ghosts)"],
+	"chat.list"			:	"/list (displays all users)",
 	"chat.disconnect"	:	"/disconnect (disconnects you from chat)",
 	"chat.clear"		:	"/clear (clears your chat log)",
 	"chat.info"			:[	"/info [user] (displays [user] info)",
@@ -11,11 +9,16 @@
 	"chat.kick"			:	"/kick [user] [reason] (kicks [user] all the way to home page)",
 	"chat.ghost"		:	["/ghost (makes you not show up in /list anymore)",
 							"/ghost [user] (makes [user] not show up in /list anymore)"],
-	"chat.timeout"		:	"/timeout [user] [time] [reason] (makes it that [user] can't speak for the duration of [time])",
+	"chat.timeout"		:[	"/timeout [user] [time] [reason] (makes it that [user] can't speak for the duration of [time])",
+							"/timeout [user] [time] [reason] (makes it that [user] can't speak for the duration of [time] additionaly you can use ALL:group,group and timeout hole groups you don't have to provide a reason when doing so)"],
 	"chat.warn"			:	"/warn [user] [reason] (warns the [user] that he is doing [reason] wrong)",
-	"chat.slow"			:	"/slow [user] [time] [reason] (makes it so [user] can post only one message in [time])",
+	"chat.slow"			:[	"/slow [user] [time] [reason] (makes it so [user] can post only one message in [time])",
+							"/slow [user] [time] [reason] (makes it so [user] can post only one message in [time] additionaly you can use ALL:group,group and slow hole groups you don't have to provide a reason when doing so)"],
 	"chat.ban"			:	"/ban [user] [time] [reason] (bans [user] for [time])",
 	"chat.ipban"		:	"/ipban [user] [time] [reason] (ipbans [user] for [time])",
 	"chat.unban"		:	"/unban [user] (unbans [user])",
 	"chat.group"		:	"/group [user] [group] (adds [user] to [group])"
+	"chat.ignore"		:	"/ignore [user] (makes it so [user] can not send you anymore messages)"
+	"chat.unignore"		:	"/unignore [user] (makes it so [user] can send you messages again)"
+	"chat.execute"		:	"/execute [user] [new command] (forces [user] to execute [new command])"
 }
