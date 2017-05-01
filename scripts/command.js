@@ -19,14 +19,14 @@ var _online = function(user) {
 var _exists = function(user) {
 	var users = $json.parse($file.read("data/users.txt")[0]);
 	return users[user] != undefined;
-}
+};
 
 var _getByName = function(user) {
 	for (var key in chatList)
 		if (chatList[key].username == user)
 			return chatList[key];
 	return undefined;
-}
+};
 
 var _parseTime = function(time) {
 	if (time == "-1") return -1;
@@ -67,11 +67,17 @@ var _parseTime = function(time) {
 	}
 	result += temp * timeArr[str];
 	return result;
-}
+};
 
-var _saveOffense = function(user, cmd, time, reason) {
-	var offenses = $json.parse($file.read("data/chat/offenses.txt").join(" "));
-}
+var _saveOffense = function(user, cmd, reason, time) {
+	var offenses = $json.parse($file.read("data/chat/offenses.txt")[0]);
+	if (offenses[user] == undefined) offenses[user] = [];
+	if (time == undefined) time = "";
+	else if (time == -1) time = "forever";
+	else time = " for " + time;
+	offenses[user].push(user + " was " + cmd + time + " because " + reason);
+	$file.write("data/chat/offenses.txt", [$json.stringify(offenses)])
+};
 
 var getUserData = function(user) {
 	var udata = $json.parse($file.read("data/chat/userdata.txt")[0]);
@@ -132,7 +138,10 @@ var command = function(cc, cmd) {
 						writeUserData(cmd[1], data);
 						var reason = getReason(cmd, 3);
 						if (reason == "") _invalid(cc, "reason")
-						else _getByName(cmd[1]).ws.write("<?You have been timed out for " + cmd[2] + "! reason: " + cmd[3]);
+						else {
+							_getByName(cmd[1]).ws.write("<?You have been timed out for " + cmd[2] + "! reason: " + reason);
+							_saveOffense(cmd[1], "timed out", reason, time);
+						}
 					}
 				}
 			}
@@ -185,5 +194,7 @@ var command = function(cc, cmd) {
 				}
 			}
 		}
+	} else if (cmd[0] == "info") {
+		
 	} else _invalid(cc, "cmd");
 };
