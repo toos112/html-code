@@ -10,7 +10,7 @@ Commands
 
 1	/help (displays all the commands)
 2	/list (displays users online at that moment)
-3	/info [user] (displays [user] info including ip earlier names and earlier offences and UUID and possibly notes on the [user])
+3	/info [user] (displays [user] info including ip earlier names and earlier offenses and UUID and possibly notes on the [user])
 4	/kick [user] [reason] (kicks the [user] back to hub)
 5	/timeout [user] [reason] [time] (makes it so that [user] can't send any chat messages for [time])
 6	/ghost [user] [true/false] (makes it you don't show up at list, default [true/false] is true)
