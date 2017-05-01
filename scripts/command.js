@@ -80,6 +80,7 @@ var _saveOffense = function(user, cmd, reason, time) {
 };
 
 var _getOffenses = function(user) {
+	if ($json.parse($file.read("data/chat/offenses.txt")[0])[user] == undefined) return [];
 	return $json.parse($file.read("data/chat/offenses.txt")[0])[user];
 }
 
@@ -144,7 +145,7 @@ var command = function(cc, cmd) {
 						if (reason == "") _invalid(cc, "reason")
 						else {
 							_getByName(cmd[1]).ws.write("<?You have been timed out for " + cmd[2] + "! reason: " + reason);
-							_saveOffense(cmd[1], "timed out", reason, time);
+							_saveOffense(cmd[1], "timed out", reason, cmd[2]);
 						}
 					}
 				}
@@ -194,15 +195,16 @@ var command = function(cc, cmd) {
 		else {
 			if (!_exists(cmd[1])) _invalid(cc, "user," + cmd[1]);
 			else {
-				var rank = $perm.group(cmd[1]) == "secret" ? "user" : $perm.group(cmd[1]);
+				var rank = $perm.group(cmd[1]) == "secret" && perm.level != 3 ? "user" : $perm.group(cmd[1]);
 				var result = "<?[" + rank + "] " + cmd[1];
 				var data = getUserData(cmd[1]);
 				if (perm.ghosts.indexOf($perm.group(cmd[1])) != -1 && data.ghost)
 					result += " (ghost)"
 				result += " is " + (perm.ghosts.indexOf($perm.group(cmd[1])) == -1 ? "offline" : "online");
-				if (perm.level == 2) result += " and their ip is " + cc.ws.address;
+				if (perm.level == 3) result += " and their ip is " + cc.ws.address;
 				result += "\n";
 				var offenses = _getOffenses(cmd[1]);
+				if (offenses.length > 0) result += "Offenses:\n";
 				for (var i = 0; i < offenses.length; i++)
 					result += offenses[i] + "\n";
 				result = result.substring(0, result.length - 1);
