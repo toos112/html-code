@@ -1,3 +1,4 @@
+var goodClose = false;
 var ws;
 check(function(success) {
 	if (!success) {
@@ -71,6 +72,12 @@ check(function(success) {
 			ws.send("@" + getCookie("user") + ">" + getCookie("UUID"));
 		}
 		
+		ws.onclose = function(e) {
+			if (goodClose == false) {
+				location.replace("index.html");
+			}
+		}
+		
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("GET", "server/getChat.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), true);
 		xmlhttp.send();
@@ -116,6 +123,7 @@ function send() {
 	if (htmlMessage.startsWith("/") == true) {
 		if (htmlMessage.startsWith("/disconnect") == true) {
 			ws.close();
+			goodClose = true;
 		} else if (htmlMessage.startsWith("/clear") == true) {
 			var htmlChat = document.getElementById("chat");
 			htmlChat.innerHTML = "";
