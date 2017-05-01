@@ -334,3 +334,26 @@
 [15:36:2] DutChen18: /info Gidion
 [15:37:14] DutChen18: /ghost Gidion
 [15:37:25] DutChen18: /list
+[15:42:50] DutChen18: /list
+[15:43:42] DutChen18: /list
+[15:44:20] DutChen18: /list
+[15:44:25] DutChen18: /ghost
+[15:44:28] DutChen18: /list
+[15:44:40] DutChen18: /ghost
+[15:44:42] DutChen18: /list
+[15:44:48] DutChen18: /ghost Gidion
+[15:45:0] Gidion: /list
+[15:45:11] DutChen18: /list
+[15:45:33] Gidion: /list
+[15:46:35] DutChen18: /list
+[15:46:57] Gidion: /list
+[15:46:59] Gidion: hi
+[15:47:5] DutChen18: /list
+[15:47:9] DutChen18: /ghost Gidion
+[15:47:13] Gidion: hu
+[15:47:15] Gidion: /list
+[15:47:18] Gidion: ke ...
+[15:47:37] DutChen18: /list
+[15:48:51] DutChen18: /info Gidion
+[16:17:17] DutChen18: /kick
+[16:20:8] DutChen18: /kick
