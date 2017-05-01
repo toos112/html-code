@@ -14,7 +14,7 @@ Commands
 *4	/kick [user] [reason] (kicks the [user] back to hub)
 *5	/timeout [user] [reason] [time] (makes it so that [user] can't send any chat messages for [time])
 *6	/ghost [user] [true/false] (makes it you don't show up at list, default [true/false] is true)
-7	/slow [user] [time] [reason] (makes it [user] can only send 1 message in [time] if [user] = "all" do it for all level 0 [0] disables slow reason only needed when not for everybody)
+*7	/slow [user] [time] [reason] (makes it [user] can only send 1 message in [time] if [user] = "all" do it for all level 0 [0] disables slow reason only needed when not for everybody)
 8	/warn [user] [reason] (send message to [user] that he is warned for [reason])
 *9	/disconnect (disconnects you from chat)
 10	/ban [user] [reason] [time] [sort] ([user] account will be disabled for [time] can be "perm" as time [sort] can be account is default or ip)
@@ -24,6 +24,10 @@ Commands
 14	/ignore [user] (makes it so you can't recieve any more messages from [user])
 15	/unignore [user] (unignors priviously ignored [user])
 16	/execute [user] [new command] (executes a command as if [user] does it)
+17	/report [user] [reason] (reports [user] for [reason])
+18	/issues (see all issues)
+19	/solved [issue id] (solve a issue by giving the [issue id])
+
 
 (/ignore , /unignore)
 add offences to users when a reason is given do add the possible punisment that was given aswell in order
