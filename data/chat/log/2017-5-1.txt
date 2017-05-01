@@ -327,3 +327,10 @@
 [14:23:54] DutChen18: /timeout Gidion 20s very good reason
 [15:19:24] DutChen18: /info
 [15:19:27] DutChen18: /info DutChen18
+[15:24:9] DutChen18: /info DutChen18
+[15:26:15] DutChen18: /info DutChen18
+[15:27:25] DutChen18: /info Gidion
+[15:29:6] DutChen18: /list
+[15:36:2] DutChen18: /info Gidion
+[15:37:14] DutChen18: /ghost Gidion
+[15:37:25] DutChen18: /list
