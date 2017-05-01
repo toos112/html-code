@@ -18,6 +18,9 @@ function _WebSocketWrapper(e) {
 	this.write = function(string) {
 		this._ws.out(string);
 	};
+	this.close = function() {
+		this._ws.close();
+	}
 	this.protocol = "" + this._ws.getProtocol();
 	this.address = "" + this._ws.getAddress();
 	this.equals = function(other) {
