@@ -2,6 +2,7 @@ _.I("_scripts/std.js");
 _.I("_scripts/file.js");
 _.I("_scripts/event.js");
 _.I("_scripts/websocket.js");
+_.I("_scripts/encode.js");
 _.I("scripts/login.js");
 _.I("scripts/command.js");
 
@@ -9,16 +10,16 @@ var chatList = [];
 
 function log(str) {
 	var date = new Date();
-	var filename = "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
+	var filename = "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
 	var file = $file.read("data/log/" + filename + ".txt");
-	var text = $.replaceAll(str, "\n", "\\n");
+	str = $.replaceAll(str, "\n", "\\n");
 	file.push("[" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "] " + str);
 	$file.write("data/log/" + filename + ".txt", file);
 }
 
 function addToCache(user, str) {
 	var file = $file.read("data/chat.txt");
-	var text = $.replaceAll(str, "\n", new Array(user.length + 2));
+	str = $.replaceAll(str, "\n", " ");
 	file.push(user + ": " + str);
 	if (file.length > 16)
 		file.splice(0, file.length - 16);
