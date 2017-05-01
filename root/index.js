@@ -25,7 +25,7 @@ function setLoggedIn() {
 }
 
 function enterPress(e) {
-	if (e.keyCode == 13 && loggedIn == false) {
+	if (e.keyCode == 13) {
 		send();
 	}
 }
