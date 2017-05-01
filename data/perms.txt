@@ -40,19 +40,22 @@
 			"chat.group":{"has":"true","users":["user","trusted"],"groups":["user","trusted"]}
 		}
 	},
-	"owner":{
+	"dev":{
 		"inherit":["admin","moderator","trusted","user"],
+	},
+	"owner":{
+		"inherit":["dev","admin","moderator","trusted","user"],
 		"perms":{
 			"chat.list":{"has":"true","level":3},
 			"chat.info":{"has":"true","level":2,"users":["user","trusted","admin","owner"]},
 			"chat.kick":{"has":true,"users":["user","trusted","moderator","admin"]},
-			"chat.ghost":{"has":true,"users":["user","trusted","moderator","admin","owner"],"level":2},
+			"chat.ghost":{"has":true,"level":2},
 			"chat.timeout":{"has":"true","users":["user","trusted","moderator","admin"],"time":-1},
 			"chat.warn":{"has":"true","users":["user","trusted","moderator","admin"]},
 			"chat.slow":{"has":"true","users":["user","trusted","moderator","admin"],"time":-1},
 			"chat.ban":{"has":"true","users":["user","trusted","moderator","admin"],"time":-1},
 			"chat.ipban":{"has":"true","users":["user","trusted","moderator","admin"],"time":-1},
-			"chat.group":{"has":"true","users":["user","trusted","moderator","admin"],"groups":["user","trusted","moderator","admin"]}
+			"chat.group":{"has":"true","users":["user","trusted","moderator","admin","secret"],"groups":["user","trusted","moderator","admin"]}
 		}
-	}
+	},
 }
