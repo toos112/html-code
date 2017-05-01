@@ -31,11 +31,14 @@ check(function(success) {
 						} else if (message.startsWith("reason")) {
 							message = "Please enter a valid reason.";
 						} else if (message.startsWith("user")) {
-							message = mesage.substr(5) + " is not a user";
+							message = message.substr(5) + " is not a user";
 						} else {
 							message = "An error occured";
 						}
 						htmlChat.innerHTML += "<span style = 'color: #c22;'>" + message + "</span><br/>";
+					} else if (message.startsWith("*")) {
+						message = message.substr(1);
+						htmlChat.innerHTML += "<span style = 'color: #f70;'>" + message + "</span><br/>";
 					} else if (message.startsWith("?")) {
 						message = message.substr(1);
 						var height = 1;
