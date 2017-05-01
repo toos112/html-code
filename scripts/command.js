@@ -89,7 +89,8 @@ var getUserData = function(user) {
 	if (udata[user] == undefined) {
 		udata[user] = {
 			timeout: $.time(),
-			ghost: false
+			ghost: false,
+			slow: 0
 		}
 		$file.write("data/chat/userdata.txt", [$json.stringify(udata)]);
 	}
@@ -130,22 +131,49 @@ var command = function(cc, cmd) {
 	} else if (cmd[0] == "timeout") {
 		if (cmd.length < 3) _invalid(cc, "args");
 		else {
-			if (!_online(cmd[1])) _invalid(cc, "offline," + cmd[1]);
+			if (!_online(cmd[1]) && !cmd[1].startsWith("ALL:")) _invalid(cc, "offline," + cmd[1]);
 			else {
-				if (perm.users.indexOf($perm.group(cmd[1])) == -1) _invalid(cc, "target," + cmd[1]);
+				if (!(cmd[1].startsWith("ALL:") || !perm.users.indexOf($perm.group(cmd[1])))) _invalid(cc, "target," + cmd[1]);
 				else {
 					var time = _parseTime(cmd[2]);
 					if (time == -2) _invalid(cc, "time," + cmd[2]);
 					else if (time > perm.time && !(perm.time == -1)) _invalid(cc, "long");
 					else {
-						var data = getUserData(cmd[1]);
-						data.timeout = $.time() + time;
-						writeUserData(cmd[1], data);
-						var reason = getReason(cmd, 3);
-						if (reason == "") _invalid(cc, "reason")
+						if (!cmd[1].startsWith("ALL:")) {
+							var reason = getReason(cmd, 3);
+							if (reason == "") _invalid(cc, "reason")
+							else {
+								var data = getUserData(cmd[1]);
+								data.timeout = $.time() + time;
+								writeUserData(cmd[1], data);
+								_getByName(cmd[1]).ws.write("<?You have been timed out for " + cmd[2] + "! reason: " + reason);
+								if (cc.username != cmd[1])
+									_saveOffense(cc.username, cmd[1], "timed out", reason, cmd[2]);
+							}
+						} else if (perm.level == 1) _invalid(cc, "target,ALL");
 						else {
-							_getByName(cmd[1]).ws.write("<?You have been timed out for " + cmd[2] + "! reason: " + reason);
-							_saveOffense(cc.username, cmd[1], "timed out", reason, cmd[2]);
+							var users = cmd[1].substr(4).split(",");
+							for (var i = 0; i < users.length; i++) {
+								var rank = users[i];
+								if (perm.users.indexOf(rank) == -1) {
+									_invalid(cc, "target," + rank);
+									return;
+								}
+							}
+							for (var user in chatList) {
+								if (users.indexOf($perm.group(chatList[user].username)) == -1) {
+									var data = getUserData(chatList[user].username);
+									data.timeout = $.time() + time;
+									writeUserData(chatList[user].username, data);
+								}
+							}
+							var bc = ""
+							for (var i = 0; i < users.length; i++) {
+								var rank = users[i];
+								 bc += rank + "s and ";
+							}
+							if (bc != "") bc = bc.substring(0, bc.length - 5);
+							broadcast("<?all " + bc + " have been timed out for " + cmd[2]);
 						}
 					}
 				}
@@ -212,6 +240,22 @@ var command = function(cc, cmd) {
 			}
 		}
 	} else if (cmd[0] == "kick") {
-		cc.ws.close();
+		if (cmd.length < 2) _invalid(cc, "args");
+		else {
+			if (!_online(cmd[1])) _invalid(cc, "offline," + cmd[1]);
+			else {
+				if (perm.users.indexOf($perm.group(cmd[1])) == -1) _invalid(cc, "target," + cmd[1]);
+				else {
+					var reason = getReason(cmd, 2);
+					if (reason == "") _invalid(cc, "reason")
+					else {
+						_getByName(cmd[1]).ws.close();
+						_saveOffense(cc.username, cmd[1], "kicked", reason);
+					}
+				}
+			}
+		}
+	} else if (cmd[0] == "slow") {
+		
 	} else _invalid(cc, "cmd");
 };
