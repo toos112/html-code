@@ -29,6 +29,7 @@ var $auth = {
 		} else return "";
 	},
 	register: function(user, pass, email) {
+		if (user.indexOf(":") != -1) return "4";
 		if (user.length > 5  && user.length <= 16 && pass.length > 6 && pass.length <= 24) {
 			var users = $json.parse($file.read("data/users.txt")[0]);
 			if (users[user] != undefined) return "2";
