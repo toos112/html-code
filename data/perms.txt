@@ -39,7 +39,7 @@
 			"chat.slow":{"has":"true","users":["user"],"time":5000},
 			"chat.ban":{"has":"true","users":["user","trusted"],"time":-1},
 			"chat.unban":{"has":"true","users":["user","trusted","moderator","owner"]},
-			"chat.group":{"has":"true","users":["user","trusted"],"groups":["user","trusted"]}
+			"chat.group":{"has":"true","users":["user","trusted","secret"],"groups":["user","trusted"]}
 		}
 	},
 	"dev":{
