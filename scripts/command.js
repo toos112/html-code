@@ -237,6 +237,7 @@ var command = function(cc, cmd) {
 				result += "\n";
 				var offenses = _getOffenses(cmd[1]);
 				if (offenses.length > 0) result += "Offenses:\n";
+				else result += cmd[1] + " has no offenses\n";
 				for (var i = 0; i < offenses.length; i++)
 					result += offenses[i] + "\n";
 				result = result.substring(0, result.length - 1);
@@ -315,7 +316,7 @@ var command = function(cc, cmd) {
 	} else if (cmd[0] == "warn") {
 		if (cmd.length < 2) _invalid(cc, "args");
 		else {
-			if (!_online(cmd[1])) _invalid(cc, "offline," + cmd[1]);
+			if (!_online(cc.username, cmd[0], cmd[1])) _invalid(cc, "offline," + cmd[1]);
 			else {
 				if (perm.users.indexOf($perm.group(cmd[1])) == -1) _invalid(cc, "target," + cmd[1]);
 				else {
@@ -323,6 +324,7 @@ var command = function(cc, cmd) {
 					if (reason == "") _invalid(cc, "reason")
 					else {
 						_getByName(cmd[1]).ws.write("<*" + reason);
+						cc.ws.write("Your warned " + cmd[1]);
 						_saveOffense(cc.username, cmd[1], "warned", reason);
 					}
 				}
