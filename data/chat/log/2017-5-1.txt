@@ -764,3 +764,49 @@
 [19:52:1] Gidion: /ghost DutChen18
 [19:52:14] Gidion: /info DutChen18
 [19:52:39] Gidion: /kick DutChen18 ga weg
+[19:59:52] DutChen18: /ghost
+[20:4:45] DutChen18: /list
+[20:5:1] Gidion: /ghost
+[20:5:14] Gidion: /warn DutChen18 hi
+[20:5:22] DutChen18: /info DutChen18
+[20:5:35] Gidion: /info DutChen18
+[20:5:44] Gidion: /warn DutChen18 hi
+[20:7:27] DutChen18: /list
+[20:7:31] Gidion: l
+[20:7:33] Gidion: k
+[20:7:34] Gidion: u
+[20:7:36] DutChen18: /warn Gidion hallo
+[20:7:36] Gidion: n
+[20:7:39] Gidion: v
+[20:7:42] Gidion: w
+[20:7:47] Gidion: /list
+[20:7:59] Gidion: /ghost
+[20:8:1] Gidion: /list
+[20:8:9] Gidion: /ghost
+[20:8:11] Gidion: /ghost
+[20:8:13] Gidion: /ghost
+[20:8:21] Gidion: /kick Gidion ha
+[20:8:37] Gidion: undefined
+[20:8:39] Gidion: undefined
+[20:8:40] Gidion: undefined
+[20:8:40] Gidion: undefined
+[20:8:41] Gidion: undefined
+[20:8:41] Gidion: undefined
+[20:8:45] Gidion: null
+[20:8:51] Gidion: null
+[20:8:53] Gidion: null
+[20:9:2] Gidion: undefined
+[20:9:5] Gidion: null
+[20:9:12] DutChen18: /warn Gidion hallo
+[20:10:18] DutChen18: /info Gidion
+[20:11:2] DutChen18: /ghost
+[20:11:20] Gidion: /ghost
+[20:11:22] DutChen18: /ghost
+[20:11:27] Gidion: hi
+[20:11:29] DutChen18: /info Gidion
+[20:11:36] DutChen18: /ghost
+[20:11:40] Gidion: /info DutChen18
+[20:12:3] DutChen18: /warn Gidion fuck off
+[20:12:13] Gidion: /list
+[20:12:16] Gidion: /kfl
+[20:12:24] Gidion: /warn Gidion HI
