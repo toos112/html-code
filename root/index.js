@@ -16,6 +16,11 @@ function setLoggedIn() {
 			<span>\
 				Logout\
 			</span>\
+		</button>\
+		<button onclick = \"settings();\" style \"width: 96px; margin-left: 6px;\">\
+			<span>\
+				Settings\
+			</span>\
 		</button><br/>\
 		<button onclick = \"goToChat();\" style = \"margin-top: 6px; width: 96px;\">\
 			<span>\
@@ -28,6 +33,13 @@ function enterPress(e) {
 	if (e.keyCode == 13) {
 		send();
 	}
+}
+
+function settings() {
+	var title = document.getElementById("title");
+	var div = document.getElementById("nameInput");
+	title.innerHTML = "settings";
+	div.innerHTML = "";
 }
 
 function send() {
