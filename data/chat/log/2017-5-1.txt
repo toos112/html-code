@@ -756,3 +756,11 @@
 [19:47:39] Gidion: /warn DutChen18 ga weg
 [19:47:55] Gidion: /info DutChen18
 [19:48:2] Gidion: /info DutChen18
+[19:51:22] DutChen18: /ghost Gidion
+[19:51:29] DutChen18: /ghost Gidion
+[19:51:38] DutChen18: /info Gidion
+[19:51:51] DutChen18: /ghost Gidion
+[19:51:56] DutChen18: /info Gidion
+[19:52:1] Gidion: /ghost DutChen18
+[19:52:14] Gidion: /info DutChen18
+[19:52:39] Gidion: /kick DutChen18 ga weg
