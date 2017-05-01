@@ -9,7 +9,7 @@ var _invalid = function(cc, err) {
 	cc.ws.write("<!" + err);
 };
 
-var _online = function(user) {
+var _online = function(user, ghost) {
 	for (var key in chatList)
 		if (chatList[key].username == user)
 			return true;
@@ -79,6 +79,10 @@ var _saveOffense = function(user, cmd, reason, time) {
 	$file.write("data/chat/offenses.txt", [$json.stringify(offenses)])
 };
 
+var _getOffenses = function(user) {
+	return $json.parse($file.read("data/chat/offenses.txt")[0])[user];
+}
+
 var getUserData = function(user) {
 	var udata = $json.parse($file.read("data/chat/userdata.txt")[0]);
 	if (udata[user] == undefined) {
@@ -100,7 +104,7 @@ var writeUserData = function(user, data) {
 var getReason = function(cmd, start) {
 	var reason = "";
 	for (var i = start; i < cmd.length; i++)
-		reason += cmd[i];
+		reason += cmd[i] + " ";
 	return reason.trim();
 };
 
@@ -148,21 +152,12 @@ var command = function(cc, cmd) {
 		}
 	} else if (cmd[0] == "list") {
 		var result = "<@";
-		if (perm.level == 1) {
-			for (var user in chatList) {
-				var data = getUserData(chatList[user].username);
-				if (!data.ghost)
-					result += chatList[user].username + ",";
+		for (var user in chatList) {
+			var data = getUserData(chatList[user].username);
+			if (perm.ghosts.indexOf($perm.group(cmd[1])) != -1) {
+				if (data.ghost) result += "<i>" + chatList[user].username + "</i>,";
+				else result += chatList[user].username + ",";
 			}
-		} else if (perm.level == 2) {
-			for (var user in chatList) {
-				var data = getUserData(chatList[user].username);
-				if (!data.ghost || $perm.group(chatList[user].username) != "owner")
-					result += chatList[user].username + ",";
-			}
-		} else if (perm.level == 3) {
-			for (var user in chatList)
-				result += chatList[user].username + ",";
 		}
 		if (result.endsWith(","))
 			result = result.substring(0, result.length - 1);
@@ -195,6 +190,24 @@ var command = function(cc, cmd) {
 			}
 		}
 	} else if (cmd[0] == "info") {
-		
+		if (cmd.length < 2) _invalid(cc, "args");
+		else {
+			if (!_exists(cmd[1])) _invalid(cc, "user," + cmd[1]);
+			else {
+				var rank = $perm.group(cmd[1]) == "secret" ? "user" : $perm.group(cmd[1]);
+				var result = "<?[" + rank + "] " + cmd[1];
+				var data = getUserData(cmd[1]);
+				if (perm.ghosts.indexOf($perm.group(cmd[1])) != -1 && data.ghost)
+					result += " (ghost)"
+				result += " is " + (perm.ghosts.indexOf($perm.group(cmd[1])) == -1 ? "offline" : "online");
+				if (perm.level == 2) result += " and their ip is " + cc.ws.address;
+				result += "\n";
+				var offenses = _getOffenses(cmd[1]);
+				for (var i = 0; i < offenses.length; i++)
+					result += offenses[i] + "\n";
+				result = result.substring(0, result.length - 1);
+				cc.ws.write(result);
+			}
+		}
 	} else _invalid(cc, "cmd");
 };

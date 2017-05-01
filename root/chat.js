@@ -20,15 +20,17 @@ check(function(success) {
 						} else if (message.startsWith("args")) {
 							message = "Not enough arguments.";
 						} else if (message.startsWith("offline")) {
-							message = message.substr(8) + "is not online right now.";
+							message = message.substr(8) + " is not online right now.";
 						} else if (message.startsWith("target")) {
-							message = message.substr(7) + "is not a valid target.";
+							message = message.substr(7) + " is not a valid target.";
 						} else if (message.startsWith("time")) {
-							message = message.substr(5) + "is not a valid time.";
+							message = message.substr(5) + " is not a valid time.";
 						} else if (message.startsWith("long")) {
 							message = "The time you entered is to long";
 						} else if (message.startsWith("reason")) {
 							message = "Please enter a valid reason.";
+						} else if (message.startsWith("user")) {
+							message = mesage.substr(5) + " is not a user";
 						} else {
 							message = "An error occured";
 						}
@@ -80,7 +82,7 @@ check(function(success) {
 		}
 	}
 });
-
+var messages = [];
 var p = false;
 function onShiftDown(e) {
 	if (e.keyCode == 16) {
@@ -93,15 +95,24 @@ function onShiftUp(e) {
 		p = false;
 	}
 }
-
+var messageCount = -1;
 function enterPress(e) {
+	var htmlMessage = document.getElementById("message").value;
 	if (e.keyCode == 13 && p != true) {
 		send();
+	}else if (e.keycode == 38) {
+		messageCount++;
+		htmlMessage = message[messageCount];
+	}else if (e.keycode == 40) {
+		messageCount--;
+		htmlMessage = message[messageCount];
 	}
 }
 
 function send() {
 	var htmlMessage = document.getElementById("message").value;
+	messages.unshift(htmlMessage);
+	messageCount = -1;
 	if (htmlMessage.startsWith("/") == true) {
 		if (htmlMessage.startsWith("/disconnect") == true) {
 			ws.close();

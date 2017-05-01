@@ -325,3 +325,5 @@
 [14:11:5] DutChen18: /timeout Gidion 20s goede reden
 [14:21:21] DutChen18: /timeout Gidion 20s goede reden
 [14:23:54] DutChen18: /timeout Gidion 20s very good reason
+[15:19:24] DutChen18: /info
+[15:19:27] DutChen18: /info DutChen18
