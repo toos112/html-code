@@ -158,16 +158,26 @@ var command = function(cc, cmd) {
 			var data = getUserData(cc.username);
 			data.ghost = !data.ghost;
 			writeUserData(cc.username, data);
-			if (data.ghost) cc.ws.write("<?You are now a ghost!");
-			else cc.ws.write("<?You are no longer a ghost!");
+			if (data.ghost) {
+				cc.ws.write("<?You are now a ghost!");
+				broadcast("<-" + cc.username);
+			} else {
+				cc.ws.write("<?You are no longer a ghost!");
+				broadcast("<+" + cc.username);
+			}
 		} else if (perm.level == 2) {
 			if (!_online(cmd[1])) _invalid(cc, "offline," + cmd[1]);
 			else {
 				var data = getUserData(cmd[1]);
 				data.ghost = !data.ghost;
 				writeUserData(cmd[1], data);
-				if (data.ghost) cc.ws.write("<?" + cmd[1] + " is now a ghost!");
-				else  cc.ws.write("<?" + cmd[1] + " is no longer a ghost!");
+				if (data.ghost)  {
+					cc.ws.write("<?" + cmd[1] + " is now a ghost!");
+					broadcast("<-" + cc.username);
+				} else {
+					cc.ws.write("<?" + cmd[1] + " is no longer a ghost!");
+					broadcast("<-" + cc.username);
+				}
 			}
 		}
 	} else _invalid(cc, "cmd");
