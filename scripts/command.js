@@ -233,7 +233,7 @@ var command = function(cc, cmd) {
 				if (perm.ghosts.indexOf($perm.group(cmd[1])) != -1 && data.ghost)
 					result += " (ghost)"
 				result += " is " + ((_online(cc.username, cmd[0], cmd[1]) && (!data.ghost || perm.ghosts.indexOf($perm.group(cmd[1])))) ? "online" : "offline");
-				if (perm.level == 3 && ((_online(cc.username, cmd[0], cmd[1]) && (!data.ghost || perm.ghosts.indexOf($perm.group(cmd[1]))))) result += " and their ip is " + _getByName(cmd[1]).ws.address;
+				if (perm.level == 3 && (_online(cc.username, cmd[0], cmd[1]) && (!data.ghost || perm.ghosts.indexOf($perm.group(cmd[1]))))) result += " and their ip is " + _getByName(cmd[1]).ws.address;
 				result += "\n";
 				var offenses = _getOffenses(cmd[1]);
 				if (offenses.length > 0) result += "Offenses:\n";
