@@ -69,13 +69,13 @@ var _parseTime = function(time) {
 	return result;
 };
 
-var _saveOffense = function(user, cmd, reason, time) {
+var _saveOffense = function(su, user, cmd, reason, time) {
 	var offenses = $json.parse($file.read("data/chat/offenses.txt")[0]);
 	if (offenses[user] == undefined) offenses[user] = [];
 	if (time == undefined) time = "";
 	else if (time == -1) time = "forever";
 	else time = " for " + time;
-	offenses[user].push(user + " was " + cmd + time + " because " + reason);
+	offenses[user].push(user + " was " + cmd + " by " + su + time + " because " + reason);
 	$file.write("data/chat/offenses.txt", [$json.stringify(offenses)])
 };
 
@@ -145,7 +145,7 @@ var command = function(cc, cmd) {
 						if (reason == "") _invalid(cc, "reason")
 						else {
 							_getByName(cmd[1]).ws.write("<?You have been timed out for " + cmd[2] + "! reason: " + reason);
-							_saveOffense(cmd[1], "timed out", reason, cmd[2]);
+							_saveOffense(cc.username, cmd[1], "timed out", reason, cmd[2]);
 						}
 					}
 				}
@@ -155,7 +155,7 @@ var command = function(cc, cmd) {
 		var result = "<@";
 		for (var user in chatList) {
 			var data = getUserData(chatList[user].username);
-			if (perm.ghosts.indexOf($perm.group(cmd[1])) != -1) {
+			if (perm.ghosts.indexOf($perm.group(chatList[user].username)) != -1 || !data.ghost) {
 				if (data.ghost) result += "<i>" + chatList[user].username + "</i>,";
 				else result += chatList[user].username + ",";
 			}
@@ -183,10 +183,10 @@ var command = function(cc, cmd) {
 				writeUserData(cmd[1], data);
 				if (data.ghost)  {
 					cc.ws.write("<?" + cmd[1] + " is now a ghost!");
-					broadcast("<-" + cc.username);
+					broadcast("<-" + cmd[1]);
 				} else {
 					cc.ws.write("<?" + cmd[1] + " is no longer a ghost!");
-					broadcast("<-" + cc.username);
+					broadcast("<+" + cmd[1]);
 				}
 			}
 		}
@@ -211,5 +211,7 @@ var command = function(cc, cmd) {
 				cc.ws.write(result);
 			}
 		}
+	} else if (cmd[0] == "kick") {
+		cc.ws.close();
 	} else _invalid(cc, "cmd");
 };
