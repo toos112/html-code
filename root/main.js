@@ -1,31 +1,3 @@
-function key(length) {
-	var key = new Array(length);
-	for (var i; i < length; i++) {
-		key[i] = Math.floor(Math.random() * 10);
-	}
-	return key;
-}
-
-var handShakeDone = false;
-function handShake(func) {
-	var ws = new WebSocket("ws://" + location.host, "enc_setup");
-	ws.onmessage = function(e) {
-		var arr = e.data.split(":");
-		arr[0] = strToBigUInt(arr[0]);
-		func(key);
-	}
-	handShakeDone = true;
-}
-
-function encrypt(str) {
-	if (handShakeDone == false) {
-		handShake(function(key) {
-			
-		});
-	}
-	
-}
-
 function check(func) {
 	var success = false;
 	var xmlhttp = new XMLHttpRequest();

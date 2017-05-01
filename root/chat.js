@@ -95,7 +95,7 @@ function onShiftUp(e) {
 }
 
 function enterPress(e) {
-	if (e.keyCode == 13 && p == true) {
+	if (e.keyCode == 13 && p != true) {
 		send();
 	}
 }
