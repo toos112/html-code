@@ -6,6 +6,7 @@
 	"chat.disconnect"	:	"/disconnect (disconnects you from chat)",
 	"chat.clear"		:	"/clear (clears your chat log)",
 	"chat.info"			:[	"/info [user] (displays [user] info)",
+							"/info [user] (displays [user] info)",
 							"/info [user] (displays [user] info)"],
 	"chat.kick"			:	"/kick [user] [reason] (kicks [user] all the way to home page)",
 	"chat.ghost"		:	["/ghost (makes you not show up in /list anymore)",

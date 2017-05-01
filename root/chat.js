@@ -29,6 +29,8 @@ check(function(success) {
 							message = "The time you entered is to long";
 						} else if (message.startsWith("reason")) {
 							message = "Please enter a valid reason.";
+						} else if (message.startsWith("user")) {
+							message = mesage.substr(5) + " is not a user";
 						} else {
 							message = "An error occured";
 						}
