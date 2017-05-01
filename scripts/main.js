@@ -51,6 +51,8 @@ function ChatClient(ws) {
 		} else if (e.message.startsWith(":") && this.username != "") {
 			var udata = getUserData(this.username);
 			if ($.time() > udata.timeout) {
+				udata.timeout = $.time() + udata.slow;
+				writeUserData(this.username, udata);
 				payload = $.escape(payload);
 				if (payload != "") {
 					addToCache(this.username, payload);
