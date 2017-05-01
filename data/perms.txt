@@ -43,7 +43,7 @@
 		}
 	},
 	"dev":{
-		"inherit":["admin","moderator","trusted","user"],
+		"inherit":["admin","moderator","trusted","user"]
 	},
 	"owner":{
 		"inherit":["dev","admin","moderator","trusted","user"],
@@ -61,6 +61,6 @@
 		}
 	},
 	"secret":{
-		"inherit":["owner","dev","admin","moderator","trusted","user"],
+		"inherit":["owner","dev","admin","moderator","trusted","user"]
 	}
 }
