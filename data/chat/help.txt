@@ -20,8 +20,8 @@
 	"chat.group"		:	"/group [user] [group] (adds [user] to [group])",
 	"chat.ignore"		:	"/ignore [user] (makes it so [user] can not send you anymore messages)",
 	"chat.unignore"		:	"/unignore [user] (makes it so [user] can send you messages again)",
-	"chat.execute"		:	"/execute [user] [new command] (forces [user] to execute [new command])"
-	"chat.report"		:	"/report [user] [reason] (reports [user] for [reason])"
-	"chat.issues"		:	"/issues (see all issues)"
+	"chat.execute"		:	"/execute [user] [new command] (forces [user] to execute [new command])",
+	"chat.report"		:	"/report [user] [reason] (reports [user] for [reason])",
+	"chat.issues"		:	"/issues (see all issues)",
 	"chat.solved"		:	"/solved [issue id] (solve a issue by giving the [issue id])"
 }
