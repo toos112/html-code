@@ -1,0 +1,125 @@
+
+[0:8:27] DutChen18: test
+[0:9:46] DutChen18: test\ntest
+[0:20:39] DutChen18: test
+[0:22:40] DutChen18: test\ntest
+[0:22:58] DutChen18: test\ntest
+[0:24:36] DutChen18: 1\n1\n1\n1\n1\n1\n1\n1
+[0:24:40] DutChen18: 1\n11\n1\n1\n1\n1\n1\n1\n1\n1\n1\n
+[0:24:42] DutChen18: 1
+[0:24:42] DutChen18: 1
+[0:24:43] DutChen18: 1
+[0:24:43] DutChen18: 1
+[0:25:0] DutChen18: 1
+[0:25:1] DutChen18: 1
+[0:25:1] DutChen18: 1
+[0:25:2] DutChen18: 1
+[0:25:2] DutChen18: 1
+[0:25:3] DutChen18: 1
+[0:25:3] DutChen18: 1
+[0:25:4] DutChen18: 1
+[0:25:5] DutChen18: 1
+[0:25:5] DutChen18: 1
+[0:25:6] DutChen18: 1
+[0:25:6] DutChen18: 1
+[0:25:7] DutChen18: 1
+[0:25:7] DutChen18: 1
+[0:25:8] DutChen18: 1
+[0:25:15] DutChen18: 1!
+[0:25:15] DutChen18: 
+[0:25:17] DutChen18: 
+[0:25:17] DutChen18: 
+[0:25:17] DutChen18: 
+[0:25:17] DutChen18: 
+[0:25:17] DutChen18: 
+[0:25:17] DutChen18: 
+[0:25:17] DutChen18: 
+[0:25:17] DutChen18: 
+[0:25:18] DutChen18: 
+[0:25:18] DutChen18: 
+[0:25:18] DutChen18: 
+[0:25:18] DutChen18: 
+[0:25:18] DutChen18: 
+[0:25:18] DutChen18: 
+[0:25:18] DutChen18: 
+[0:25:19] DutChen18: 
+[0:25:19] DutChen18: 
+[0:25:19] DutChen18: 
+[0:25:19] DutChen18: 
+[0:25:20] DutChen18: 
+[0:25:20] DutChen18: 
+[0:25:22] DutChen18: 
+[0:25:22] DutChen18: 
+[0:25:22] DutChen18: 
+[0:25:22] DutChen18: 
+[0:25:22] DutChen18: 
+[0:25:22] DutChen18: 
+[0:25:24] DutChen18: 
+[0:25:24] DutChen18: 
+[0:25:24] DutChen18: 
+[0:25:24] DutChen18: 
+[0:25:24] DutChen18: 
+[0:25:25] DutChen18: 
+[0:25:25] DutChen18: 
+[0:25:25] DutChen18: 
+[0:25:25] DutChen18: 
+[0:25:25] DutChen18: 
+[0:25:25] DutChen18: 
+[0:25:25] DutChen18: 
+[0:25:25] DutChen18: 
+[0:25:25] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:26] DutChen18: 
+[0:25:27] DutChen18: 
+[0:25:27] DutChen18: 
+[0:25:27] DutChen18: 
+[0:25:27] DutChen18: 
+[0:25:27] DutChen18: 
+[0:25:27] DutChen18: 
+[0:25:27] DutChen18: 
+[0:25:27] DutChen18: 
+[0:25:27] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:28] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:29] DutChen18: 
+[0:25:30] DutChen18: 
+[0:25:30] DutChen18: 
+[0:25:30] DutChen18: 
+[0:25:30] DutChen18: 
+[0:25:30] DutChen18: 
+[0:25:30] DutChen18: 
+[0:25:30] DutChen18: 
+[1:15:37] DutChen18: test
+[1:15:42] DutChen18: test\ntest
+[1:16:11] DutChen18: test
+[1:17:0] DutChen18: test\ntest
+[1:17:51] DutChen18: test
+[1:20:17] DutChen18: test\ntest
+[11:45:43] DutChen18: test
+[11:45:45] DutChen18: test\ntest
+[11:45:56] DutChen18: _.I("_scripts/std.js");\n_.I("_scripts/file.js");\n_.I("_scripts/event.js");\n_.I("_scripts/websocket.js");\n_.I("scripts/login.js");\n_.I("scripts/command.js");\n\nvar chatList = [];\n\nfunction log(str) {\n	var date = new Date();\n	var filename = "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();\n	var file = $file.read("data/log/" + filename + ".txt");\n	str = $.replaceAll(str, "\n", "\\n");\n	file.push("[" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "] " + str);\n	$file.write("data/log/" + filename + ".txt", file);\n}\n\nfunction addToCache(user, str) {\n	var file = $file.read("data/chat.txt");\n	str = $.replaceAll(str, "\n", " ");\n	file.push(user + ": " + str);\n	if (file.length &gt; 16)\n		file.splice(0, file.length - 16);\n	$file.write("data/chat.txt", file);\n}\n\nfunction ChatClient(ws) {\n	this.ws = ws;\n	this.username = "";\n	\n	this.ws.handler("message", new EventListener(function(e) {\n		var payload = e.message.substr(1);\n		\n		if (e.message.startsWith("/")) {\n			log(this.username + ": " + e.message);\n			command(this, e.message.substr(1).split(" "));\n		} else if (e.message.startsWith("@")) {\n			payload = payload.split("&gt;");\n			if ($auth.check(payload[0], payload[1]) && this.username == "") {\n				this.username = payload[0];\n				for (var i = 0; i &lt; chatList.length; i++)\n					chatList[i].ws.write("&lt;+" + this.username);\n			}\n		} else if (e.message.startsWith(":") && this.username != "") {\n			var udata = getUserData(this.username);\n			if ($.time() &gt; udata.timeout) {\n				payload = $.escape(payload);\n				addToCache(this.username, payload);\n				log(this.username + ": " + payload);\n				for (var i = 0; i &lt; chatList.length; i++)\n					chatList[i].ws.write(this.username + "&gt;" + payload);\n			}\n		}\n	}, this));\n}\n\n$ws.addProtocol("chat");\n$event.handler("ws_new", new EventListener(function(e) {\n	if (e.ws.protocol == "chat") {\n		chatList.push(new ChatClient(e.ws));\n	}\n}, null));\n$event.handler("ws_close", new EventListener(function(e) {\n	if (e.ws.protocol == "chat") {\n		var name = "";\n		for (var i = 0; i &lt; chatList.length; i++) {\n			if (chatList[i].ws.equals(e.ws)) {\n				name = chatList[i].username;\n				chatList.splice(i, 1);\n				break;\n			}\n		}\n		if (name != "")\n			for (var i = 0; i &lt; chatList.length; i++)\n				chatList[i].ws.write("&lt;-" + name);\n	}\n}, null));\n\n_.loop(60000, function() {\n	var sessions = $json.parse($file.read("data/sessions.txt")[0]);\n	for (var key in sessions)\n		if (sessions[key].expire &lt; $.time())\n			delete sessions[key];\n	$file.write("data/sessions.txt", [$json.stringify(sessions)]);\n});

@@ -13,7 +13,7 @@ var $ = {
 	replaceAll: function(str, s1, s2) {
 		var copy = "" + str;
 		while (copy.indexOf(s1) != -1)
-			copy.replace(s1, s2);
+			copy = copy.replace(s1, s2);
 		return copy;
 	},
 	escape: function(str) {
