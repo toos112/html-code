@@ -1,5 +1,8 @@
 data/sessions.txt
 data/users.txt
-data/chat/chat.txt
-data/chat/userdata.txt
-data/chat/userdata.txt
+data/sessions.txt
+data/sessions.txt
+data/chat/log/2017-5-1.txt
+*.txt
+data/sessions.txt
+data/sessions.txt

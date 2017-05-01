@@ -74,7 +74,7 @@ check(function(success) {
 		
 		ws.onclose = function(e) {
 			if (goodClose == false) {
-				location.replace("index.html");
+				home();
 			}
 		}
 		
@@ -89,30 +89,44 @@ check(function(success) {
 		}
 	}
 });
+
+var currentMessage = "";
 var messages = [];
 var p = false;
-function onShiftDown(e) {
+var messageCount = -1;
+function onKeyDown(e) {
+	var htmlMessage = document.getElementById("message");
 	if (e.keyCode == 16) {
 		p = true;
-	}	
+	} else if (e.keyCode == 38) {
+		if (messageCount == -1) {
+			currentMessage = htmlMessage.value;
+		}
+		messageCount++;
+		if ((messages.length - 1) < messageCount) {
+			messageCount = messages.length - 1;
+		}
+		htmlMessage.value = messages[messageCount];
+	} else if (e.keyCode == 40) {
+		messageCount--;
+		if (messageCount < 0) {
+			messageCount = -1;
+			htmlMessage.value = currentMessage;
+		} else {
+			htmlMessage.value = messages[messageCount];
+		}
+	}
 }
 
-function onShiftUp(e) {
+function onKeyUp(e) {
 	if (e.keyCode == 16) {
 		p = false;
 	}
 }
-var messageCount = -1;
-function enterPress(e) {
-	var htmlMessage = document.getElementById("message").value;
+
+function onKeyPress(e) {
 	if (e.keyCode == 13 && p != true) {
 		send();
-	}else if (e.keycode == 38) {
-		messageCount++;
-		htmlMessage = message[messageCount];
-	}else if (e.keycode == 40) {
-		messageCount--;
-		htmlMessage = message[messageCount];
 	}
 }
 

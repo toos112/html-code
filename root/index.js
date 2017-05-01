@@ -5,19 +5,21 @@ check(function(success) {
 });
 
 function setLoggedIn() {
+	var titleT = document.getElementById("titleT");
 	var title = document.getElementById("title");
 	var div = document.getElementById("nameInput");
+	titleT.innerHTML = "Home";
 	title.innerHTML = "Home";
 	div.innerHTML = "\
-		<span class = \"center\" id = \"nameText\" style = \"width: 250px; color: #ccc;\">\
-			You have logged in.\
-		</span>\
 		<button onclick = \"logout();\" style \"width: 96px;\">\
 			<span>\
 				Logout\
 			</span>\
 		</button>\
-		<button onclick = \"settings();\" style \"width: 96px; margin-left: 6px;\">\
+		<span class = \"center\" id = \"nameText\" style = \"width: 250px; color: #ccc;\">\
+			You have logged in.\
+		</span>\
+		<button onclick = \"settings();\" style \"width: 96px;\">\
 			<span>\
 				Settings\
 			</span>\
@@ -36,6 +38,7 @@ function enterPress(e) {
 }
 
 function settings() {
+	var titleT = document.getElementById("titleT");
 	var title = document.getElementById("title");
 	var div = document.getElementById("nameInput");
 	title.innerHTML = "settings";
@@ -199,6 +202,8 @@ function commit() {
 					wrongInput("Username is already in use");
 				} else if (this.responseText.trim() == "3") {
 					wrongInput("Email is already in use");
+				} else if (this.responseText.trim() == "4"){
+					wrongInput("Your username has a invalid carracter");
 				} else {
 					wrongInput("Internal server error");
 				}
