@@ -38,7 +38,7 @@ check(function(success) {
 						htmlChat.innerHTML += "<span style = 'color: #c22;'>" + message + "</span><br/>";
 					} else if (message.startsWith("*")) {
 						message = message.substr(1);
-						htmlChat.innerHTML += "<span style = 'color: #f70;'>" + message + "</span><br/>";
+						htmlChat.innerHTML += "<span style = 'color: #f70;'>You were warned becouse: \"" + message + "\".</span><br/>";
 					} else if (message.startsWith("?")) {
 						message = message.substr(1);
 						var height = 1;
