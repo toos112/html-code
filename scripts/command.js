@@ -324,7 +324,7 @@ var command = function(cc, cmd) {
 					if (reason == "") _invalid(cc, "reason")
 					else {
 						_getByName(cmd[1]).ws.write("<*" + reason);
-						cc.ws.write("Your warned " + cmd[1]);
+						cc.ws.write("<?Your warned " + cmd[1]);
 						_saveOffense(cc.username, cmd[1], "warned", reason);
 					}
 				}
