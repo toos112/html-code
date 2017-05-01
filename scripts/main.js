@@ -47,6 +47,7 @@ function ChatClient(ws) {
 				this.username = payload[0];
 				var udata = getUserData(this.username);
 				if (!udata.ghost) broadcast("<+" + this.username);
+				else ws.write("<?Your are still a ghost!");
 			}
 		} else if (e.message.startsWith(":") && this.username != "") {
 			var udata = getUserData(this.username);
