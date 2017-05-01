@@ -5,5 +5,5 @@
 	
 	var qs = $.getQS();
 	if ($auth.check(qs.user, qs.uuid))
-		$file.read("data/chat.txt").join("<br/>") + "<br/>";
+		$file.read("data/chat/chat.txt").join("<br/>") + "<br/>";
 :js)

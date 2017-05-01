@@ -3,7 +3,7 @@ _.I("_scripts/json.js");
 _.I("_scripts/file.js");
 _.I("scripts/perms.js");
 
-var _help = $json.parse($file.read("data/help.txt").join(" "));
+var _help = $json.parse($file.read("data/chat/help.txt").join(" "));
 
 var _invalid = function(cc, err) {
 	cc.ws.write("<!" + err);
@@ -29,6 +29,7 @@ var _getByName = function(user) {
 }
 
 var _parseTime = function(time) {
+	if (time == "-1") return -1;
 	var timeArr = {
 		"ms" : 1,
 		"s" : 1000,
@@ -55,7 +56,7 @@ var _parseTime = function(time) {
 		} else {
 			if (end) {
 				if (timeArr[str] == undefined)
-					return -1;
+					return -2;
 				result += temp * timeArr[str];
 				str = "";
 				end = false;
@@ -68,22 +69,26 @@ var _parseTime = function(time) {
 	return result;
 }
 
+var _saveOffense = function(user, cmd, time, reason) {
+	var offenses = $json.parse($file.read("data/chat/offenses.txt").join(" "));
+}
+
 var getUserData = function(user) {
-	var udata = $json.parse($file.read("data/userdata.txt")[0]);
+	var udata = $json.parse($file.read("data/chat/userdata.txt")[0]);
 	if (udata[user] == undefined) {
 		udata[user] = {
 			timeout: $.time(),
 			ghost: false
 		}
-		$file.write("data/userdata.txt", [$json.stringify(udata)]);
+		$file.write("data/chat/userdata.txt", [$json.stringify(udata)]);
 	}
 	return udata[user];
 };
 
 var writeUserData = function(user, data) {
-	var udata = $json.parse($file.read("data/userdata.txt")[0]);
+	var udata = $json.parse($file.read("data/chat/userdata.txt")[0]);
 	udata[user] = data;
-	$file.write("data/userdata.txt", [$json.stringify(udata)]);
+	$file.write("data/chat/userdata.txt", [$json.stringify(udata)]);
 };
 
 var getReason = function(cmd, start) {
@@ -91,7 +96,7 @@ var getReason = function(cmd, start) {
 	for (var i = start; i < cmd.length; i++)
 		reason += cmd[i];
 	return reason.trim();
-}
+};
 
 var command = function(cc, cmd) {
 	var perm = $perm.uPerm(cc.username, "chat." + cmd[0]);
@@ -119,7 +124,7 @@ var command = function(cc, cmd) {
 				if (perm.users.indexOf($perm.group(cmd[1])) == -1) _invalid(cc, "target," + cmd[1]);
 				else {
 					var time = _parseTime(cmd[2]);
-					if (time == -1) _invalid(cc, "time," + cmd[2]);
+					if (time == -2) _invalid(cc, "time," + cmd[2]);
 					else if (time > perm.time && !(perm.time == -1)) _invalid(cc, "long");
 					else {
 						var data = getUserData(cmd[1]);

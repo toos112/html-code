@@ -11,19 +11,19 @@ var chatList = [];
 function log(str) {
 	var date = new Date();
 	var filename = "" + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-	var file = $file.read("data/log/" + filename + ".txt");
+	var file = $file.read("data/chat/log/" + filename + ".txt");
 	str = $.replaceAll(str, "\n", "\\n");
 	file.push("[" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "] " + str);
-	$file.write("data/log/" + filename + ".txt", file);
+	$file.write("data/chat/log/" + filename + ".txt", file);
 }
 
 function addToCache(user, str) {
-	var file = $file.read("data/chat.txt");
+	var file = $file.read("data/chat/chat.txt");
 	str = $.replaceAll(str, "\n", " ");
 	file.push(user + ": " + str);
 	if (file.length > 16)
 		file.splice(0, file.length - 16);
-	$file.write("data/chat.txt", file);
+	$file.write("data/chat/chat.txt", file);
 }
 
 function broadcast(str) {
@@ -36,11 +36,11 @@ function ChatClient(ws) {
 	this.username = "";
 	
 	this.ws.handler("message", new EventListener(function(e) {
-		var payload = e.message.substr(1);
+		var payload = e.message.substr(1).trim();
 		
 		if (e.message.startsWith("/")) {
 			log(this.username + ": " + e.message);
-			command(this, e.message.substr(1).split(" "));
+			command(this, payload.split(" "));
 		} else if (e.message.startsWith("@")) {
 			payload = payload.split(">");
 			if ($auth.check(payload[0], payload[1]) && this.username == "") {
@@ -51,7 +51,7 @@ function ChatClient(ws) {
 		} else if (e.message.startsWith(":") && this.username != "") {
 			var udata = getUserData(this.username);
 			if ($.time() > udata.timeout) {
-				payload = $.escape(payload).trim();
+				payload = $.escape(payload);
 				if (payload != "") {
 					addToCache(this.username, payload);
 					log(this.username + ": " + payload);
