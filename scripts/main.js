@@ -10,7 +10,7 @@ var chatList = [];
 
 function log(str) {
 	var date = new Date();
-	var filename = "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+	var filename = "" + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 	var file = $file.read("data/log/" + filename + ".txt");
 	str = $.replaceAll(str, "\n", "\\n");
 	file.push("[" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "] " + str);
@@ -24,6 +24,11 @@ function addToCache(user, str) {
 	if (file.length > 16)
 		file.splice(0, file.length - 16);
 	$file.write("data/chat.txt", file);
+}
+
+function broadcast(str) {
+	for (var i = 0; i < chatList.length; i++)
+		chatList[i].ws.write(str);
 }
 
 function ChatClient(ws) {
@@ -40,17 +45,18 @@ function ChatClient(ws) {
 			payload = payload.split(">");
 			if ($auth.check(payload[0], payload[1]) && this.username == "") {
 				this.username = payload[0];
-				for (var i = 0; i < chatList.length; i++)
-					chatList[i].ws.write("<+" + this.username);
+				var udata = getUserData(this.username);
+				if (!udata.ghost) broadcast("<+" + this.username);
 			}
 		} else if (e.message.startsWith(":") && this.username != "") {
 			var udata = getUserData(this.username);
 			if ($.time() > udata.timeout) {
-				payload = $.escape(payload);
-				addToCache(this.username, payload);
-				log(this.username + ": " + payload);
-				for (var i = 0; i < chatList.length; i++)
-					chatList[i].ws.write(this.username + ">" + payload);
+				payload = $.escape(payload).trim();
+				if (payload != "") {
+					addToCache(this.username, payload);
+					log(this.username + ": " + payload);
+					broadcast(this.username + ">" + payload);
+				}
 			}
 		}
 	}, this));
@@ -72,9 +78,9 @@ $event.handler("ws_close", new EventListener(function(e) {
 				break;
 			}
 		}
-		if (name != "")
-			for (var i = 0; i < chatList.length; i++)
-				chatList[i].ws.write("<-" + name);
+		var udata = getUserData(name);
+		if (name != "" && !udata.ghost)
+			broadcast("<-" + name);
 	}
 }, null));
 
