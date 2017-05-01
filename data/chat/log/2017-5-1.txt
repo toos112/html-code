@@ -673,3 +673,86 @@
 [19:10:56] DutChen18: /slow ALL:trusted 0C
 [19:11:12] DutChen18: /slow ALL:trusted 1C
 [19:12:13] DutChen18: /slow ALL:trusted 0C
+[19:35:15] DutChen18: /help
+[19:35:53] DutChen18: /list
+[19:36:12] Gidion: f
+[19:36:12] Gidion: f
+[19:36:12] Gidion: f
+[19:36:13] Gidion: ffff
+[19:36:13] Gidion: fff
+[19:36:17] Gidion: f\\\\\\\\
+[19:36:21] Gidion: .list
+[19:36:29] Gidion: /ignore Dutchen18
+[19:36:31] Gidion: /list
+[19:36:35] Gidion: /list
+[19:36:40] DutChen18: /list
+[19:36:46] DutChen18: /ghost Gidion
+[19:36:48] DutChen18: /list
+[19:36:55] Gidion: /list
+[19:38:40] DutChen18: /ghost Gidion
+[19:38:44] DutChen18: /kick Gidion
+[19:38:50] DutChen18: /kick Gidion reden
+[19:39:6] Gidion: IK HAAT JE NU
+[19:39:10] Gidion: /list
+[19:39:22] Gidion: /list
+[19:39:25] Gidion: hi
+[19:39:28] DutChen18: /list
+[19:39:38] DutChen18: /kick Gidion reden
+[19:39:48] Gidion: DOEI
+[19:39:52] Gidion: ...
+[19:40:10] Gidion: /ghost
+[19:40:14] DutChen18: /info Gidion
+[19:40:29] DutChen18: /info Gidion
+[19:40:31] Gidion: /info DutChen18
+[19:40:40] DutChen18: /list
+[19:40:58] DutChen18: /info Gidion
+[19:41:19] Gidion: /kick DutChen18 <3 nu kan ik het ook
+[19:41:43] Gidion: /info DutChen18
+[19:42:9] Gidion: /help
+[19:42:15] Gidion: /ghost
+[19:44:35] Gidion: /issues
+[19:44:59] DutChen18: /ghost Gidion
+[19:45:2] Gidion: /info DutChen18
+[19:45:9] DutChen18: /ghost Gidion
+[19:45:31] DutChen18: test
+[19:45:35] Gidion: ...
+[19:45:37] DutChen18: /ghost
+[19:45:38] Gidion: /ghost
+[19:45:41] DutChen18: /ghost Gidion
+[19:45:45] Gidion: /ghost
+[19:45:46] DutChen18: /ghost Gid
+[19:45:48] Gidion: /ghost
+[19:45:50] Gidion: /ghost
+[19:45:50] Gidion: /ghost
+[19:45:51] Gidion: /ghost
+[19:45:51] Gidion: /ghost
+[19:45:51] Gidion: /ghost
+[19:45:51] Gidion: /ghost
+[19:45:53] Gidion: /ghost
+[19:45:55] Gidion: /ghost
+[19:46:32] Gidion: hi
+[19:46:34] Gidion: kkk
+[19:46:34] Gidion: k
+[19:46:35] Gidion: kk
+[19:46:35] DutChen18: /ghost
+[19:46:36] Gidion: k
+[19:46:37] Gidion: kk
+[19:46:37] Gidion: k
+[19:46:38] Gidion: kk
+[19:46:39] Gidion: k
+[19:46:41] Gidion: kkk
+[19:46:41] Gidion: kk
+[19:46:42] Gidion: k
+[19:46:42] DutChen18: /list
+[19:46:42] Gidion: k
+[19:46:44] Gidion: kkkk
+[19:46:44] Gidion: k
+[19:46:45] Gidion: kk
+[19:46:46] Gidion: kk
+[19:46:46] DutChen18: /info Gidion
+[19:46:47] Gidion: kkk
+[19:47:28] DutChen18: /ghost Gidion
+[19:47:34] Gidion: /warn DutChen18 ga weg
+[19:47:39] Gidion: /warn DutChen18 ga weg
+[19:47:55] Gidion: /info DutChen18
+[19:48:2] Gidion: /info DutChen18

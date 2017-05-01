@@ -11,7 +11,7 @@ var _invalid = function(cc, err) {
 
 var _online = function(exec, cmd, user) {
 	var data = getUserData(user);
-	if (user.ghost && $perm.uPerm(exec, "chat." + cmd).ghosts.indexOf($perm.group(user)) == -1) return false;
+	if (data.ghost && $perm.uPerm(exec, "chat." + cmd).ghosts.indexOf($perm.group(user)) == -1) return false;
 	for (var key in chatList)
 		if (chatList[key].username == user)
 			return true;
@@ -230,7 +230,7 @@ var command = function(cc, cmd) {
 				var data = getUserData(cmd[1]);
 				if (perm.ghosts.indexOf($perm.group(cmd[1])) != -1 && data.ghost)
 					result += " (ghost)"
-				result += " is " + (_online(cc.username, cmd[0], cmd[1]) && (!data.ghost || perm.ghosts.indexOf($perm.group(cmd[1])))) ? "online" : "offline";
+				result += " is " + ((_online(cc.username, cmd[0], cmd[1]) && (!data.ghost || perm.ghosts.indexOf($perm.group(cmd[1])))) ? "online" : "offline");
 				if (perm.level == 3) result += " and their ip is " + cc.ws.address;
 				result += "\n";
 				var offenses = _getOffenses(cmd[1]);
