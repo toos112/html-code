@@ -10,18 +10,18 @@
 	"chat.ghost"		:	["/ghost (makes you not show up in /list anymore)",
 							"/ghost [user] (makes [user] not show up in /list anymore)"],
 	"chat.timeout"		:[	"/timeout [user] [time] [reason] (makes it that [user] can't speak for the duration of [time])",
-							"/timeout [user] [time] [reason] (makes it that [user] can't speak for the duration of [time] additionaly you can use ALL:group,group and timeout hole groups you don't have to provide a reason when doing so)"],
+							"/timeout [user] [time] [reason] (makes it that [user] can't speak for the duration of [time] additionaly you can use ALL:group,group and timeout whole groups you don't have to provide a reason when doing so)"],
 	"chat.warn"			:	"/warn [user] [reason] (warns the [user] that he is doing [reason] wrong)",
 	"chat.slow"			:[	"/slow [user] [time] [reason] (makes it so [user] can post only one message per [time])",
-							"/slow [user] [time] [reason] (makes it so [user] can post only one message per [time] additionaly you can use ALL:group,group and slow hole groups you don't have to provide a reason when doing so)"],
+							"/slow [user] [time] [reason] (makes it so [user] can post only one message per [time] additionaly you can use ALL:group,group and slow whole groups you don't have to provide a reason when doing so)"],
 	"chat.ban"			:	"/ban [user] [time] [reason] (bans [user] for [time])",
 	"chat.ipban"		:	"/ipban [user] [time] [reason] (ipbans [user] for [time])",
 	"chat.unban"		:	"/unban [user] (unbans [user])",
 	"chat.group"		:	"/group [user] [group] (adds [user] to [group])",
 	"chat.ignore"		:	"/ignore [user] (makes it so [user] can not send you anymore messages)",
 	"chat.unignore"		:	"/unignore [user] (makes it so [user] can send you messages again)",
-	"chat.execute"		:	"/execute [user] [new command] (forces [user] to execute [new command])"
-	"chat.report"		:	"/report [user] [reason] (reports [user] for [reason])"
-	"chat.issues"		:	"/issues (see all issues)"
+	"chat.execute"		:	"/execute [user] [new command] (forces [user] to execute [new command])",
+	"chat.report"		:	"/report [user] [reason] (reports [user] for [reason])",
+	"chat.issues"		:	"/issues (see all issues)",
 	"chat.solved"		:	"/solved [issue id] (solve a issue by giving the [issue id])"
 }
