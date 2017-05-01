@@ -213,9 +213,11 @@ var command = function(cc, cmd) {
 				writeUserData(cmd[1], data);
 				if (data.ghost)  {
 					cc.ws.write("<?" + cmd[1] + " is now a ghost!");
+					_getByName(cmd[1]).ws.write("<?You are now a ghost thanks to " + cc.username + "!");
 					broadcast("<-" + cmd[1]);
 				} else {
 					cc.ws.write("<?" + cmd[1] + " is no longer a ghost!");
+					_getByName(cmd[1]).ws.write("<?You no longer a ghost thanks to " + cc.username + "!");
 					broadcast("<+" + cmd[1]);
 				}
 			}
