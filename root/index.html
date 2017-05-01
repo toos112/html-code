@@ -4,7 +4,6 @@
 		<title>
 			Home
 		</title>
-		<script src = "bigint.js"></script>
 		<script src = "main.js"></script>
 		<script src = "index.js"></script>
 		<script src = "alert/alert.js"></script>
@@ -22,11 +21,11 @@
 				<span class = "center" id = "nameText" style = "width : 120px; color: #ccc;">
 					Username: 
 				</span>
-				<input type = "text" id = "name" placeholder = "Type your Name here" style = "width: calc(100% - 124px);"/><br/>
+				<input type = "text" id = "name" onkeypress = "enterPress(event);" placeholder = "Type your Name here" style = "width: calc(100% - 124px);"/><br/>
 				<span class = "center" id = "nameText" style = "margin-top: 6px; width : 120px; color: #ccc;">
 					Password: 
 				</span>
-				<input type = "password" id = "password" placeholder = "Type your Password here" style = "margin-top: 6px; width: calc(100% - 124px);"/><br/>
+				<input type = "password" id = "password" onkeypress = "enterPress(event);" placeholder = "Type your Password here" style = "margin-top: 6px; width: calc(100% - 124px);"/><br/>
 				<button onclick = "send();" style = "margin-top: 6px; width: 96px;">
 					<span>
 						Send
