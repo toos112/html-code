@@ -11,15 +11,15 @@ function setLoggedIn() {
 	titleT.innerHTML = "Home";
 	title.innerHTML = "Home";
 	div.innerHTML = "\
-		<span class = \"center\" id = \"nameText\" style = \"width: 250px; color: #ccc;\">\
-			You have logged in.\
-		</span>\
 		<button onclick = \"logout();\" style \"width: 96px;\">\
 			<span>\
 				Logout\
 			</span>\
 		</button>\
-		<button onclick = \"settings();\" style \"width: 96px; margin-left: 6px;\">\
+		<span class = \"center\" id = \"nameText\" style = \"width: 250px; color: #ccc;\">\
+			You have logged in.\
+		</span>\
+		<button onclick = \"settings();\" style \"width: 96px;\">\
 			<span>\
 				Settings\
 			</span>\
