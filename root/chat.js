@@ -32,6 +32,8 @@ check(function(success) {
 							message = "Please enter a valid reason.";
 						} else if (message.startsWith("user")) {
 							message = message.substr(5) + " is not a user";
+						} else if (message.startsWith("banned")) {
+							message = "Your banned from this server. Turn arround and never come back to this realm of the wild internet.";
 						} else {
 							message = "An error occured";
 						}
