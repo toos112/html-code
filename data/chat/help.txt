@@ -15,7 +15,7 @@
 	"chat.slow"			:[	"/slow [user] [time] [reason] (makes it so [user] can post only one message per [time])",
 							"/slow [user] [time] [reason] (makes it so [user] can post only one message per [time] additionaly you can use ALL:group,group and slow whole groups you don't have to provide a reason when doing so)"],
 	"chat.ban"			:	"/ban [user] [time] [reason] (bans [user] for [time])",
-	"chat.ipban"		:	"/ipban [user] [time] [reason] (ipbans [user] for [time])",
+	"chat.ipban"		:	"/ipban [ip] [time] [reason] (ipbans [ip] for [time])",
 	"chat.unban"		:	"/unban [user] (unbans [user])",
 	"chat.ipunban"		:	"/ipunban [ip] (unbans [ip])",
 	"chat.group"		:	"/group [user] [group] (adds [user] to [group])",
