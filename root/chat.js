@@ -104,14 +104,16 @@ function onKeyDown(e) {
 	if (e.keyCode == 16) {
 		p = true;
 	} else if (e.keyCode == 38) {
-		if (messageCount == -1) {
-			currentMessage = htmlMessage.value;
+		if (messages.length > 0) {
+			if (messageCount == -1) {
+				currentMessage = htmlMessage.value;
+			}
+			messageCount++;
+			if ((messages.length - 1) < messageCount) {
+				messageCount = messages.length - 1;
+			}
+			htmlMessage.value = messages[messageCount];
 		}
-		messageCount++;
-		if ((messages.length - 1) < messageCount) {
-			messageCount = messages.length - 1;
-		}
-		htmlMessage.value = messages[messageCount];
 	} else if (e.keyCode == 40) {
 		messageCount--;
 		if (messageCount < 0) {
