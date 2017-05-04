@@ -96,7 +96,7 @@ check(function(success) {
 });
 
 var currentMessage = "";
-var messages = getCookie(messages).split("<");
+var messages = getCookie("messages") == undefined ? [] : getCookie("messages").split(",");
 var p = false;
 var messageCount = -1;
 function onKeyDown(e) {
@@ -142,7 +142,7 @@ function send() {
 	messages.unshift(htmlMessage.replace(",", "&comma;"));
 	messages = messages.slice(0, 16);
 	messageCount = -1;
-	setCookie("messages", messages.join(","))
+	setCookie("messages", messages.join(","));
 	if (htmlMessage.startsWith("/") == true) {
 		if (htmlMessage.startsWith("/disconnect") == true) {
 			ws.close();
