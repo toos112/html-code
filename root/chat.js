@@ -139,6 +139,7 @@ function onKeyPress(e) {
 
 function send() {
 	var htmlMessage = document.getElementById("message").value;
+	if (htmlMessage == "") return;
 	messages.unshift(htmlMessage.replace(",", "&comma;"));
 	messages = messages.slice(0, 16);
 	messageCount = -1;
