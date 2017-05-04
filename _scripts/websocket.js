@@ -22,7 +22,7 @@ function _WebSocketWrapper(e) {
 		this._ws.close();
 	}
 	this.protocol = "" + this._ws.getProtocol();
-	this.address = "" + this._ws.getAddress();
+	this.address = "" + this._ws.getAddress().substr(1);
 	this.equals = function(other) {
 		return this._ws == other._ws;
 	}
