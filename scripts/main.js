@@ -46,7 +46,9 @@ function ChatClient(ws) {
 			var udata = getUserData(payload[0]);
 			if (udata.banned > $.time() || udata.banned == -1) {
 				_invalid(this, "banned");
+				this.ws.close();
 			} else if ($auth.check(payload[0], payload[1]) && this.username == "") {
+				chatList.push(this);
 				this.username = payload[0];
 				if (!udata.ghost) broadcast("<+" + this.username);
 				else ws.write("<?Your are still a ghost!");
@@ -58,9 +60,10 @@ function ChatClient(ws) {
 				writeUserData(this.username, udata);
 				payload = $.escape(payload);
 				if (payload != "") {
-					addToCache(this.username, payload);
+					var escapedUser = $.escape(this.username);
+					addToCache(escapedUser, payload);
 					log(this.username + ": " + payload);
-					broadcast(this.username + ">" + payload);
+					broadcast(escapedUser + ">" + payload);
 				}
 			}
 		}
@@ -70,7 +73,11 @@ function ChatClient(ws) {
 $ws.addProtocol("chat");
 $event.handler("ws_new", new EventListener(function(e) {
 	if (e.ws.protocol == "chat") {
-		chatList.push(new ChatClient(e.ws));
+		var ipbans = $json.parse($file.read("data/chat/ipban.txt")[0]);
+		if (ipbans.indexOf(e.ws.address) != -1) {
+			_invalid({ws:e.ws}, "banned");
+			this.ws.close();
+		} else new ChatClient(e.ws);
 	}
 }, null));
 $event.handler("ws_close", new EventListener(function(e) {
