@@ -27,7 +27,8 @@ Commands
 17	/report [user] [reason] (reports [user] for [reason])
 18	/issues (see all issues)
 19	/solved [issue id] (solve a issue by giving the [issue id])
-
+20	/ipban [ip] [time] (bans [ip] for [time])
+21	/ipunban [ip] (unbans [ip])
 
 add offences to users when a reason is given do add the possible punisment that was given aswell in order
 Typing in color with (/color [hexcode])?
