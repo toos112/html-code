@@ -348,7 +348,8 @@ var command = function(cc, cmd) {
 							var data = getUserData(cmd[1]);
 							data.banned = time == -1 ? -1 : $.time() + time;
 							writeUserData(cmd[1], data);
-							_getByName(cmd[1]).ws.close();
+							if (_online(cc.username, cmd[0], cmd[1]))
+								_getByName(cmd[1]).ws.close();
 							broadcast("<?" + cmd[1] + " has been banned for " + cmd[2] + "! reason: " + reason);
 							if (cc.username != cmd[1])
 								_saveOffense(cc.username, cmd[1], "banned", reason, cmd[2]);
@@ -370,6 +371,29 @@ var command = function(cc, cmd) {
 					broadcast("<?" + cmd[1] + " was unbanned!");
 				}
 			}
+		}
+	} else if (cmd[0] == "ipban") {
+		if (cmd.length < 3) _invalid(cc, "args");
+		else {
+			var time = _parseTime(cmd[2]);
+			if (time == -2) _invalid(cc, "time," + cmd[2]);
+			else if (time > perm.time && (perm.time != -1) || (time == -1 && perm.time != -1)) _invalid(cc, "long");
+			else {
+				var ipbans = $json.parse($file.read("data/chat/ipban.txt")[0]);
+				ipbans.push(cmd[1]);
+				$file.write("data/chat/ipban.txt", [$json.stringify(ipbans)]);
+				for (var user in chatList) {
+					if (chatList[user].address == cmd[1])
+						chatList[user].ws.close();
+				}
+			}
+		}
+	} else if (cmd[0] == "ipunban") {
+		if (cmd.length < 2) _invalid(cc, "args");
+		else {
+			var ipbans = $json.parse($file.read("data/chat/ipban.txt")[0]);
+			ipbans.push(cmd[1]);
+			$file.write("data/chat/ipban.txt", [$json.stringigy(ipbans)]);
 		}
 	} else _invalid(cc, "cmd");
 };
