@@ -43,9 +43,11 @@ function ChatClient(ws) {
 			command(this, payload.split(" "));
 		} else if (e.message.startsWith("@")) {
 			payload = payload.split(">");
-			if ($auth.check(payload[0], payload[1]) && this.username == "") {
+			var udata = getUserData(payload[0]);
+			if (udata.banned > $.time() || udata.banned == -1) {
+				_invalid(this, "banned");
+			} else if ($auth.check(payload[0], payload[1]) && this.username == "") {
 				this.username = payload[0];
-				var udata = getUserData(this.username);
 				if (!udata.ghost) broadcast("<+" + this.username);
 				else ws.write("<?Your are still a ghost!");
 			}

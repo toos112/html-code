@@ -90,9 +90,10 @@ var getUserData = function(user) {
 	var udata = $json.parse($file.read("data/chat/userdata.txt")[0]);
 	if (udata[user] == undefined) {
 		udata[user] = {
-			timeout: $.time(),
+			timeout: 0,
 			ghost: false,
-			slow: 0
+			slow: 0,
+			banned: 0
 		}
 		$file.write("data/chat/userdata.txt", [$json.stringify(udata)]);
 	}
@@ -135,11 +136,11 @@ var command = function(cc, cmd) {
 		else {
 			if (!_online(cc.username, cmd[0], cmd[1]) && !cmd[1].startsWith("ALL:")) _invalid(cc, "offline," + cmd[1]);
 			else {
-				if (!(cmd[1].startsWith("ALL:") || !perm.users.indexOf($perm.group(cmd[1])))) _invalid(cc, "target," + cmd[1]);
+				if (!(cmd[1].startsWith("ALL:") || perm.users.indexOf($perm.group(cmd[1])) != -1)) _invalid(cc, "target," + cmd[1]);
 				else {
 					var time = _parseTime(cmd[2]);
 					if (time == -2) _invalid(cc, "time," + cmd[2]);
-					else if (time > perm.time && !(perm.time == -1)) _invalid(cc, "long");
+					else if (time > perm.time && (perm.time != -1) || (time == -1 && perm.time != -1)) _invalid(cc, "long");
 					else {
 						if (!cmd[1].startsWith("ALL:")) {
 							var reason = getReason(cmd, 3);
@@ -265,11 +266,11 @@ var command = function(cc, cmd) {
 		else {
 			if (!_online(cc.username, cmd[0], cmd[1]) && !cmd[1].startsWith("ALL:")) _invalid(cc, "offline," + cmd[1]);
 			else {
-				if (!(cmd[1].startsWith("ALL:") || !perm.users.indexOf($perm.group(cmd[1])))) _invalid(cc, "target," + cmd[1]);
+				if (!(cmd[1].startsWith("ALL:") || perm.users.indexOf($perm.group(cmd[1])) != -1)) _invalid(cc, "target," + cmd[1]);
 				else {
 					var time = _parseTime(cmd[2]);
 					if (time == -2) _invalid(cc, "time," + cmd[2]);
-					else if (time > perm.time && !(perm.time == -1)) _invalid(cc, "long");
+					else if (time > perm.time && (perm.time != -1) || (time == -1 && perm.time != -1)) _invalid(cc, "long");
 					else {
 						if (!cmd[1].startsWith("ALL:")) {
 							var reason = getReason(cmd, 3);
@@ -281,7 +282,7 @@ var command = function(cc, cmd) {
 								if (time != 0) _getByName(cmd[1]).ws.write("<?You have been slowed to 1 message every " + cmd[2] + "! reason: " + reason);
 								else _getByName(cmd[1]).ws.write("<?You are nog longer slowed!");
 								if (cc.username != cmd[1])
-									_saveOffense(cc.username, cmd[1], "timed out", reason, cmd[2]);
+									_saveOffense(cc.username, cmd[1], "slowed", reason, cmd[2]);
 							}
 						} else if (perm.level == 1) _invalid(cc, "target,ALL");
 						else {
@@ -327,6 +328,46 @@ var command = function(cc, cmd) {
 						cc.ws.write("<?Your warned " + cmd[1]);
 						_saveOffense(cc.username, cmd[1], "warned", reason);
 					}
+				}
+			}
+		}
+	} else if (cmd[0] == "ban") {
+		if (cmd.length < 3) _invalid(cc, "args");
+		else {
+			if (!_exists(cc.username)) _invalid(cc, "user," + cmd[1]);
+			else {
+				if (perm.users.indexOf($perm.group(cmd[1])) == -1) _invalid(cc, "target," + cmd[1]);
+				else {
+					var time = _parseTime(cmd[2]);
+					if (time == -2) _invalid(cc, "time," + cmd[2]);
+					else if (time > perm.time && (perm.time != -1) || (time == -1 && perm.time != -1)) _invalid(cc, "long");
+					else {
+						var reason = getReason(cmd, 3);
+						if (reason == "") _invalid(cc, "reason")
+						else {
+							var data = getUserData(cmd[1]);
+							data.banned = time == -1 ? -1 : $.time() + time;
+							writeUserData(cmd[1], data);
+							_getByName(cmd[1]).ws.close();
+							broadcast("<?" + cmd[1] + " has been banned for " + cmd[2] + "! reason: " + reason);
+							if (cc.username != cmd[1])
+								_saveOffense(cc.username, cmd[1], "banned", reason, cmd[2]);
+						}
+					}
+				}
+			}
+		}
+	} else if (cmd[0] == "unban") {
+		if (cmd.length < 2) _invalid(cc, "args");
+		else {
+			if (!_exists(cc.username)) _invalid(cc, "user," + cmd[1]);
+			else {
+				if (time > perm.time && (perm.time != -1) || (time == -1 && perm.time != -1)) _invalid(cc, "target," + cmd[1]);
+				else {
+					var data = getUserData(cmd[1]);
+					data.banned = 0;
+					writeUserData(cmd[1], data);
+					broadcast("<?" + cmd[1] + " was unbanned!");
 				}
 			}
 		}
