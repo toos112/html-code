@@ -383,7 +383,7 @@ var command = function(cc, cmd) {
 				ipbans.push(cmd[1]);
 				$file.write("data/chat/ipban.txt", [$json.stringify(ipbans)]);
 				for (var user in chatList) {
-					if (chatList[user].address == cmd[1])
+					if (chatList[user].ws.address == cmd[1])
 						chatList[user].ws.close();
 				}
 			}
