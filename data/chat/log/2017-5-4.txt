@@ -1,0 +1,187 @@
+
+[13:54:55] DutChen18: /help
+[13:55:33] Gidion: hi
+[13:55:37] Gidion: /ghost
+[13:55:40] Gidion: /ghost
+[13:55:41] DutChen18: /help
+[13:56:18] Gidion: /ban DutChen18 1m
+[13:56:25] Gidion: /ban DutChen18 1s
+[13:56:26] DutChen18: /ban Gidion 10s Test
+[13:56:40] Gidion: /ban DutChen18 1ms
+[13:56:48] Gidion: /ban DutChen18 1ms HAAT
+[13:56:53] DutChen18: /timeout Gidion 1s Test
+[13:57:19] DutChen18: /timeout Gidion 1s Test
+[13:57:40] Gidion: /ghost
+[13:57:49] Gidion: /ghost
+[13:57:51] Gidion: /ghost
+[13:57:53] Gidion: /help
+[13:57:56] Gidion: /ghost
+[13:58:20] DutChen18: /ghost Gidion
+[13:58:29] DutChen18: /timeout Gidion 1s Test
+[14:15:20] DutChen18: /timeout ALL:user 1s
+[14:18:45] DutChen18: /timeout ALL:user 1s
+[14:20:54] DutChen18: /ban Gidion 20s Test
+[14:21:1] Gidion: ha
+[14:21:2] Gidion: gay
+[14:22:23] Gidion: 7ygoefwdsal8-9
+[14:22:24] DutChen18: /ban Gidion 20s Test
+[14:23:53] DutChen18: /ghost
+[14:24:37] DutChen18: /ban Gidion 20s HAHA
+[14:25:29] DutChen18: /ban Gidion -1 HAHA
+[14:28:45] DutChen18: /ban Gidion -1 HAHA
+[14:29:10] DutChen18: /unban Gidion
+[14:29:23] Gidion: hiu
+[15:28:20] DutChen18: test
+[15:28:44] DutChen18: /ipban 85.150.186.163 -1
+[15:29:16] DutChen18: /ipban 85.150.186.163 -1
+[15:29:26] DutChen18: test
+[15:29:29] DutChen18: test
+[15:29:50] DutChen18: /info DutChen18
+[15:50:55] DutChen18: tes
+[16:2:20] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:47] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:49] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:51] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:52] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:53] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:54] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:55] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:56] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:56] DutChen18: HLALOFKSUFIJSDFHSDF
+[16:2:57] DutChen18: HLALOFKSUFIJSDFHSDF
+[18:48:41] Gidion: /ghost
+[18:53:54] EdH12051969: Halo wil €100,--
+[18:54:4] Gidion: pas maar op hoor
+[18:54:7] Gidion: niet zeuren
+[18:54:26] EdH12051969: Wie zeurt krijgt een beurt
+[18:54:34] Gidion: /kick EdH12051969
+[18:54:40] EdH12051969: Duurt lang
+[18:54:41] Gidion: /kick EdH12051969 zeuren
+[18:54:43] DutChen18: Ik ben er ook
+[18:55:12] Gidion: /help
+[18:55:28] Gidion: /info EdH12051969
+[18:56:35] Gidion: /ban EdH12051969 20s Test
+[18:57:3] EdH12051969: Wat zijn jullie streng dan!
+[18:57:30] EdH12051969: Mag hier ook niks!!!
+[18:57:52] DutChen18: /help
+[18:57:54] DutChen18: /list
+[18:57:58] DutChen18: /list
+[18:58:16] DutChen18: /info Edh12051969
+[18:59:39] Gidion: &lt;3
+[18:59:41] EdH12051969: Ben jij een iritatiefactor!!
+[18:59:44] Gidion: /ghost
+[18:59:49] EdH12051969: /help
+[18:59:51] Gidion: nu ben ik pas online hoor
+[19:0:2] EdH12051969: Mister slow
+[19:0:5] Gidion: /help
+[19:0:25] DutChen18: Gaat dit nog ergens heen?
+[19:0:31] Gidion: /ghost
+[19:0:36] DutChen18: gidion is gecrasht
+[19:0:41] EdH12051969: Naar nergens
+[19:1:2] DutChen18: /list
+[19:1:12] Gidion: /ghost EdH12051969
+[19:1:36] Gidion: /ghost EdH12051969
+[19:1:45] EdH12051969: Nog iets te verbeteren
+[19:1:48] Gidion: /ghost EdH12051969
+[19:1:49] Gidion: nah
+[19:1:50] DutChen18: wat?
+[19:1:52] Gidion: werkt wel
+[19:1:59] Gidion: doe is /list
+[19:2:2] DutChen18: wat moeten we verbeteren?
+[19:2:5] DutChen18: /ghost
+[19:2:15] Gidion: of gewoon /help
+[19:2:19] EdH12051969: Iemand er uit kicken
+[19:2:22] Gidion: zie je alle commands die je kunt
+[19:2:23] DutChen18: maar de helft werkt nog niet
+[19:2:40] EdH12051969: /help
+[19:3:9] EdH12051969: /CLEAR
+[19:3:22] EdH12051969: /hel[
+[19:3:27] EdH12051969: /help
+[19:3:39] EdH12051969: /help
+[19:3:51] EdH12051969: Duurt lang
+[19:4:6] EdH12051969: Iemand er uit kicken
+[19:4:14] EdH12051969: Nog iets te verbeteren
+[19:4:19] EdH12051969: Duurt lang
+[19:4:48] EdH12051969: /list
+[19:5:9] Gidion: /ghost EdH12051969
+[19:5:24] DutChen18: /warn EdH12051969 Je bent niet alleen!
+[19:5:48] EdH12051969: yes
+[19:6:26] EdH12051969: Dat is fijn
+[19:6:36] DutChen18: /warn EdH12051969 You are surrounded by ghosts
+[19:6:37] EdH12051969: Toch geen Remie
+[19:6:41] Gidion: ....
+[19:6:43] Gidion: ...
+[19:6:44] Gidion: ..
+[19:6:45] Gidion: .
+[19:6:49] Gidion: .
+[19:7:9] Gidion: .\n..\n...\n....\n.....\n......\n.......\n........\n.........
+[19:7:30] EdH12051969: /ghost
+[19:7:35] EdH12051969: /help
+[19:7:41] EdH12051969: /list
+[19:8:48] EdH12051969: /help
+[19:9:1] EdH12051969: /info
+[19:9:14] EdH12051969: /info Gidion
+[19:10:5] EdH12051969: /info DutChen18
+[19:10:29] EdH12051969: /help
+[19:10:46] EdH12051969: /help
+[19:11:5] EdH12051969: /help
+[19:11:18] EdH12051969: /warn Gidion
+[19:11:31] EdH12051969: /help
+[19:11:48] EdH12051969: /ghost
+[19:12:3] Gidion: /ghost EdH12051969
+[19:12:4] EdH12051969: /kick Gidion
+[19:12:12] DutChen18: /info DutCHen18
+[19:12:15] DutChen18: /info DutChen18
+[19:12:20] EdH12051969: /ghost
+[19:12:27] EdH12051969: /kick Gidion
+[19:12:39] Gidion: /list
+[19:12:40] DutChen18: /info EdH12051969
+[19:12:41] EdH12051969: /issues
+[19:12:48] EdH12051969: /issues
+[19:12:52] DutChen18: /ghost EdH12051969
+[19:12:56] DutChen18: /ghost EdH12051969
+[19:12:56] DutChen18: /ghost EdH12051969
+[19:12:56] DutChen18: /ghost EdH12051969
+[19:12:56] DutChen18: /ghost EdH12051969
+[19:12:57] EdH12051969: /report
+[19:12:57] DutChen18: /ghost EdH12051969
+[19:12:57] DutChen18: /ghost EdH12051969
+[19:12:57] DutChen18: /ghost EdH12051969
+[19:12:57] DutChen18: /ghost EdH12051969
+[19:12:58] DutChen18: /ghost EdH12051969
+[19:12:58] DutChen18: /ghost EdH12051969
+[19:12:58] DutChen18: /ghost EdH12051969
+[19:12:58] DutChen18: /ghost EdH12051969
+[19:12:59] DutChen18: /ghost EdH12051969
+[19:12:59] DutChen18: /ghost EdH12051969
+[19:12:59] DutChen18: /ghost EdH12051969
+[19:13:0] DutChen18: /ghost EdH12051969
+[19:13:0] DutChen18: /ghost EdH12051969
+[19:13:0] DutChen18: /ghost EdH12051969
+[19:13:9] EdH12051969: /isseus
+[19:13:13] EdH12051969: /help
+[19:13:20] EdH12051969: /issues
+[19:13:31] Gidion: /slow EdH12051969 2m
+[19:13:42] Gidion: /slow EdH12051969 2m talking to much
+[19:13:48] EdH12051969: wat de hell are you do
+[19:14:12] EdH12051969: /jupvj 
+[19:14:55] Gidion: /slow EdH12051969 20s talking to much
+[19:15:48] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:5] Gidion: /slow EdH12051969 0 h
+[19:16:9] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:10] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:10] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:12] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:12] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:13] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:14] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:15] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:16] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:17] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:18] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:18] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:19] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:20] EdH12051969: duurt lang!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[19:16:23] Gidion: /timeout EdH12051969 -1 h
+[19:16:31] EdH12051969: /logout
+[19:17:10] DutChen18: /ban Gidion -1 fuck u
