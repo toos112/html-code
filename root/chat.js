@@ -4,7 +4,7 @@ check(function(success) {
 	if (!success) {
 		location.replace("index.html");
 	} else {
-		ws = new WebSocket("wss://" + location.host, "chat");
+		ws = new WebSocket("ws://" + location.host, "chat");
 		
 		ws.onmessage = function(e) {
 			var htmlChat = document.getElementById("chat");
