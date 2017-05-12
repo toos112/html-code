@@ -96,7 +96,11 @@ check(function(success) {
 });
 
 var currentMessage = "";
+<<<<<<< HEAD
+var messages = getCookie("messages").split(",");
+=======
 var messages = getCookie("messages") == undefined ? [] : getCookie("messages").split(",");
+>>>>>>> origin/master
 var p = false;
 var messageCount = -1;
 function onKeyDown(e) {
