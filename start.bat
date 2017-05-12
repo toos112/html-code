@@ -1,2 +1,2 @@
-java -jar server.jar 80 443
+java -jar server.jar 80
 pause
