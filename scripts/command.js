@@ -75,7 +75,7 @@ var _saveOffense = function(su, user, cmd, reason, time) {
 	var offenses = $json.parse($file.read("data/chat/offenses.txt")[0]);
 	if (offenses[user] == undefined) offenses[user] = [];
 	if (time == undefined) time = "";
-	else if (time == -1) time = "forever";
+	else if (time == -1) time = " forever";
 	else time = " for " + time;
 	offenses[user].push(user + " was " + cmd + " by " + su + time + " because " + reason);
 	$file.write("data/chat/offenses.txt", [$json.stringify(offenses)])
