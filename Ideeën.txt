@@ -1,0 +1,26 @@
+Website opbouw
+
+~			= Check if logged in
+Home(0) 	= Home not logged in
+Register	= Place to make account
+About		= Tells you what the website is all about
+Login		= Portal to login
+Home(1)		= Home logged in
+Chats(-1)	= All chats
+Games(-1)	= All games
+
+Home(0)		> Register,		About,		Login
+Register	> Home,			Login
+About		> Home(~)
+Login		> Home(1),		Home(0),	Register
+Home(1)		> Chats,		Games,		
+Chats		> Chat(-1), 	Home(~)
+Games		> Games(-1),	Home(~)
+
+
+
+
+Game ideas
+
+Hanging man in the chats
+Some sort of mine sweeper in games
