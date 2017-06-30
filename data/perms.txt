@@ -64,7 +64,7 @@
 			"chat.ban":{"has":true,"users":["user","trusted","moderator","admin","dev","secret"],"time":-1,"ghosts":["user","trusted","moderator","admin","dev","secret"]},
 			"chat.ipban":{"has":true,"users":["user","trusted","moderator","admin","dev"],"time":-1,"ghosts":["user","trusted","moderator","admin","dev"]},
 			"chat.ipunban":{"has":true,"users":["user","trusted","moderator","admin","dev","owner","secret"],"ghosts":["user","trusted","moderator","admin","dev","owner","secret"]},
-			"chat.group":{"has":true,"users":["user","trusted","moderator","admin","dev","secret"],"groups":["user","trusted","moderator","admin","dev","secret"],"ghosts":["user","trusted","moderator","admin","dev"]},
+			"chat.group":{"has":true,"users":["user","trusted","moderator","admin","dev","secret"],"groups":["user","trusted","moderator","admin","dev","secret"],"ghosts":["user","trusted","moderator","admin","dev","secret"]},
 			"chat.execute":{"has":true,"users":["user","trusted","moderator","admin","dev"],"ghosts":["user","trusted","moderator","admin","dev"]}
 		}
 	},
