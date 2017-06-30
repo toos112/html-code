@@ -399,5 +399,22 @@ var command = function(cc, cmd) {
 					cc.ws.write("<?All users over at " + cmd[1] + " are now unbanned!");
 			} else cc.ws.write("<?" + cmd[1] + " is not banned!?!");
 		}
+	} else if (cmd[0] == "group") {
+		if (cmd.length < 3) _invalid(cc, "args");
+		else {
+			if (!_exists(cc.username)) _invalid(cc, "user," + cmd[1]);
+			else {
+				if (perm.users.indexOf($perm.group(cmd[1])) == -1) _invalid(cc, "target," + cmd[1]);
+				else {
+					if (perm.groups.indexOf(cmd[2]) == -1) _invalid(cc, "group," + cmd[2]);
+					else {
+						var users = $json.parse($file.read("data/users.txt")[0]);
+						users[cmd[1]].group = cmd[2];
+						$file.write("data/users.txt", [$json.stringify(users)]);
+						cc.ws.write("<?" + cmd[1] + " is now " + cmd[2] + "!");
+					}
+				}
+			}
+		}
 	} else _invalid(cc, "cmd");
 };
