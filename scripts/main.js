@@ -46,7 +46,6 @@ function ChatClient(ws) {
 			var udata = getUserData(payload[0]);
 			if (udata.banned > $.time() || udata.banned == -1) {
 				_invalid(this, "banned");
-				this.ws.close();
 			} else if ($auth.check(payload[0], payload[1]) && this.username == "") {
 				chatList.push(this);
 				this.username = payload[0];
