@@ -406,7 +406,7 @@ var command = function(cc, cmd) {
 			else {
 				if (perm.users.indexOf($perm.group(cmd[1])) == -1) _invalid(cc, "target," + cmd[1]);
 				else {
-					if (perm.groups.indexOf(cmd[2]) == -1) _invalid(cc, "group," + cmd[2]);
+					if (perm.groups.indexOf(cmd[2]) == -1) _invalid(cc, "group," + cmd[2] + "," + cmd[1]);
 					else {
 						var users = $json.parse($file.read("data/users.txt")[0]);
 						users[cmd[1]].group = cmd[2];
