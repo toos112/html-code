@@ -36,6 +36,8 @@ check(function(success) {
 							message = message.substr(5) + " is not a user";
 						} else if (message.startsWith("banned")) {
 							message = "Your banned from this server. Turn arround and never come back to this realm of the wild internet.";
+						} else if (message.startsWith("group")) {
+							message = "User can not be changed to" + message.substr(6) + ".";
 						} else {
 							message = "An error occured";
 						}
