@@ -37,18 +37,18 @@ loadLevel("(js:
 	$.replaceAll($file.read("data/btd/maps/level 1/data.txt").join(""), "\"", "\\\"");
 :js)"));
 
-let enemies = JSON.parse("(js:
+let enemyTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
 	$.replaceAll($file.read("data/btd/btdEnemy.txt").join(""), "\"", "\\\"");
 :js)");
-
-let enemies = [];
-for (let e in enemies) {
-	e.r = e.width;
+for (let e in enemyTypes) {
+	enemyTypes[e].r = enemyTypes[e].width;
 }
 
-let spawnEnemy = function(e, r) {
+let enemies = [];
+
+let spawnEnemy = function(e) {
 	if (ldata.spawn == "LB") {
 		e.x = start.x;
 		e.y = start.y - e.r;
@@ -65,7 +65,7 @@ let spawnEnemy = function(e, r) {
 	enemies.push(e);
 	return e;
 };
-spawnEnemy({ r : 3 });
+spawnEnemy(enemyTypes["E0.2.0"]);
 	
 let canMove = function(obj, move, radius, grid) {
 	if (move.x != 0 && move.y != 0)
