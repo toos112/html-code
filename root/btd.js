@@ -42,9 +42,6 @@ let enemyTypes = JSON.parse("(js:
 	_.I("_scripts/file.js");
 	$.replaceAll($file.read("data/btd/btdEnemy.txt").join(""), "\"", "\\\"");
 :js)");
-for (let e in enemyTypes) {
-	enemyTypes[e].r = enemyTypes[e].width;
-}
 
 let enemies = [];
 
@@ -65,7 +62,14 @@ let spawnEnemy = function(e) {
 	enemies.push(e);
 	return e;
 };
-spawnEnemy(enemyTypes["E0.2.0"]);
+
+let _spawn = function(e) {
+	et = enemyTypes[e];
+	let speed = et.flyingSpeed;
+	if (speed == -1) speed = et.swimmingSpeed;
+	if (speed == -1) speed = et.landSpeed;
+	spawnEnemy({ r : et.width, s : speed, dlay : 0 });
+}
 	
 let canMove = function(obj, move, radius, grid) {
 	if (move.x != 0 && move.y != 0)
@@ -178,9 +182,12 @@ window.onload = function() {
 				enemies.splice(i, 1);
 				continue;
 			}
-			let path = findPath(enemies[i], end, enemies[i].r, grid);
-			enemies[i].x = path[1].x;
-			enemies[i].y = path[1].y;
+			if (enemies[i].dlay++ >= enemies[i].s) {
+				let path = findPath(enemies[i], end, enemies[i].r, grid);
+				enemies[i].x = path[1].x;
+				enemies[i].y = path[1].y;
+				enemies[i].dlay = 0;
+			}
 		}
 	}, 50);
 };
