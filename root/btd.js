@@ -6,12 +6,36 @@ for (let i = 0; i < grid.length; i++) {
 		grid[i][ii] = { name : null, solid : false };
 }
 
-let start = { x : 0, y : 0 }, end = { x : 63, y : 47 };
-grid[start.x][start.y] = { name : "start", solid : false };
-grid[end.x][end.y] = { name : "end", solid : false };
+let start, end;
+
+let loadLevel = function(level) {
+	for (let x = 0; x < level.length; x++) {
+		let row = level[x].split();
+		for (let y = 0; y < level.length; y++) {
+			if (row[y] == "S") {
+				start = { x : x, y : y };
+				grid[x][y] = { name : "start", solid : false };
+			} else if (row[y] == "E") {
+				end = { x : x, y : y };
+				grid[x][y] = { name : "end", solid : false };
+			} else if (row[y] == "#") {
+				grid[x][y] = { name : "wall", solid : true };
+			}
+		}
+	}
+};
+loadLevel((js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	_.I("_scripts/client.js");
+	_.I("scripts/login.js");
+	_.I("scripts/command.js")
+	
+	$file.read("data/btd/maps/level 1/level.txt").join("|");
+:js).split("|"));
 
 let enemies = [];
-enemies.push({ x : start.x, y : start.y, r : 2 });
+enemies.push({ x : start.x, y : start.y, r : 3 });
 	
 let canMove = function(obj, move, radius, grid) {
 	if (move.x != 0 && move.y != 0)
