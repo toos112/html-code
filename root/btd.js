@@ -1,5 +1,6 @@
 let canvas, context;
 let grid = new Array(64);
+let ldata;
 for (let i = 0; i < grid.length; i++) {
 	grid[i] = new Array(48);
 	for (let ii = 0; ii < grid[i].length; ii++)
@@ -8,11 +9,10 @@ for (let i = 0; i < grid.length; i++) {
 
 let start, end;
 
-let loadLevel = function(level) {
+let loadLevel = function(level, data) {
 	for (let y = 0; y < level.length; y++) {
 		let row = level[y].split("");
 		for (let x = 0; x < row.length; x++) {
-			console.log(row.length);
 			if (row[x] == "S") {
 				start = { x : x, y : y };
 				grid[x][y] = { name : "start", solid : false };
@@ -26,6 +26,7 @@ let loadLevel = function(level) {
 			}
 		}
 	}
+	ldata = data;
 };
 loadLevel("(js:
 	_.I("_scripts/std.js");
@@ -35,10 +36,36 @@ loadLevel("(js:
 	_.I("scripts/command.js")
 	
 	$file.read("data/btd/maps/level 1/level.txt").join("|");
-:js)".split("|"));
+:js)".split("|"), JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	_.I("_scripts/client.js");
+	_.I("scripts/login.js");
+	_.I("scripts/command.js")
+	
+	$file.read("data/btd/maps/level 1/level.txt").join("|");
+:js)"));
 
 let enemies = [];
-enemies.push({ x : start.x, y : start.y, r : 3 });
+
+let spawnEnemy = function(e, r) {
+	if (ldata.spawn == "LB") {
+		e.x = start.x;
+		e.y = start.y - r;
+	} else if (ldata.spawn == "RB") {
+		e.x = start.x - r;
+		e.y = start.y - r;
+	} else if (ldata.spawn == "LT") {
+		e.x = start.x;
+		e.y = start.y;
+	} else if (ldata.spawn == "RT") {
+		e.x = start.x - r;
+		e.y = start.y;
+	}
+	enemies.push(e);
+	return e;
+});
+spawnEnemy({ r : 3 });
 	
 let canMove = function(obj, move, radius, grid) {
 	if (move.x != 0 && move.y != 0)
