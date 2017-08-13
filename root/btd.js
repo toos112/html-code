@@ -9,22 +9,25 @@ for (let i = 0; i < grid.length; i++) {
 let start, end;
 
 let loadLevel = function(level) {
-	for (let x = 0; x < level.length; x++) {
-		let row = level[x].split();
-		for (let y = 0; y < level.length; y++) {
-			if (row[y] == "S") {
+	for (let y = 0; y < level.length; y++) {
+		let row = level[y].split("");
+		for (let x = 0; x < row.length; x++) {
+			console.log(row.length);
+			if (row[x] == "S") {
 				start = { x : x, y : y };
 				grid[x][y] = { name : "start", solid : false };
-			} else if (row[y] == "E") {
+			} else if (row[x] == "E") {
 				end = { x : x, y : y };
 				grid[x][y] = { name : "end", solid : false };
-			} else if (row[y] == "#") {
+			} else if (row[x] == "#") {
 				grid[x][y] = { name : "wall", solid : true };
+			} else if (row[x] == ".") {
+				grid[x][y] = { name : null, solid : false };
 			}
 		}
 	}
 };
-loadLevel((js:
+loadLevel("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
 	_.I("_scripts/client.js");
@@ -32,7 +35,7 @@ loadLevel((js:
 	_.I("scripts/command.js")
 	
 	$file.read("data/btd/maps/level 1/level.txt").join("|");
-:js).split("|"));
+:js)".split("|"));
 
 let enemies = [];
 enemies.push({ x : start.x, y : start.y, r : 3 });
