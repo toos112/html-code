@@ -1,0 +1,8 @@
+
+/*
+REMEMBER
+1 = 20 per s 2 = 10 per s 20 ticks per s
+TO ADD
+spawnTime
+hasCorpse
+*/
