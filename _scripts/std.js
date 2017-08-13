@@ -11,10 +11,7 @@ var $ = {
 		return JSON.parse(_qs);
 	},
 	replaceAll: function(str, s1, s2) {
-		var copy = "" + str;
-		while (copy.indexOf(s1) != -1)
-			copy = copy.replace(s1, s2);
-		return copy;
+		return str.split(s1).join(s2);
 	},
 	escape: function(str) {
 		str = $.replaceAll(str, "<", "&lt;");
