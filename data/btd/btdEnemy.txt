@@ -13,7 +13,7 @@
 		"attackFlying": true,
 		"attackSwimming": false,
 		"landSpeed": -1,
-		"flyingSpeed": 15,
+		"flyingSpeed": 3,
 		"swimmingSpeed": -1,
 		"onDeath": []
 	},
