@@ -1,5 +1,4 @@
 {
-	name : "Test",
-	spawn: "LB",
-	
+	"name" : "Test",
+	"spawn" : "LB"
 }

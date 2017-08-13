@@ -43,7 +43,7 @@ loadLevel("(js:
 	_.I("scripts/login.js");
 	_.I("scripts/command.js")
 	
-	$file.read("data/btd/maps/level 1/data.txt").join("");
+	$.replaceAll($file.read("data/btd/maps/level 1/data.txt").join(""), "\"", "\\\"");
 :js)"));
 
 let enemies = [];
@@ -65,7 +65,7 @@ let spawnEnemy = function(e, r) {
 	enemies.push(e);
 	return e;
 };
-spawnEnemy({ r : 3 });
+spawnEnemy({ r : 3 }, 3);
 	
 let canMove = function(obj, move, radius, grid) {
 	if (move.x != 0 && move.y != 0)
