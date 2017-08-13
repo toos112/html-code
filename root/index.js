@@ -28,6 +28,11 @@ function setLoggedIn() {
 			<span>\
 				Chat\
 			</span>\
+		</button>\
+		<button onclick = \"goToBtd();\" style = \"margin-top: 6px; margin-left: 6px; width: 96px;\">\
+			<span>\
+				BTD\
+			</span>\
 		</button>";
 }
 
@@ -71,6 +76,10 @@ function send() {
 
 function goToChat() {
 	location.replace("chat.html");
+}
+
+function goToBtd() {
+	location.replace("btd.html");
 }
 
 function logout() {
