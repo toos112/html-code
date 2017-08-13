@@ -1,5 +1,6 @@
 let canvas, context;
 let grid = new Array(64);
+let ldata;
 for (let i = 0; i < grid.length; i++) {
 	grid[i] = new Array(48);
 	for (let ii = 0; ii < grid[i].length; ii++)
@@ -8,23 +9,26 @@ for (let i = 0; i < grid.length; i++) {
 
 let start, end;
 
-let loadLevel = function(level) {
-	for (let x = 0; x < level.length; x++) {
-		let row = level[x].split();
-		for (let y = 0; y < level.length; y++) {
-			if (row[y] == "S") {
+let loadLevel = function(level, data) {
+	for (let y = 0; y < level.length; y++) {
+		let row = level[y].split("");
+		for (let x = 0; x < row.length; x++) {
+			if (row[x] == "S") {
 				start = { x : x, y : y };
 				grid[x][y] = { name : "start", solid : false };
-			} else if (row[y] == "E") {
+			} else if (row[x] == "E") {
 				end = { x : x, y : y };
 				grid[x][y] = { name : "end", solid : false };
-			} else if (row[y] == "#") {
+			} else if (row[x] == "#") {
 				grid[x][y] = { name : "wall", solid : true };
+			} else if (row[x] == ".") {
+				grid[x][y] = { name : null, solid : false };
 			}
 		}
 	}
+	ldata = data;
 };
-loadLevel((js:
+loadLevel("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
 	_.I("_scripts/client.js");
@@ -32,10 +36,36 @@ loadLevel((js:
 	_.I("scripts/command.js")
 	
 	$file.read("data/btd/maps/level 1/level.txt").join("|");
-:js).split("|"));
+:js)".split("|"), JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	_.I("_scripts/client.js");
+	_.I("scripts/login.js");
+	_.I("scripts/command.js")
+	
+	$file.read("data/btd/maps/level 1/level.txt").join("|");
+:js)"));
 
 let enemies = [];
-enemies.push({ x : start.x, y : start.y, r : 3 });
+
+let spawnEnemy = function(e, r) {
+	if (ldata.spawn == "LB") {
+		e.x = start.x;
+		e.y = start.y - r;
+	} else if (ldata.spawn == "RB") {
+		e.x = start.x - r;
+		e.y = start.y - r;
+	} else if (ldata.spawn == "LT") {
+		e.x = start.x;
+		e.y = start.y;
+	} else if (ldata.spawn == "RT") {
+		e.x = start.x - r;
+		e.y = start.y;
+	}
+	enemies.push(e);
+	return e;
+});
+spawnEnemy({ r : 3 });
 	
 let canMove = function(obj, move, radius, grid) {
 	if (move.x != 0 && move.y != 0)
