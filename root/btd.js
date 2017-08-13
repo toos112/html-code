@@ -29,43 +29,43 @@ let loadLevel = function(level, data) {
 	ldata = data;
 };
 loadLevel("(js:
-	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	_.I("_scripts/client.js");
-	_.I("scripts/login.js");
-	_.I("scripts/command.js")
-	
 	$file.read("data/btd/maps/level 1/level.txt").join("|");
 :js)".split("|"), JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	_.I("_scripts/client.js");
-	_.I("scripts/login.js");
-	_.I("scripts/command.js")
-	
 	$.replaceAll($file.read("data/btd/maps/level 1/data.txt").join(""), "\"", "\\\"");
 :js)"));
 
+let enemies = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/btd/btdEnemy.txt").join(""), "\"", "\\\"");
+:js)");
+
 let enemies = [];
+for (let e in enemies) {
+	e.r = e.width;
+}
 
 let spawnEnemy = function(e, r) {
 	if (ldata.spawn == "LB") {
 		e.x = start.x;
-		e.y = start.y - r;
+		e.y = start.y - e.r;
 	} else if (ldata.spawn == "RB") {
-		e.x = start.x - r;
-		e.y = start.y - r;
+		e.x = start.x - e.r;
+		e.y = start.y - e.r;
 	} else if (ldata.spawn == "LT") {
 		e.x = start.x;
 		e.y = start.y;
 	} else if (ldata.spawn == "RT") {
-		e.x = start.x - r;
+		e.x = start.x - e.r;
 		e.y = start.y;
 	}
 	enemies.push(e);
 	return e;
 };
-spawnEnemy({ r : 3 }, 3);
+spawnEnemy({ r : 3 });
 	
 let canMove = function(obj, move, radius, grid) {
 	if (move.x != 0 && move.y != 0)
