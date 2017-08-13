@@ -78,7 +78,7 @@ E0.1.1 {
 	hp: 40;
 	armor: 10;
 	damage: 20;
-	attackSpeed: 50;
+	attackSpeed: 60;
 	range: 1;
 	attackGround: true;
 	attackFlying: false;
@@ -95,7 +95,7 @@ E0.1.2 {
 	hp: 80;
 	armor: 20;
 	damage: 40;
-	attackSpeed: 60;
+	attackSpeed: 80;
 	range: 1;
 	attackGround: true;
 	attackFlying: false;
@@ -111,8 +111,8 @@ E0.2.0 {
 	height: 2;
 	hp: 40;
 	armor: 10;
-	damage: 20;
-	attackSpeed: 60;
+	damage: 10;
+	attackSpeed: 35;
 	range: 1;
 	attackGround: true;
 	attackFlying: false;
@@ -129,7 +129,7 @@ E0.2.1 {
 	hp: 80;
 	armor: 20;
 	damage: 20;
-	attackSpeed: 60;
+	attackSpeed: 40;
 	range: 1;
 	attackGround: true;
 	attackFlying: false;
@@ -145,8 +145,8 @@ E0.2.2 {
 	height: 3;
 	hp: 160;
 	armor: 40;
-	damage: 20;
-	attackSpeed: 60;
+	damage: 40;
+	attackSpeed: 50;
 	range: 1;
 	attackGround: true;
 	attackFlying: false;
@@ -158,9 +158,8 @@ E0.2.2 {
 }
 /*
 REMEMBER
-1 = 20 per s 2 = 10 per s
+1 = 20 per s 2 = 10 per s 20 ticks per s
 TO ADD
-strength
 spawnTime
 hasCorpse
 */
