@@ -13,7 +13,7 @@
 		"attackFlying": true,
 		"attackSwimming": false,
 		"landSpeed": -1,
-		"flyingSpeed": 3,
+		"flyingSpeed": 2.5,
 		"swimmingSpeed": -1,
 		"onDeath": []
 	},
@@ -31,7 +31,7 @@
 		"attackFlying": true,
 		"attackSwimming": false,
 		"landSpeed": -1,
-		"flyingSpeed": 20,
+		"flyingSpeed": 3,
 		"swimmingSpeed": -1,
 		"onDeath": []
 	},
@@ -49,7 +49,7 @@
 		"attackFlying": true,
 		"attackSwimming": false,
 		"landSpeed": -1,
-		"flyingSpeed": 25,
+		"flyingSpeed": 4,
 		"swimmingSpeed": -1,
 		"onDeath": []
 	},
@@ -66,9 +66,9 @@
 		"attackGround": true,
 		"attackFlying": false,
 		"attackSwimming": true,
-		"landSpeed": 50,
+		"landSpeed": 20,
 		"flyingSpeed": -1,
-		"swimmingSpeed": 100,
+		"swimmingSpeed": 30,
 		"onDeath": [{"name":"E0.0.0", "count":2}]
 	},
 	"E0.1.1" : {
@@ -84,9 +84,9 @@
 		"attackGround": true,
 		"attackFlying": false,
 		"attackSwimming": true,
-		"landSpeed": 60,
+		"landSpeed": 25,
 		"flyingSpeed": -1,
-		"swimmingSpeed": 120,
+		"swimmingSpeed": 40,
 		"onDeath": [{"name":"E0.0.0", "count":1},{"name":"E0.0.1", "count":2}]
 	},
 	"E0.1.2" : {
@@ -101,9 +101,9 @@
 		"attackGround": true,
 		"attackFlying": false,
 		"attackSwimming": true,
-		"landSpeed": 75,
+		"landSpeed": 35,
 		"flyingSpeed": -1,
-		"swimmingSpeed": 150,
+		"swimmingSpeed": 50,
 		"onDeath": [{"name":"E0.0.0", "count":1},{"name":"E0.0.1", "count":2},{"name":"E0.0.2", "count":1}]
 	},
 	"E0.2.0" : {
@@ -118,9 +118,9 @@
 		"attackGround": true,
 		"attackFlying": false,
 		"attackSwimming": true,
-		"landSpeed": 30,
+		"landSpeed": 15,
 		"flyingSpeed": -1,
-		"swimmingSpeed": 100,
+		"swimmingSpeed": 30,
 		"onDeath": [{"name":"E0.0.0", "count":2},{"name":"E0.1.0", "count":1}]
 	},
 	"E0.2.1" : {
@@ -135,9 +135,9 @@
 		"attackGround": true,
 		"attackFlying": false,
 		"attackSwimming": true,
-		"landSpeed": 40,
+		"landSpeed": 17.5,
 		"flyingSpeed": -1,
-		"swimmingSpeed": 100,
+		"swimmingSpeed": 40,
 		"onDeath": [{"name":"E0.0.0", "count":1},{"name":"E0.0.1", "count":2},{"name":"E0.1.1", "count":1}]
 	},
 	"E0.2.2" : {
@@ -152,9 +152,9 @@
 		"attackGround": true,
 		"attackFlying": false,
 		"attackSwimming": true,
-		"landSpeed": 60,
+		"landSpeed": 20,
 		"flyingSpeed": -1,
-		"swimmingSpeed": 120,
+		"swimmingSpeed": 50,
 		"onDeath": [{"name":"E0.0.0", "count":1},{"name":"E0.0.1", "count":2},{"name":"E0.0.2", "count":1},{"name":"E0.1.2", "count":1}]
 	}
 }
