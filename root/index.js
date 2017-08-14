@@ -196,7 +196,7 @@ function commit() {
 	var email = document.getElementById("email").value;
 	var password1 = document.getElementById("password1").value;
 	var password2 = document.getElementById("password2").value;
-	if (name.length >= 6  && name.length <= 16 && email.indexOf("@") != -1 && email.indexOf(".") > email.indexOf("@") && password1.length > 6 && password1.length <= 24 && password1 == password2) {
+	if (name.length >= 6  && name.length <= 16 && email.indexOf("@") != -1 && email.indexOf(".", email.indexOf("@")) != -1 && password1.length > 6 && password1.length <= 24 && password1 == password2) {
 		var xmlhttp = new XMLHttpRequest();
 		//password1 = encrypt(password1);
 		xmlhttp.open("GET", "auth/register.js?user=" + name + "&email=" + email + "&password=" + password1, true);
@@ -225,8 +225,8 @@ function commit() {
 	} else if (name.length >= 16) {
 		wrongInput("Please enter a shorter username");
 	} else if (email.indexOf("@") == -1) {
-		wrongInput("Please enter a  valid email");
-	} else if (email.indexOf(".") <= email.indexOf("@")) {
+		wrongInput("Please enter a valid email");
+	} else if (email.indexOf(".", email.indexOf("@")) == -1) {
 		wrongInput("Please enter a valid email");
 	} else if (password1.length <= 6) {
 		wrongInput("Please enter a longer password");
