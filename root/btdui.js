@@ -1,3 +1,2 @@
 var renderUI = function(ctx) {
-	
 };
