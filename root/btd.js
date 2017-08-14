@@ -8,6 +8,9 @@ for (let i = 0; i < grid.length; i++) {
 }
 
 let start, end;
+let cups = 0, cfps = 0;
+let ups = 0, fps = 0;
+let coins = 0, lives = 0;
 
 let loadLevel = function(level, data) {
 	for (let y = 0; y < level.length; y++) {
@@ -236,65 +239,74 @@ let _spawnrandom = function(e) {
 	enemies.push(enemy);
 }
 
+let draw = function() {
+	cfps++;
+	canvas.width = canvas.width;
+	for (let x = 0; x < grid.length; x++) {
+		for (let y = 0; y < grid[x].length; y++) {
+			if (grid[x][y].name == "start") {
+				context.fillStyle = "#3f7f3f";
+			} else if (grid[x][y].name == "end") {
+				context.fillStyle = "#7f3f3f";
+			} else if (grid[x][y].name == "wall") {
+				context.fillStyle = "#1f1f1f";
+			} else if (grid[x][y].name == "water") {
+				context.fillStyle = "#3f3f7f";
+			} else if (grid[x][y].name == "hill") {
+				context.fillStyle = "#7f5f3f";
+			} else context.fillStyle = (x % 2 == y % 2) ? "#373737" : "#474747";
+			context.fillRect(x * 8, y * 8, 8, 8);
+		}
+	}
+	for (let i = 0; i < enemies.length; i++) {
+		context.fillStyle = "#3f1f1f";
+		if (enemies[i].pi < enemies[i].path.length - 1) {
+			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
+			let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+			let tpos = { x : enemies[i].x + nextMove.x * fract, y : enemies[i].y + nextMove.y * fract };
+			context.fillRect(Math.round(tpos.x * 8), Math.round(tpos.y * 8), 8 * enemies[i].r, 8 * enemies[i].r);
+		} else {
+			context.fillRect(enemies[i].x * 8, enemies[i].y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
+		}
+	}
+	for (let i = 0; i < enemies.length; i++) {
+		context.beginPath();
+		context.globalAlpha = 0.2;
+		context.strokeStyle = "#ff0000";
+		context.lineWidth = 2;
+		context.moveTo(enemies[i].x * 8 + enemies[i].r * 4, enemies[i].y * 8 + enemies[i].r * 4);
+		for (let ii = enemies[i].pi; ii < enemies[i].path.length - 1; ii++)
+			context.lineTo(enemies[i].path[ii + 1].x * 8 + enemies[i].r * 4, enemies[i].path[ii + 1].y * 8 + enemies[i].r * 4);
+		context.stroke();
+		context.globalAlpha = 1;
+	}
+	renderUI(context);
+};
+
+let tick = function() {
+	cups++;
+	for (let i = enemies.length - 1; i >= 0; i--) {
+		if (isFinished(enemies[i], enemies[i])) {
+			enemies.splice(i, 1);
+			continue;
+		}
+		if (--enemies[i].dlay <= 0) {
+			enemies[i].x = enemies[i].path[++enemies[i].pi].x;
+			enemies[i].y = enemies[i].path[enemies[i].pi].y;
+			if (enemies[i].pi < enemies[i].path.length - 1)
+				enemies[i].dlay = moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+		}
+	}
+};
+
 window.onload = function() {
 	canvas = document.getElementById("game");
 	context = canvas.getContext("2d");
 	
+	setInterval(draw, 1000 / 20);
+	setInterval(tick, 1000 / 30);
 	setInterval(function() {
-		canvas.width = canvas.width;
-		for (let x = 0; x < grid.length; x++) {
-			for (let y = 0; y < grid[x].length; y++) {
-				if (grid[x][y].name == "start") {
-					context.fillStyle = "#3f7f3f";
-				} else if (grid[x][y].name == "end") {
-					context.fillStyle = "#7f3f3f";
-				} else if (grid[x][y].name == "wall") {
-					context.fillStyle = "#1f1f1f";
-				} else if (grid[x][y].name == "water") {
-					context.fillStyle = "#3f3f7f";
-				} else if (grid[x][y].name == "hill") {
-					context.fillStyle = "#7f5f3f";
-				} else context.fillStyle = (x % 2 == y % 2) ? "#373737" : "#474747";
-				context.fillRect(x * 8, y * 8, 8, 8);
-			}
-		}
-		for (let i = 0; i < enemies.length; i++) {
-			context.fillStyle = "#3f1f1f";
-			if (enemies[i].pi < enemies[i].path.length - 1) {
-				let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
-				let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
-				let tpos = { x : enemies[i].x + nextMove.x * fract, y : enemies[i].y + nextMove.y * fract };
-				context.fillRect(Math.round(tpos.x * 8), Math.round(tpos.y * 8), 8 * enemies[i].r, 8 * enemies[i].r);
-			} else {
-				context.fillRect(enemies[i].x * 8, enemies[i].y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
-			}
-		}
-		for (let i = 0; i < enemies.length; i++) {
-			context.beginPath();
-			context.globalAlpha = 0.2;
-			context.strokeStyle = "#ff0000";
-			context.lineWidth = 2;
-			context.moveTo(enemies[i].x * 8 + enemies[i].r * 4, enemies[i].y * 8 + enemies[i].r * 4);
-			for (let ii = enemies[i].pi; ii < enemies[i].path.length - 1; ii++)
-				context.lineTo(enemies[i].path[ii + 1].x * 8 + enemies[i].r * 4, enemies[i].path[ii + 1].y * 8 + enemies[i].r * 4);
-			context.stroke();
-			context.globalAlpha = 1;
-		}
-		renderUI(context);
-	}, 1000 / 20);
-	
-	setInterval(function() {
-		for (let i = enemies.length - 1; i >= 0; i--) {
-			if (isFinished(enemies[i], enemies[i])) {
-				enemies.splice(i, 1);
-				continue;
-			}
-			if (--enemies[i].dlay <= 0) {
-				enemies[i].x = enemies[i].path[++enemies[i].pi].x;
-				enemies[i].y = enemies[i].path[enemies[i].pi].y;
-				if (enemies[i].pi < enemies[i].path.length - 1)
-					enemies[i].dlay = moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
-			}
-		}
-	}, 1000 / 30);
+		fps = cfps, ups = cups;
+		cups = 0, cfps = 0;
+	}, 1000 / 1);
 };
