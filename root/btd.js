@@ -174,6 +174,7 @@ window.onload = function() {
 			context.fillStyle = "#3f1f1f";
 			context.fillRect(enemies[i].x * 8, enemies[i].y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
 		}
+		renderUi(context);
 	}, 50);
 	
 	setInterval(function() {
