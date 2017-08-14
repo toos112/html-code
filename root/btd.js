@@ -4,7 +4,7 @@ let ldata;
 for (let i = 0; i < grid.length; i++) {
 	grid[i] = new Array(48);
 	for (let ii = 0; ii < grid[i].length; ii++)
-		grid[i][ii] = { name : null, solid : false };
+		grid[i][ii] = null;
 }
 
 let start, end;
@@ -15,14 +15,18 @@ let loadLevel = function(level, data) {
 		for (let x = 0; x < row.length; x++) {
 			if (row[x] == "S") {
 				start = { x : x, y : y };
-				grid[x][y] = { name : "start", solid : false };
+				grid[x][y] = { name : "start", water : true, land : true, flight : true };
 			} else if (row[x] == "E") {
 				end = { x : x, y : y };
-				grid[x][y] = { name : "end", solid : false };
+				grid[x][y] = { name : "end", water : true, land : true, flight : true };
 			} else if (row[x] == "#") {
-				grid[x][y] = { name : "wall", solid : true };
+				grid[x][y] = { name : "wall", water : false, land : false, flight : false };
 			} else if (row[x] == ".") {
-				grid[x][y] = { name : null, solid : false };
+				grid[x][y] = { name : null, water : false, land : true, flight : true };
+			} else if (row[x] == "w") {
+				grid[x][y] = { name : "water", water : true, land : false, flight : true };
+			} else if (row[x] == "^") {
+				grid[x][y] = { name : "hill", water : false, land : false, flight : true };
 			}
 		}
 	}
@@ -44,42 +48,61 @@ let enemyTypes = JSON.parse("(js:
 :js)");
 
 let enemies = [];
+let landpath, waterpath, flypath;
 
-let spawnEnemy = function(e) {
+let spawnPos = function(r, start) {
+	let pos = { x : start.x, y : start.y };
+	if (ldata.spawn == "LB") {
+		pos.x = start.x;
+		pos.y = start.y - r + 1;
+	} else if (ldata.spawn == "RB") {
+		pos.x = start.x - r + 1;
+		pos.y = start.y - r + 1;
+	} else if (ldata.spawn == "LT") {
+		pos.x = start.x;
+		pos.y = start.y;
+	} else if (ldata.spawn == "RT") {
+		pos.x = start.x - r + 1;
+		pos.y = start.y;
+	}
+	return pos;
+}
+
+let spawnEnemy = function(e, start) {
 	if (ldata.spawn == "LB") {
 		e.x = start.x;
-		e.y = start.y - e.r;
+		e.y = start.y - e.r + 1;
 	} else if (ldata.spawn == "RB") {
-		e.x = start.x - e.r;
-		e.y = start.y - e.r;
+		e.x = start.x - e.r + 1;
+		e.y = start.y - e.r + 1;
 	} else if (ldata.spawn == "LT") {
 		e.x = start.x;
 		e.y = start.y;
 	} else if (ldata.spawn == "RT") {
-		e.x = start.x - e.r;
+		e.x = start.x - e.r + 1;
 		e.y = start.y;
 	}
-	enemies.push(e);
 	return e;
 };
 
-let _spawn = function(e) {
-	et = enemyTypes[e];
-	let speed = et.flyingSpeed;
-	if (speed == -1) speed = et.swimmingSpeed;
-	if (speed == -1) speed = et.landSpeed;
-	spawnEnemy({ r : et.width, s : speed, dlay : 0 });
+let getBestSpeed = function(p, o, grid) {
+	let t = grid[p.x][p.y];
+	let result = Infinity;
+	if (o.ls != -1 && o.ls < result && t.land) result = o.ls;
+	if (o.ss != -1 && o.ss < result && t.water) result = o.ss;
+	if (o.fs != -1 && o.fs < result && t.flight) result = o.fs;
+	return result;
 }
 	
-let canMove = function(obj, move, radius, grid) {
+let canMove = function(pos, move, grid, obj) {
 	if (move.x != 0 && move.y != 0)
-		if (!canMove(obj, { x : move.x, y : 0 }, radius, grid) || !canMove(obj, { x : 0, y : move.y }, radius, grid)) return false;
-	let nobj = { x : obj.x + move.x, y : obj.y + move.y };
-	for (let x = 0; x < radius; x++) {
-		for (let y = 0; y < radius; y++) {
+		if (!canMove(pos, { x : move.x, y : 0 }, grid, obj) || !canMove(pos, { x : 0, y : move.y }, grid, obj)) return false;
+	let nobj = { x : pos.x + move.x, y : pos.y + move.y };
+	for (let x = 0; x < obj.r; x++) {
+		for (let y = 0; y < obj.r; y++) {
 			if (nobj.x + x < 0 || nobj.x + x >= grid.length || nobj.y + y < 0 || nobj.y + y >= grid[nobj.x + x].length)
 				return false;
-			if (grid[nobj.x + x][nobj.y + y].solid)
+			if (getBestSpeed({ x : nobj.x + x, y : nobj.y + y }, obj, grid) == Infinity)
 				return false;
 		}
 	}
@@ -94,8 +117,37 @@ let dist = function(a, b) {
 	return Math.sqrt((a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y));
 }
 
+let omdist = function(posa, obja, posb, objb) {
+	return Math.abs(posa.x + obja.r / 2 - posb.x - objb.r / 2)
+		+ Math.abs(posa.y + obja.r / 2 - posb.y - objb.r / 2);
+}
+
+let odist = function(posa, obja, posb, objb) {
+	let dx = posa.x + obja.r / 2 - posb.x - objb.r / 2,
+		dy = posa.y + obja.r / 2 - posb.y - objb.r / 2;
+	return Math.sqrt(dx * dx + dy * dy);
+}
+
+let isFinished = function(pos, obj) {
+	return Math.abs(pos.x + obj.r * 0.5 - (end.x + 0.5)) < obj.r / 2
+		&& Math.abs(pos.y + obj.r * 0.5 - (end.y + 0.5)) < obj.r / 2;
+}
+
+let getSpeed = function(p, o, grid) {
+	let result = 0;
+	for (let x = 0; x < o.r; x++)
+		for (let y = 0; y < o.r; y++)
+			result += getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid)
+	return Math.round(result / (o.r * o.r));
+}
+
+let moveCost = function(p, o, np, grid, isrelative) {
+	let newpos = isrelative ? { x : o.x + np.x, y : o.y + np.y } : np;
+	return Math.round(getSpeed(p, o, grid) * odist(p, o, np, o));
+}
+
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
-let findPath = function(start, end, radius, grid) {
+let findPath = function(start, end, obj, grid) {
 	let open = [start];
 	let openMap = new Array(grid.length);
 	let closed = new Array(grid.length);
@@ -112,7 +164,7 @@ let findPath = function(start, end, radius, grid) {
 	}
 	openMap[start.x][start.y] = true;
 	grid[start.x][start.y].g = 0;
-	grid[start.x][start.y].f = mdist(start, end);
+	grid[start.x][start.y].f = omdist(start, obj, end, { r : 1 }) * getSpeed(start, obj, grid);
 	
 	while (open.length > 0) {
         let current, fScore = Infinity;
@@ -123,7 +175,7 @@ let findPath = function(start, end, radius, grid) {
             }
         }
 		
-		if (Math.abs(current.x - end.x) < radius && Math.abs(current.y - end.y) < radius) {
+		if (isFinished(current, obj)) {
             let result = [];
             while (current !== undefined) {
                 result.push(current);
@@ -137,21 +189,57 @@ let findPath = function(start, end, radius, grid) {
         closed[current.x][current.y] = true;
         
         for (let i = 0; i < possible.length; i++) {
-			if (!canMove(current, possible[i], radius, grid)) continue;
+			if (!canMove(current, possible[i], grid, obj)) continue;
             if (closed[current.x + possible[i].x][current.y + possible[i].y]) continue;
             let node = { x : current.x + possible[i].x, y : current.y + possible[i].y };
             if (!openMap[node.x][node.y]) {
 				open.push(node);
 				openMap[node.x][node.y] = true;
 			}
-            let gScore = grid[current.x][current.y].g + dist(current, node);
+            let gScore = grid[current.x][current.y].g + moveCost(current, obj, node, grid, false);
             if (gScore >= grid[node.x][node.y].g) continue;
             grid[node.x][node.y].p = current;
             grid[node.x][node.y].g = gScore;
-            grid[node.x][node.y].f = gScore + mdist(node, end);
+            grid[node.x][node.y].f = gScore + omdist(node, obj, end, { r : 1 }) * getSpeed(node, obj, grid);
         }
 	}
 };
+
+let updatePath = function(e) {
+	e.path = findPath(e, end, e, grid);
+	e.pi = 0;
+	return e;
+}
+
+let updatePaths = function() {
+	landPath = new Array(3);
+	for (let i = 0; i < 3; i++) {
+		landPath[i] = findPath(spawnPos(i + 1, start), end, { r : i + 1, ls : 1, ss : -1, fs : -1 }, grid);
+	}
+	for (let i = 0; i < enemies.length; i++)
+		enemies[i] = updatePath(enemies[i]);
+}
+updatePaths();
+
+let _spawn = function(e) {
+	et = enemyTypes[e];
+	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed }, start);
+	enemy = updatePath(enemy);
+	enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
+	enemies.push(enemy);
+};
+
+let _spawnrandom = function(e) {
+	et = enemyTypes[e];
+	let enemy = { r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed };
+	let pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
+	while (getSpeed(pos, enemy, grid) == Infinity)
+		pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
+	enemy = spawnEnemy(enemy, pos);
+	enemy = updatePath(enemy);
+	enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
+	enemies.push(enemy);
+}
 
 window.onload = function() {
 	canvas = document.getElementById("game");
@@ -166,29 +254,47 @@ window.onload = function() {
 					context.fillStyle = "#7f3f3f";
 				} else if (grid[x][y].name == "wall") {
 					context.fillStyle = "#1f1f1f";
+				} else if (grid[x][y].name == "water") {
+					context.fillStyle = "#3f3f7f";
+				} else if (grid[x][y].name == "hill") {
+					context.fillStyle = "#7f5f3f";
 				} else context.fillStyle = (x % 2 == y % 2) ? "#373737" : "#474747";
 				context.fillRect(x * 8, y * 8, 8, 8);
 			}
 		}
 		for (let i = 0; i < enemies.length; i++) {
 			context.fillStyle = "#3f1f1f";
-			context.fillRect(enemies[i].x * 8, enemies[i].y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
+			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
+			let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+			let tpos = { x : enemies[i].x + nextMove.x * fract, y : enemies[i].y + nextMove.y * fract };
+			context.fillRect(Math.round(tpos.x * 8), Math.round(tpos.y * 8), 8 * enemies[i].r, 8 * enemies[i].r);
 		}
-		renderUi(context);
-	}, 50);
+		for (let i = 0; i < enemies.length; i++) {
+			context.beginPath();
+			context.globalAlpha = 0.2;
+			context.strokeStyle = "#ff0000";
+			context.lineWidth = 2;
+			context.moveTo(enemies[i].x * 8 + enemies[i].r * 4, enemies[i].y * 8 + enemies[i].r * 4);
+			for (let ii = enemies[i].pi; ii < enemies[i].path.length - 1; ii++)
+				context.lineTo(enemies[i].path[ii + 1].x * 8 + enemies[i].r * 4, enemies[i].path[ii + 1].y * 8 + enemies[i].r * 4);
+			context.stroke();
+			context.globalAlpha = 1;
+		}
+		renderUI(context);
+	}, 1000 / 20);
 	
 	setInterval(function() {
 		for (let i = enemies.length - 1; i >= 0; i--) {
-			if (Math.abs(enemies[i].x - end.x) < enemies[i].r && Math.abs(enemies[i].y - end.y) < enemies[i].r) {
+			if (isFinished(enemies[i], enemies[i])) {
 				enemies.splice(i, 1);
 				continue;
 			}
-			if (enemies[i].dlay++ >= enemies[i].s) {
-				let path = findPath(enemies[i], end, enemies[i].r, grid);
-				enemies[i].x = path[1].x;
-				enemies[i].y = path[1].y;
-				enemies[i].dlay = 0;
+			if (--enemies[i].dlay <= 0) {
+				enemies[i].x = enemies[i].path[++enemies[i].pi].x;
+				enemies[i].y = enemies[i].path[enemies[i].pi].y;
+				if (enemies[i].pi < enemies[i].path.length - 1)
+					enemies[i].dlay = moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 			}
 		}
-	}, 50);
+	}, 1000 / 30);
 };
