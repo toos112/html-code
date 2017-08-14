@@ -1,0 +1,77 @@
+REMEMBER
+1 = 20 per s 2 = 10 per s 20 ticks per s
+TO ADD
+spawnTime
+hasCorpse
+
+
+BALANCING
+
+
+btd verranderen naar td
+
+waves
+
+towers
+
+levels
+
+more balancing
+
+bullet types
+
+difficulty waves
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bosses
+
+
+
+
+
+new enemies
