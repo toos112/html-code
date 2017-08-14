@@ -48,7 +48,6 @@ let enemyTypes = JSON.parse("(js:
 :js)");
 
 let enemies = [];
-let landpath, waterpath, flypath;
 
 let spawnPos = function(r, start) {
 	let pos = { x : start.x, y : start.y };
@@ -164,7 +163,7 @@ let findPath = function(start, end, obj, grid) {
 	}
 	openMap[start.x][start.y] = true;
 	grid[start.x][start.y].g = 0;
-	grid[start.x][start.y].f = omdist(start, obj, end, { r : 1 }) * getSpeed(start, obj, grid);
+	grid[start.x][start.y].f = odist(start, obj, end, { r : 1 });
 	
 	while (open.length > 0) {
         let current, fScore = Infinity;
@@ -200,7 +199,7 @@ let findPath = function(start, end, obj, grid) {
             if (gScore >= grid[node.x][node.y].g) continue;
             grid[node.x][node.y].p = current;
             grid[node.x][node.y].g = gScore;
-            grid[node.x][node.y].f = gScore + omdist(node, obj, end, { r : 1 }) * getSpeed(node, obj, grid);
+            grid[node.x][node.y].f = gScore + odist(node, obj, end, { r : 1 });
         }
 	}
 };
@@ -212,10 +211,6 @@ let updatePath = function(e) {
 }
 
 let updatePaths = function() {
-	landPath = new Array(3);
-	for (let i = 0; i < 3; i++) {
-		landPath[i] = findPath(spawnPos(i + 1, start), end, { r : i + 1, ls : 1, ss : -1, fs : -1 }, grid);
-	}
 	for (let i = 0; i < enemies.length; i++)
 		enemies[i] = updatePath(enemies[i]);
 }
@@ -246,6 +241,7 @@ window.onload = function() {
 	context = canvas.getContext("2d");
 	
 	setInterval(function() {
+		canvas.width = canvas.width;
 		for (let x = 0; x < grid.length; x++) {
 			for (let y = 0; y < grid[x].length; y++) {
 				if (grid[x][y].name == "start") {
@@ -264,10 +260,14 @@ window.onload = function() {
 		}
 		for (let i = 0; i < enemies.length; i++) {
 			context.fillStyle = "#3f1f1f";
-			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
-			let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
-			let tpos = { x : enemies[i].x + nextMove.x * fract, y : enemies[i].y + nextMove.y * fract };
-			context.fillRect(Math.round(tpos.x * 8), Math.round(tpos.y * 8), 8 * enemies[i].r, 8 * enemies[i].r);
+			if (enemies[i].pi < enemies[i].path.length - 1) {
+				let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
+				let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+				let tpos = { x : enemies[i].x + nextMove.x * fract, y : enemies[i].y + nextMove.y * fract };
+				context.fillRect(Math.round(tpos.x * 8), Math.round(tpos.y * 8), 8 * enemies[i].r, 8 * enemies[i].r);
+			} else {
+				context.fillRect(enemies[i].x * 8, enemies[i].y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
+			}
 		}
 		for (let i = 0; i < enemies.length; i++) {
 			context.beginPath();
