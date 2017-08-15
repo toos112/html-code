@@ -279,7 +279,6 @@ let draw = function() {
 };
 
 let tick = function() {
-	updatePaths();
 	for (let i = enemies.length - 1; i >= 0; i--) {
 		if (isFinished(enemies[i], enemies[i])) {
 			enemies.splice(i, 1);
