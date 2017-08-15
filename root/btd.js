@@ -12,31 +12,26 @@ let cups = 0, cfps = 0;
 let ups = 0, fps = 0;
 let coins = 0, lives = 0;
 
-let UPS = 30;
-
-let setGridTile = function(pos, tile) {
-	if (tile == "S") {
-		start = { x : pos.x, y : pos.y };
-		grid[pos.x][pos.y] = { name : "start", water : true, land : true, flight : true };
-	} else if (tile == "E") {
-		end = { x : pos.x, y : pos.y };
-		grid[pos.x][pos.y] = { name : "end", water : true, land : true, flight : true };
-	} else if (tile == "#") {
-		grid[pos.x][pos.y] = { name : "wall", water : false, land : false, flight : false };
-	} else if (tile == ".") {
-		grid[pos.x][pos.y] = { name : null, water : false, land : true, flight : true };
-	} else if (tile == "w") {
-		grid[pos.x][pos.y] = { name : "water", water : true, land : false, flight : true };
-	} else if (tile == "^") {
-		grid[pos.x][pos.y] = { name : "hill", water : false, land : false, flight : true };
-	}
-};
-
 let loadLevel = function(level, data) {
 	for (let y = 0; y < level.length; y++) {
 		let row = level[y].split("");
-		for (let x = 0; x < row.length; x++)
-			setGridTile({ x : x, y : y }, row[x]);
+		for (let x = 0; x < row.length; x++) {
+			if (row[x] == "S") {
+				start = { x : x, y : y };
+				grid[x][y] = { name : "start", water : true, land : true, flight : true };
+			} else if (row[x] == "E") {
+				end = { x : x, y : y };
+				grid[x][y] = { name : "end", water : true, land : true, flight : true };
+			} else if (row[x] == "#") {
+				grid[x][y] = { name : "wall", water : false, land : false, flight : false };
+			} else if (row[x] == ".") {
+				grid[x][y] = { name : null, water : false, land : true, flight : true };
+			} else if (row[x] == "w") {
+				grid[x][y] = { name : "water", water : true, land : false, flight : true };
+			} else if (row[x] == "^") {
+				grid[x][y] = { name : "hill", water : false, land : false, flight : true };
+			}
+		}
 	}
 	ldata = data;
 };
@@ -57,91 +52,101 @@ let enemyTypes = JSON.parse("(js:
 
 let enemies = [];
 
-let spawnEnemy = function(e, start, sloc) {
-	if (sloc == "LB") {
+let spawnPos = function(r, start) {
+	let pos = { x : start.x, y : start.y };
+	if (ldata.spawn == "LB") {
+		pos.x = start.x;
+		pos.y = start.y - r + 1;
+	} else if (ldata.spawn == "RB") {
+		pos.x = start.x - r + 1;
+		pos.y = start.y - r + 1;
+	} else if (ldata.spawn == "LT") {
+		pos.x = start.x;
+		pos.y = start.y;
+	} else if (ldata.spawn == "RT") {
+		pos.x = start.x - r + 1;
+		pos.y = start.y;
+	}
+	return pos;
+}
+
+let spawnEnemy = function(e, start) {
+	if (ldata.spawn == "LB") {
 		e.x = start.x;
 		e.y = start.y - e.r + 1;
-	} else if (sloc == "RB") {
+	} else if (ldata.spawn == "RB") {
 		e.x = start.x - e.r + 1;
 		e.y = start.y - e.r + 1;
-	} else if (sloc == "LT") {
+	} else if (ldata.spawn == "LT") {
 		e.x = start.x;
 		e.y = start.y;
-	} else if (sloc == "RT") {
+	} else if (ldata.spawn == "RT") {
 		e.x = start.x - e.r + 1;
 		e.y = start.y;
 	}
 	return e;
 };
 
-let killEnemy = function(index) {
-	
-};
-
 let getBestSpeed = function(p, o, grid) {
 	let t = grid[p.x][p.y];
-	let result = 0;
-	if (o.ls > result && t.land) result = o.ls;
-	if (o.ss > result && t.water) result = o.ss;
-	if (o.fs > result && t.flight) result = o.fs;
+	let result = Infinity;
+	if (o.ls != -1 && o.ls < result && t.land) result = o.ls;
+	if (o.ss != -1 && o.ss < result && t.water) result = o.ss;
+	if (o.fs != -1 && o.fs < result && t.flight) result = o.fs;
 	return result;
-};
-
-let isColliding = function(p, o, grid) {
-	for (let x = 0; x < o.r; x++) {
-		for (let y = 0; y < o.r; y++) {
-			if (p.x + x < 0 || p.x + x >= grid.length || p.y + y < 0 || p.y + y >= grid[p.x + x].length)
-				return true;
-			if (getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid) == 0)
-				return true;
-		}
-	}
-	return false;
-};
+}
 	
 let canMove = function(pos, move, grid, obj) {
 	if (move.x != 0 && move.y != 0)
 		if (!canMove(pos, { x : move.x, y : 0 }, grid, obj) || !canMove(pos, { x : 0, y : move.y }, grid, obj)) return false;
 	let nobj = { x : pos.x + move.x, y : pos.y + move.y };
-	return !isColliding(nobj, obj, grid);
-};
+	for (let x = 0; x < obj.r; x++) {
+		for (let y = 0; y < obj.r; y++) {
+			if (nobj.x + x < 0 || nobj.x + x >= grid.length || nobj.y + y < 0 || nobj.y + y >= grid[nobj.x + x].length)
+				return false;
+			if (getBestSpeed({ x : nobj.x + x, y : nobj.y + y }, obj, grid) == Infinity)
+				return false;
+		}
+	}
+	return true;
+}
 
 let mdist = function(a, b) {
 	return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-};
+}
 
 let dist = function(a, b) {
 	return Math.sqrt((a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y));
-};
+}
 
 let omdist = function(posa, obja, posb, objb) {
 	return Math.abs(posa.x + obja.r / 2 - posb.x - objb.r / 2)
 		+ Math.abs(posa.y + obja.r / 2 - posb.y - objb.r / 2);
-};
+}
 
 let odist = function(posa, obja, posb, objb) {
 	let dx = posa.x + obja.r / 2 - posb.x - objb.r / 2,
 		dy = posa.y + obja.r / 2 - posb.y - objb.r / 2;
 	return Math.sqrt(dx * dx + dy * dy);
-};
+}
 
 let isFinished = function(pos, obj) {
 	return Math.abs(pos.x + obj.r * 0.5 - (end.x + 0.5)) < obj.r / 2
 		&& Math.abs(pos.y + obj.r * 0.5 - (end.y + 0.5)) < obj.r / 2;
-};
+}
 
 let getSpeed = function(p, o, grid) {
 	let result = 0;
 	for (let x = 0; x < o.r; x++)
 		for (let y = 0; y < o.r; y++)
 			result += getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid)
-	return result / (o.r * o.r);
-};
+	return Math.round(result / (o.r * o.r));
+}
 
 let moveCost = function(p, o, np, grid, isrelative) {
 	let newpos = isrelative ? { x : o.x + np.x, y : o.y + np.y } : np;
-	return (UPS / getSpeed(p, o, grid)) * odist(p, o, np, o);
-};
+	return Math.round(getSpeed(p, o, grid) * odist(p, o, np, o));
+}
 
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
 let findPath = function(start, end, obj, grid) {
@@ -206,17 +211,17 @@ let updatePath = function(e) {
 	e.path = findPath(e, end, e, grid);
 	e.pi = 0;
 	return e;
-};
+}
 
 let updatePaths = function() {
 	for (let i = 0; i < enemies.length; i++)
 		enemies[i] = updatePath(enemies[i]);
-};
+}
 updatePaths();
 
 let _spawn = function(e) {
 	et = enemyTypes[e];
-	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed }, start, ldata.spawn);
+	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed }, start);
 	enemy = updatePath(enemy);
 	enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
 	enemies.push(enemy);
@@ -226,15 +231,16 @@ let _spawnrandom = function(e) {
 	et = enemyTypes[e];
 	let enemy = { r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed };
 	let pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
-	while (isColliding(pos, enemy, grid))
+	while (getSpeed(pos, enemy, grid) == Infinity)
 		pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
-	enemy = spawnEnemy(enemy, pos, ldata.spawn);
+	enemy = spawnEnemy(enemy, pos);
 	enemy = updatePath(enemy);
 	enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
 	enemies.push(enemy);
-};
+}
 
 let draw = function() {
+	cfps++;
 	canvas.width = canvas.width;
 	for (let x = 0; x < grid.length; x++) {
 		for (let y = 0; y < grid[x].length; y++) {
@@ -258,7 +264,7 @@ let draw = function() {
 			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
 			let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 			let tpos = { x : enemies[i].x + nextMove.x * fract, y : enemies[i].y + nextMove.y * fract };
-			context.fillRect(tpos.x * 8, tpos.y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
+			context.fillRect(Math.round(tpos.x * 8), Math.round(tpos.y * 8), 8 * enemies[i].r, 8 * enemies[i].r);
 		} else {
 			context.fillRect(enemies[i].x * 8, enemies[i].y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
 		}
@@ -275,11 +281,10 @@ let draw = function() {
 		context.globalAlpha = 1;
 	}
 	renderUI(context);
-	cfps++;
 };
 
 let tick = function() {
-	updatePaths();
+	cups++;
 	for (let i = enemies.length - 1; i >= 0; i--) {
 		if (isFinished(enemies[i], enemies[i])) {
 			enemies.splice(i, 1);
@@ -289,10 +294,9 @@ let tick = function() {
 			enemies[i].x = enemies[i].path[++enemies[i].pi].x;
 			enemies[i].y = enemies[i].path[enemies[i].pi].y;
 			if (enemies[i].pi < enemies[i].path.length - 1)
-				enemies[i].dlay += moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+				enemies[i].dlay = moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 		}
 	}
-	cups++;
 };
 
 window.onload = function() {
@@ -300,7 +304,7 @@ window.onload = function() {
 	context = canvas.getContext("2d");
 	
 	setInterval(draw, 1000 / 20);
-	setInterval(tick, 1000 / UPS);
+	setInterval(tick, 1000 / 30);
 	setInterval(function() {
 		fps = cfps, ups = cups;
 		cups = 0, cfps = 0;
