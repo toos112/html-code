@@ -22,10 +22,10 @@ bullet types
 
 difficulty waves
 
+Effect systeem
 
 
-
-
+SET DELAY IN WAVES TO SECONDS
 
 
 
