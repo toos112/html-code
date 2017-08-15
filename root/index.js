@@ -29,9 +29,9 @@ function setLoggedIn() {
 				Chat\
 			</span>\
 		</button>\
-		<button onclick = \"goToBtd();\" style = \"margin-top: 6px; margin-left: 6px; width: 96px;\">\
+		<button onclick = \"goToTowerDefense();\" style = \"margin-top: 6px; margin-left: 6px; width: 96px;\">\
 			<span>\
-				BTD\
+				Tower Defense\
 			</span>\
 		</button>";
 }
@@ -78,8 +78,8 @@ function goToChat() {
 	location.replace("chat.html");
 }
 
-function goToBtd() {
-	location.replace("btd.html");
+function goToTowerDefense() {
+	location.replace("towdef.html");
 }
 
 function logout() {
