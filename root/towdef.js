@@ -42,17 +42,17 @@ let loadLevel = function(level, data) {
 };
 loadLevel("(js:
 	_.I("_scripts/file.js");
-	$file.read("data/btd/maps/level 1/level.txt").join("|");
+	$file.read("data/towdef/maps/level 1/level.txt").join("|");
 :js)".split("|"), JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/btd/maps/level 1/data.txt").join(""), "\"", "\\\"");
+	$.replaceAll($file.read("data/towdef/maps/level 1/data.txt").join(""), "\"", "\\\"");
 :js)"));
 
 let enemyTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/btd/btdEnemy.txt").join(""), "\"", "\\\"");
+	$.replaceAll($file.read("data/towdef/enemies.txt").join(""), "\"", "\\\"");
 :js)");
 
 let enemies = [];
