@@ -57,6 +57,12 @@ let enemyTypes = JSON.parse("(js:
 
 let enemies = [];
 let pendingSpawns = [];
+let waves = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/towdef/maps/level 1/waves.txt").join(""), "\"", "\\\"");
+:js)");
+let waveQueue = [];
 
 let spawnEnemy = function(e, start, sloc) {
 	if (sloc == "LB") {
@@ -219,6 +225,28 @@ let spawnAt = function(e, pos, com) {
 	enemies.push(enemy);
 };
 
+let clone = function(obj) {
+	if (Array.isArray(obj)) {
+		let result = [];
+		for (let i = 0; i < obj.length; i++)
+			result.push(clone(obj[i]));
+		return result;
+	} else if (typeof obj === "object") {
+		let result = {};
+		for (let key in obj)
+			result[key] = clone(obj[key]);
+		return result;
+	} else return obj;
+}
+
+let spawnWave = function(index) {
+	let startIndex = waveQueue.length;
+	waveQueue = waveQueue.concat(clone(waves[index]));
+	for (let i = startIndex; i < waveQueue.length; i++)
+		if (waveQueue[i].type == "delay")
+			waveQueue[i].delay *= UPS;
+};
+
 let killEnemy = function(index) {
 	let enemy = enemies.splice(index, 1)[0];
 	let spawnDelay = 0;
@@ -284,7 +312,25 @@ let draw = function() {
 	cfps++;
 };
 
+let waveTick = function() {
+	if (waveQueue.length > 0) {
+		let obj = waveQueue[0];
+		if (obj.type == "delay") {
+			if (--obj.delay <= 0)
+				waveQueue.splice(0, 1);
+		} else if (obj.type == "spawn") {
+			enemy = obj.enemies[0];
+			spawnAt(enemy.name, start, ldata.spawn);
+			if (--enemy.count <= 0)
+				obj.enemies.splice(0, 1);
+			if (obj.enemies.length == 0)
+				waveQueue.splice(0, 1);
+		}
+	}
+};
+
 let tick = function() {
+	waveTick();
 	for (let i = pendingSpawns.length - 1; i >= 0; i--) {
 		if (--pendingSpawns[i].ticksLeft <= 0) {
 			spawnAt(pendingSpawns[i].name, pendingSpawns[i].pos);
