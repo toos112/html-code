@@ -140,7 +140,7 @@ let getSpeed = function(p, o, grid) {
 
 let moveCost = function(p, o, np, grid, isrelative) {
 	let newpos = isrelative ? { x : o.x + np.x, y : o.y + np.y } : np;
-	return (UPS / getSpeed(p, o, grid)) * odist(p, o, np, o);
+	return (UPS / getSpeed(p, o, grid)) * omdist(p, o, np, o);
 };
 
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
@@ -161,7 +161,7 @@ let findPath = function(start, end, obj, grid) {
 	}
 	openMap[start.x][start.y] = true;
 	grid[start.x][start.y].g = 0;
-	grid[start.x][start.y].f = odist(start, obj, end, { r : 1 });
+	grid[start.x][start.y].f = omdist(start, obj, end, { r : 1 });
 	
 	while (open.length > 0) {
         let current, fScore = Infinity;
@@ -197,7 +197,7 @@ let findPath = function(start, end, obj, grid) {
             if (gScore >= grid[node.x][node.y].g) continue;
             grid[node.x][node.y].p = current;
             grid[node.x][node.y].g = gScore;
-            grid[node.x][node.y].f = gScore + odist(node, obj, end, { r : 1 });
+            grid[node.x][node.y].f = gScore + omdist(node, obj, end, { r : 1 });
         }
 	}
 };
