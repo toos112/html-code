@@ -32,7 +32,7 @@
 		{"type":"delay","delay":2},
 		{"type":"spawn","enemies":[{"name":"E0.0.0"; "count":1;}]}
 	]
-	"Wave 2": [
+	"Wave 4": [
 		{"type":"spawn","enemies":[{"name":"E0.0.0"; "count":1;}]},
 		{"type":"delay","delay":2},
 		{"type":"spawn","enemies":[{"name":"E0.0.1"; "count":1;}]},
