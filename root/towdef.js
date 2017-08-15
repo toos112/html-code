@@ -284,7 +284,9 @@ let tick = function() {
 			enemies.splice(i, 1);
 			continue;
 		}
-		if (--enemies[i].dlay <= 0) {
+		
+		--enemies[i].dlay;
+		while (enemies[i].dlay <= 0 && enemies[i].pi < enemies[i].path.length - 1) {
 			enemies[i].x = enemies[i].path[++enemies[i].pi].x;
 			enemies[i].y = enemies[i].path[enemies[i].pi].y;
 			if (enemies[i].pi < enemies[i].path.length - 1)
