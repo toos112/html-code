@@ -56,6 +56,7 @@ let enemyTypes = JSON.parse("(js:
 :js)");
 
 let enemies = [];
+let pendingSpawns = [];
 
 let spawnEnemy = function(e, start, sloc) {
 	if (sloc == "LB") {
@@ -72,10 +73,6 @@ let spawnEnemy = function(e, start, sloc) {
 		e.y = start.y;
 	}
 	return e;
-};
-
-let killEnemy = function(index) {
-	
 };
 
 let getBestSpeed = function(p, o, grid) {
@@ -214,24 +211,33 @@ let updatePaths = function() {
 };
 updatePaths();
 
-let _spawn = function(e) {
+let spawnAt = function(e, pos, com) {
 	et = enemyTypes[e];
-	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed }, start, ldata.spawn);
+	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
 	enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
 	enemies.push(enemy);
 };
 
+let killEnemy = function(index) {
+	let enemy = enemies.splice(index, 1)[0];
+	let spawnDelay = 0;
+	for (let i = 0; i < enemy.od.length; i++)
+		for (let ii = 0; ii < enemy.od[i].count; ii++)
+			pendingSpawns.push({ name : enemy.od[i].name, pos : enemy, ticksLeft : ++spawnDelay * 5 });
+};
+
+let _spawn = function(e) {
+	spawnAt(e, start, ldata.spawn);
+};
+
 let _spawnrandom = function(e) {
 	et = enemyTypes[e];
-	let enemy = { r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed };
+	let enemy = { r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath };
 	let pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
 	while (isColliding(pos, enemy, grid))
 		pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
-	enemy = spawnEnemy(enemy, pos, ldata.spawn);
-	enemy = updatePath(enemy);
-	enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
-	enemies.push(enemy);
+	spawnAt(e, pos);
 };
 
 let draw = function() {
@@ -279,8 +285,14 @@ let draw = function() {
 };
 
 let tick = function() {
+	for (let i = pendingSpawns.length - 1; i >= 0; i--) {
+		if (--pendingSpawns[i].ticksLeft <= 0) {
+			spawnAt(pendingSpawns[i].name, pendingSpawns[i].pos);
+			pendingSpawns.splice(i, 1);
+		}
+	}
 	for (let i = enemies.length - 1; i >= 0; i--) {
-		if (isFinished(enemies[i], enemies[i])) {
+		if (isFinished(enemies[i], enemies[i]) || isColliding(enemies[i], enemies[i], grid)) {
 			enemies.splice(i, 1);
 			continue;
 		}
