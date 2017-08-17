@@ -14,22 +14,31 @@ let coins = 0, lives = 0;
 
 let UPS = 30;
 
+let tileMap = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/towdef/tilemap.txt").join(""), "\"", "\\\"");
+:js)");
+
+let clone = function(obj) {
+	if (Array.isArray(obj)) {
+		let result = [];
+		for (let i = 0; i < obj.length; i++)
+			result.push(clone(obj[i]));
+		return result;
+	} else if (typeof obj === "object") {
+		let result = {};
+		for (let key in obj)
+			result[key] = clone(obj[key]);
+		return result;
+	} else return obj;
+};
+
 let setGridTile = function(pos, tile) {
-	if (tile == "S") {
-		start = { x : pos.x, y : pos.y };
-		grid[pos.x][pos.y] = { name : "start", water : true, land : true, flight : true };
-	} else if (tile == "E") {
-		end = { x : pos.x, y : pos.y };
-		grid[pos.x][pos.y] = { name : "end", water : true, land : true, flight : true };
-	} else if (tile == "#") {
-		grid[pos.x][pos.y] = { name : "wall", water : false, land : false, flight : false };
-	} else if (tile == ".") {
-		grid[pos.x][pos.y] = { name : null, water : false, land : true, flight : true };
-	} else if (tile == "w") {
-		grid[pos.x][pos.y] = { name : "water", water : true, land : false, flight : true };
-	} else if (tile == "^") {
-		grid[pos.x][pos.y] = { name : "hill", water : false, land : false, flight : true };
-	}
+	let obj = clone(tileMap[tile]);
+	if (obj.name == "start") start = { x : pos.x, y : pos.y };
+	else if (obj.name == "end") end = { x : pos.x, y : pos.y };
+	grid[pos.x][pos.y] = obj;
 };
 
 let loadLevel = function(level, data) {
@@ -225,20 +234,6 @@ let spawnAt = function(e, pos, com) {
 	enemies.push(enemy);
 };
 
-let clone = function(obj) {
-	if (Array.isArray(obj)) {
-		let result = [];
-		for (let i = 0; i < obj.length; i++)
-			result.push(clone(obj[i]));
-		return result;
-	} else if (typeof obj === "object") {
-		let result = {};
-		for (let key in obj)
-			result[key] = clone(obj[key]);
-		return result;
-	} else return obj;
-}
-
 let spawnWave = function(index) {
 	let startIndex = waveQueue.length;
 	waveQueue = waveQueue.concat(clone(waves[index]));
@@ -268,24 +263,43 @@ let _spawnrandom = function(e) {
 	spawnAt(e, pos);
 };
 
-let draw = function() {
-	canvas.width = canvas.width;
+let mapCanvas = document.createElement("canvas");
+mapCanvas.width = 64 * 8;
+mapCanvas.height = 48 * 8;
+mapContext = mapCanvas.getContext("2d");
+mapContext.fillStyle = "#373737";
+mapContext.fillRect(0, 0, 64 * 8, 48 * 8);
+let gridRenderCache = new Array(64);
+for (let i = 0; i < gridRenderCache.length; i++) {
+	gridRenderCache[i] = new Array(48);
+	for (let ii = 0; ii < gridRenderCache[i].length; ii++)
+		gridRenderCache[i][ii] = "#373737";
+}
+let renderMap = function() {
 	for (let x = 0; x < grid.length; x++) {
 		for (let y = 0; y < grid[x].length; y++) {
-			if (grid[x][y].name == "start") {
-				context.fillStyle = "#3f7f3f";
-			} else if (grid[x][y].name == "end") {
-				context.fillStyle = "#7f3f3f";
-			} else if (grid[x][y].name == "wall") {
-				context.fillStyle = "#1f1f1f";
-			} else if (grid[x][y].name == "water") {
-				context.fillStyle = "#3f3f7f";
-			} else if (grid[x][y].name == "hill") {
-				context.fillStyle = "#7f5f3f";
-			} else context.fillStyle = (x % 2 == y % 2) ? "#373737" : "#474747";
-			context.fillRect(x * 8, y * 8, 8, 8);
+			if (grid[x][y].color != "none") {
+				if (gridRenderCache[x][y] != grid[x][y].color) {
+					mapContext.fillStyle = grid[x][y].color;
+					gridRenderCache[x][y] = grid[x][y].color;
+					mapContext.fillRect(x * 8, y * 8, 8, 8);
+				}
+			} else {
+				let color = x % 2 == y % 2 ? "#373737" : "#474747";
+				if (gridRenderCache[x][y] != color) {
+					mapContext.fillStyle = color;
+					gridRenderCache[x][y] = color;
+					mapContext.fillRect(x * 8, y * 8, 8, 8);
+				}
+			}
 		}
 	}
+};
+
+let draw = function() {
+	canvas.width = canvas.width;
+	renderMap();
+	context.drawImage(mapCanvas, 0, 0);
 	for (let i = 0; i < enemies.length; i++) {
 		context.fillStyle = "#3f1f1f";
 		if (enemies[i].pi < enemies[i].path.length - 1) {
@@ -297,14 +311,14 @@ let draw = function() {
 			context.fillRect(enemies[i].x * 8, enemies[i].y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
 		}
 	}
-	for (let i = 0; i < enemies.length; i++) {
+	if (enemies.length > 0) {
 		context.beginPath();
 		context.globalAlpha = 0.2;
 		context.strokeStyle = "#ff0000";
 		context.lineWidth = 2;
-		context.moveTo(enemies[i].x * 8 + enemies[i].r * 4, enemies[i].y * 8 + enemies[i].r * 4);
-		for (let ii = enemies[i].pi; ii < enemies[i].path.length - 1; ii++)
-			context.lineTo(enemies[i].path[ii + 1].x * 8 + enemies[i].r * 4, enemies[i].path[ii + 1].y * 8 + enemies[i].r * 4);
+		context.moveTo(enemies[0].x * 8 + enemies[0].r * 4, enemies[0].y * 8 + enemies[0].r * 4);
+		for (let ii = enemies[0].pi; ii < enemies[0].path.length - 1; ii++)
+			context.lineTo(enemies[0].path[ii + 1].x * 8 + enemies[0].r * 4, enemies[0].path[ii + 1].y * 8 + enemies[0].r * 4);
 		context.stroke();
 		context.globalAlpha = 1;
 	}
