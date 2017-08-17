@@ -14,6 +14,10 @@ let coins = 0, lives = 0;
 
 let UPS = 30;
 
+let mx, my, mtx, mty;
+let mouseTile, mouseIsTile;
+let mouseEnemies = [];
+
 let tileMap = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
@@ -155,6 +159,14 @@ let moveCost = function(p, o, np, grid, isrelative) {
 	return (UPS / getSpeed(p, o, grid)) * odist(p, o, np, o);
 };
 
+let avgSpeed = function(e) {
+	let result = 0, count = 0;
+	if (e.ls != -1) count++, result += e.ls;
+	if (e.ss != -1) count++, result += e.ss;
+	if (e.fs != -1) count++, result += e.fs;
+	return result / count;
+};
+
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
 let findPath = function(start, end, obj, grid) {
 	let open = [start];
@@ -167,13 +179,12 @@ let findPath = function(start, end, obj, grid) {
 			closed[i][ii] = false;
 			openMap[i][ii] = false;
 			grid[i][ii].g = Infinity;
-			grid[i][ii].f = Infinity;
 			grid[i][ii].p = undefined;
 		}
 	}
 	openMap[start.x][start.y] = true;
 	grid[start.x][start.y].g = 0;
-	grid[start.x][start.y].f = odist(start, obj, end, { r : 1 });
+	grid[start.x][start.y].f = odist(start, obj, end, { r : 1 }) * avgSpeed(obj);
 	
 	while (open.length > 0) {
         let current, fScore = Infinity;
@@ -193,13 +204,15 @@ let findPath = function(start, end, obj, grid) {
             return result.reverse();
 		}
         
-        open.splice(open.indexOf(current), 1);
+		let index = open.indexOf(current)
+        open.splice(index, 1);
 		openMap[current.x][current.y] = false;
         closed[current.x][current.y] = true;
         
         for (let i = 0; i < possible.length; i++) {
 			if (!canMove(current, possible[i], grid, obj)) continue;
-            if (closed[current.x + possible[i].x][current.y + possible[i].y]) continue;
+            if (closed[current.x + possible[i].x][current.y + possible[i].y])
+				continue;
             let node = { x : current.x + possible[i].x, y : current.y + possible[i].y };
             if (!openMap[node.x][node.y]) {
 				open.push(node);
@@ -209,7 +222,7 @@ let findPath = function(start, end, obj, grid) {
             if (gScore >= grid[node.x][node.y].g) continue;
             grid[node.x][node.y].p = current;
             grid[node.x][node.y].g = gScore;
-            grid[node.x][node.y].f = gScore + odist(node, obj, end, { r : 1 });
+            grid[node.x][node.y].f = gScore + odist(node, obj, end, { r : 1 }) * avgSpeed(obj);
         }
 	}
 };
@@ -230,7 +243,8 @@ let spawnAt = function(e, pos, com) {
 	et = enemyTypes[e];
 	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
-	enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
+	if (enemy.path.length > 1) enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
+	else enemy.dlay = 0;
 	enemies.push(enemy);
 };
 
@@ -298,30 +312,28 @@ let renderMap = function() {
 
 let draw = function() {
 	canvas.width = canvas.width;
+	
 	renderMap();
 	context.drawImage(mapCanvas, 0, 0);
-	for (let i = 0; i < enemies.length; i++) {
-		context.fillStyle = "#3f1f1f";
-		if (enemies[i].pi < enemies[i].path.length - 1) {
-			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
-			let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
-			let tpos = { x : enemies[i].x + nextMove.x * fract, y : enemies[i].y + nextMove.y * fract };
-			context.fillRect(tpos.x * 8, tpos.y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
-		} else {
-			context.fillRect(enemies[i].x * 8, enemies[i].y * 8, 8 * enemies[i].r, 8 * enemies[i].r);
-		}
+	
+	context.fillStyle = "#3f1f1f";
+	for (let i = 0; i < enemies.length; i++)
+		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
+			context.fillRect(enemies[i].tx * 8, enemies[i].ty * 8, 8 * enemies[i].r, 8 * enemies[i].r);
+	
+	context.beginPath();
+	context.globalAlpha = 0.2;
+	context.strokeStyle = "#ff0000";
+	context.lineWidth = 2;
+	for (let i = 0; i < mouseEnemies.length; i++) {
+		let en = mouseEnemies[i];
+		context.moveTo(en.x * 8 + en.r * 4, en.y * 8 + en.r * 4);
+		for (let ii = en.pi; ii < en.path.length - 1; ii++)
+			context.lineTo(en.path[ii + 1].x * 8 + en.r * 4, en.path[ii + 1].y * 8 + en.r * 4);
 	}
-	if (enemies.length > 0) {
-		context.beginPath();
-		context.globalAlpha = 0.2;
-		context.strokeStyle = "#ff0000";
-		context.lineWidth = 2;
-		context.moveTo(enemies[0].x * 8 + enemies[0].r * 4, enemies[0].y * 8 + enemies[0].r * 4);
-		for (let ii = enemies[0].pi; ii < enemies[0].path.length - 1; ii++)
-			context.lineTo(enemies[0].path[ii + 1].x * 8 + enemies[0].r * 4, enemies[0].path[ii + 1].y * 8 + enemies[0].r * 4);
-		context.stroke();
-		context.globalAlpha = 1;
-	}
+	context.stroke();
+	context.globalAlpha = 1;
+	
 	renderUI(context);
 	cfps++;
 };
@@ -345,12 +357,14 @@ let waveTick = function() {
 
 let tick = function() {
 	waveTick();
+	
 	for (let i = pendingSpawns.length - 1; i >= 0; i--) {
 		if (--pendingSpawns[i].ticksLeft <= 0) {
 			spawnAt(pendingSpawns[i].name, pendingSpawns[i].pos);
 			pendingSpawns.splice(i, 1);
 		}
 	}
+	
 	for (let i = enemies.length - 1; i >= 0; i--) {
 		if (isFinished(enemies[i], enemies[i]) || isColliding(enemies[i], enemies[i], grid)) {
 			enemies.splice(i, 1);
@@ -365,7 +379,32 @@ let tick = function() {
 				enemies[i].dlay += moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 		}
 	}
+	
+	for (let i = 0; i < enemies.length; i++) {
+		if (enemies[i].pi < enemies[i].path.length - 1) {
+			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
+			let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+			enemies[i].tx = enemies[i].x + nextMove.x * fract, enemies[i].ty = enemies[i].y + nextMove.y * fract;
+		} else enemies[i].tx = enemies[i].x, enemies[i].ty = enemies[i].y;
+	}
+	
+	if (mouseIsTile) mouseTile = grid[mtx][mty];
+	else mouseTile = undefined;
+	mouseEnemies = [];
+	for (let i = 0; i < enemies.length; i++) {
+		let en = enemies[i];
+		if (mx / 8 < en.tx || mx / 8 >= en.tx + en.r
+			|| my / 8 < en.ty || my / 8 >= en.ty + en.r) continue;
+		mouseEnemies.push(en);
+	}
+	
 	cups++;
+};
+
+let updateInterval;
+let changeSpeedMultiplier = function(mult) {
+	clearInterval(updateInterval);
+	updateInterval = setInterval(tick, 1000 / (UPS * mult));
 };
 
 window.onload = function() {
@@ -373,9 +412,16 @@ window.onload = function() {
 	context = canvas.getContext("2d");
 	
 	setInterval(draw, 1000 / 20);
-	setInterval(tick, 1000 / UPS);
+	updateInterval = setInterval(tick, 1000 / UPS);
 	setInterval(function() {
 		fps = cfps, ups = cups;
 		cups = 0, cfps = 0;
 	}, 1000 / 1);
+
+	canvas.addEventListener("mousemove", function(e) {
+		let rect = canvas.getBoundingClientRect();
+		mx = e.clientX - rect.left, my = e.clientY - rect.top;
+		mtx = Math.floor(mx / 8), mty = Math.floor(my / 8);
+		mouseIsTile = mtx >= 0 && mtx < 64 && mty >= 0 && mty < 48
+	}, false);
 };
