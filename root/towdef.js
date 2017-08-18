@@ -17,6 +17,7 @@ let coins = 0, lives = 0;
 
 let UPS = 30;
 let EDITOR = true;
+let STARTED
 
 let mx, my, mtx, mty;
 let mouseTile, mouseIsTile;
@@ -277,7 +278,7 @@ updatePaths();
 
 let spawnAt = function(e, pos, com) {
 	et = enemyTypes[e];
-	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath, name : et.name, image : et.image }, pos, com === undefined ? "LT" : com);
+	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath, name : et.name, image : et.image, shp : et.hp, hp : et.hp }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
 	if (enemy.path.length > 1) enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
 	else enemy.dlay = 0;
@@ -359,6 +360,18 @@ let draw = function() {
 			else context.fillRect(enemies[i].tx * 8, enemies[i].ty * 8, enemies[i].r * 8, enemies[i].r * 8);
 		}
 	}
+	context.fillStyle = "#ff0000";
+	for (let i = 0; i < enemies.length; i++) {
+		let len = enemies[i].hp / enemies[i].shp * enemies[i].r * 8;
+		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
+			context.fillRect(enemies[i].tx * 8, (enemies[i].ty + enemies[i].r) * 8 - 2, len, 2);
+	}
+	context.fillStyle = "#7f0000";
+	for (let i = 0; i < enemies.length; i++) {
+		let len = enemies[i].hp / enemies[i].shp * enemies[i].r * 8;
+		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
+			context.fillRect(enemies[i].tx * 8 + len, (enemies[i].ty + enemies[i].r) * 8 - 2, enemies[i].r * 8 - len, 2);
+	}
 	
 	context.beginPath();
 	context.globalAlpha = 0.2;
@@ -425,14 +438,15 @@ let tick = function() {
 			if (enemies[i].pi < enemies[i].path.length - 1)
 				enemies[i].dlay += moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 		}
-	}
-	
-	for (let i = 0; i < enemies.length; i++) {
+		
 		if (enemies[i].pi < enemies[i].path.length - 1) {
 			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
 			let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 			enemies[i].tx = enemies[i].x + nextMove.x * fract, enemies[i].ty = enemies[i].y + nextMove.y * fract;
 		} else enemies[i].tx = enemies[i].x, enemies[i].ty = enemies[i].y;
+		
+		enemies[i].hp--;
+		if (enemies[i].hp <= 0) killEnemy(i);
 	}
 	
 	mtx = Math.floor(mx / 8), mty = Math.floor(my / 8);
