@@ -1,3 +1,38 @@
-T0.0.0 {
-	
+{
+	"T0.0.0" : {
+		"name": "Weet Ik veel",
+		"texture": "data/gfx/weetIkVeel.png",
+		"worth": 5,
+		"width": 1,
+		"height": 1,
+		"hp": 5,
+		"armor": 0,
+		"damage": 1,
+		"attackSpeed": 15,
+		"range": 1,
+		"attackGround": true,
+		"attackFlying": true,
+		"attackSwimming": true,
+		"landSpeed": -1,
+		"flyingSpeed": -1,
+		"swimmingSpeed": -1,
+	},
+	"T0.0.1" : {
+		"name": "Nee",
+		"texture": "data/gfx/nee.png",
+		"worth": 5,
+		"width": 1,
+		"height": 1,
+		"hp": 5,
+		"armor": 0,
+		"damage": 1,
+		"attackSpeed": 15,
+		"range": 1,
+		"attackGround": true,
+		"attackFlying": true,
+		"attackSwimming": true,
+		"landSpeed": -1,
+		"flyingSpeed": -1,
+		"swimmingSpeed": -1,
+	}
 }
