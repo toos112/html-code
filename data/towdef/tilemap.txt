@@ -1,8 +1,8 @@
 {
-	"^" : { "name" : "hill", "water" : false, "land" : false, "flight" : true, "color" : "#7f5f3f" },
-	"w" : { "name" : "water", "water" : true, "land" : false, "flight" : true, "color" : "#3f3f7f" },
-	"." : { "name" : "nothing", "water" : false, "land" : true, "flight" : true, "color" : "none" },
-	"#" : { "name" : "wall", "water" : false, "land" : false, "flight" : false, "color" : "#1f1f1f" },
-	"E" : { "name" : "end", "water" : true, "land" : true, "flight" : true, "color" : "#7f3f3f" },
-	"S" : { "name" : "start", "water" : true, "land" : true, "flight" : true, "color" : "#3f7f3f" }
+	"^" : { "name" : "hill", "water" : false, "land" : false, "flight" : true, "color" : "#7f5f3f", "texture" : "data/gfx/hill.png" },
+	"w" : { "name" : "water", "water" : true, "land" : false, "flight" : true, "color" : "#3f3f7f", "texture" : "data/gfx/water.png" },
+	"." : { "name" : "nothing", "water" : false, "land" : true, "flight" : true, "color" : "none", "texture" : "data/gfx/nothing.png" },
+	"#" : { "name" : "wall", "water" : false, "land" : false, "flight" : false, "color" : "#1f1f1f", "texture" : "data/gfx/wall.png" },
+	"E" : { "name" : "end", "water" : true, "land" : true, "flight" : true, "color" : "#7f3f3f", "texture" : "data/gfx/end.png" },
+	"S" : { "name" : "start", "water" : true, "land" : true, "flight" : true, "color" : "#3f7f3f", "texture" : "data/gfx/start.png" }
 }
