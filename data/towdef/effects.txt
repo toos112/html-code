@@ -1,0 +1,6 @@
+{
+	"burning" : {
+		"name":"burning",
+		"effects":{"hp":-2}
+	}
+}
