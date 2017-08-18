@@ -13,6 +13,7 @@ let ups = 0, fps = 0;
 let coins = 0, lives = 0;
 
 let UPS = 30;
+let EDITOR = true;
 
 let mx, my, mtx, mty;
 let mouseTile, mouseIsTile;
@@ -38,10 +39,17 @@ let clone = function(obj) {
 	} else return obj;
 };
 
+let calculateExits = function() {
+	for (let x = 0; x < grid.length; x++) {
+		for (let y = 0; y < grid[x].length; y++) {
+			if (grid[x][y].name == "start") start = { x : x, y : y };
+			if (grid[x][y].name == "end") end = { x : x, y : y };
+		}
+	}
+}
+
 let setGridTile = function(pos, tile) {
 	let obj = clone(tileMap[tile]);
-	if (obj.name == "start") start = { x : pos.x, y : pos.y };
-	else if (obj.name == "end") end = { x : pos.x, y : pos.y };
 	grid[pos.x][pos.y] = obj;
 };
 
@@ -51,6 +59,7 @@ let loadLevel = function(level, data) {
 		for (let x = 0; x < row.length; x++)
 			setGridTile({ x : x, y : y }, row[x]);
 	}
+	calculateExits();
 	ldata = data;
 };
 loadLevel("(js:
@@ -241,7 +250,7 @@ updatePaths();
 
 let spawnAt = function(e, pos, com) {
 	et = enemyTypes[e];
-	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath }, pos, com === undefined ? "LT" : com);
+	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath, name : et.name }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
 	if (enemy.path.length > 1) enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
 	else enemy.dlay = 0;
@@ -388,6 +397,7 @@ let tick = function() {
 		} else enemies[i].tx = enemies[i].x, enemies[i].ty = enemies[i].y;
 	}
 	
+	mouseIsTile = mtx >= 0 && mtx < 64 && mty >= 0 && mty < 48
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
 	mouseEnemies = [];
@@ -400,6 +410,18 @@ let tick = function() {
 	
 	cups++;
 };
+
+let getNext = function(object, current) {
+	let isNext = current == undefined;
+	for (let index in object) {
+		if (isNext) return index;
+		if (index == current) isNext = true;
+	}
+	if (isNext) for (let index in object) return index;
+};
+
+let dragging = false;
+let current = getNext(tileMap, undefined);
 
 let updateInterval;
 let changeSpeedMultiplier = function(mult) {
@@ -422,6 +444,34 @@ window.onload = function() {
 		let rect = canvas.getBoundingClientRect();
 		mx = e.clientX - rect.left, my = e.clientY - rect.top;
 		mtx = Math.floor(mx / 8), mty = Math.floor(my / 8);
-		mouseIsTile = mtx >= 0 && mtx < 64 && mty >= 0 && mty < 48
+		
+		if (dragging) {
+			if (EDITOR) {
+				if (mouseIsTile) {
+					setGridTile({ x : mtx, y : mty }, current);
+				} 
+			}
+		}
+	}, false);
+	
+	canvas.addEventListener("mousedown", function(e) {
+		dragging = true;
+	}, false);
+	
+	canvas.addEventListener("mouseup", function(e) {
+		dragging = false;
+		if (EDITOR) {
+			if (mouseIsTile) {
+				setGridTile({ x : mtx, y : mty }, current);
+			}
+		}
+	}, false);
+	
+	window.addEventListener("keypress", function(e) {
+		if (EDITOR) {
+			if (e.charCode == 32) {
+				current = getNext(tileMap, current);
+			}
+		}
 	}, false);
 };
