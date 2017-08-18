@@ -27,16 +27,23 @@ var renderUI = function(ctx) {
 	ctx.lineTo(500,464);
 	ctx.stroke();
 	
+	let i = 0;
+	
 	if (mouseIsTile) {
 		ctx.fillStyle = "#ffffff";
-		ctx.fillText("tilename:" + mouseTile.name,10,435);
+		ctx.fillText("tilename:" + mouseTile.name,10,435+i++*15);
 		
 	}
 	if (EDITOR) {
 		ctx.fillStyle = "#ffffff";
-		ctx.fillText("tilename:" + tileMap[current].name,10,435);
+		ctx.fillText("editortile:" + tileMap[current].name,10,435+i++*15);
 	}
 	
 	ctx.drawImage(life_img, 5, 402);
 	ctx.drawImage(coins_img, 84, 402);
+	
+	ctx.fillStyle = "#ff0000";
+	for (let ii = 0; ii < mouseEnemies.length; ii++){
+		ctx.fillText("enemy:" + mouseEnemies[ii].name, 10, 435+i++*15);
+	}
 };
