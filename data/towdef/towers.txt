@@ -2,7 +2,7 @@
 	"T0.0.0" : {
 		"name": "Machine Gun Tower",
 		"texture": "data/gfx/machineGunTower.png",
-		"worth": 20,
+		"worth": 25,
 		"width": 1,
 		"height": 1,
 		"hp": 5,
@@ -15,12 +15,12 @@
 		"attackSwimming": true,
 		"landSpeed": -1,
 		"flyingSpeed": -1,
-		"swimmingSpeed": -1,
+		"swimmingSpeed": -1
 	},
 	"T0.0.1" : {
 		"name": "Flame Tower",
 		"texture": "data/gfx/flameTower.png",
-		"worth": 30,
+		"worth": 40,
 		"width": 1,
 		"height": 1,
 		"hp": 5,
@@ -33,6 +33,6 @@
 		"attackSwimming": true,
 		"landSpeed": -1,
 		"flyingSpeed": -1,
-		"swimmingSpeed": -1,
+		"swimmingSpeed": -1
 	}
 }
