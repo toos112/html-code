@@ -1,6 +1,25 @@
 {
 	"burning" : {
 		"name":"burning",
-		"effects":{"hp":-2}
+		"effects":{
+			"tick":{
+				"hp":-3
+			},
+			"stats":{
+			}
+		}
+	},
+	"freezing" : {
+		"name":"freezing",
+		"effects":{
+			"tick":{
+				"hp":-2.5
+			},
+			"stats":{
+				"landSpeed":-0.2,
+				"flyingSpeed":-0.2,
+				"swimmingSpeed":-0.2
+			}
+		}
 	}
 }
