@@ -15,8 +15,18 @@ for (let i = 0; i < grid.length; i++) {
 let tileMap = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/tilemap.txt").join(""), "\"", "\\\"");
+	var result = $json.parse($file.read("data/towdef/tilemap.txt").join(""));
+	for (var i in result)
+		if (result[i].texture != undefined)
+			result[i].imgdata = "" + _.img(result[i].texture);
+	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
+for (let i in tileMap) {
+	if (tileMap[i].imgdata != undefined) {
+		tileMap[i].image = new Image();
+		tileMap[i].image.src = tileMap[i].imgdata;
+	}
+}
 
 let start, end;
 let cups = 0, cfps = 0;
@@ -67,7 +77,8 @@ let getMapString = function() {
 };
 
 let setGridTile = function(pos, tile) {
-	let obj = clone(tileMap[tile]);
+	let tt = tileMap[tile];
+	let obj = { name : tt.name, water : tt.water, land : tt.land, flight : tt.flight, canBuildTower : tt.canBuildTower, texture : tt.texture, image : tt.image };
 	grid[pos.x][pos.y] = obj;
 	gridChars[pos.x][pos.y] = tile;
 };
@@ -388,8 +399,6 @@ let mapCanvas = document.createElement("canvas");
 mapCanvas.width = 64 * 8;
 mapCanvas.height = 48 * 8;
 mapContext = mapCanvas.getContext("2d");
-mapContext.fillStyle = "#373737";
-mapContext.fillRect(0, 0, 64 * 8, 48 * 8);
 let gridRenderCache = new Array(64);
 for (let i = 0; i < gridRenderCache.length; i++) {
 	gridRenderCache[i] = new Array(48);
@@ -399,19 +408,9 @@ for (let i = 0; i < gridRenderCache.length; i++) {
 let renderMap = function() {
 	for (let x = 0; x < grid.length; x++) {
 		for (let y = 0; y < grid[x].length; y++) {
-			if (grid[x][y].color != "none") {
-				if (gridRenderCache[x][y] != grid[x][y].color) {
-					mapContext.fillStyle = grid[x][y].color;
-					gridRenderCache[x][y] = grid[x][y].color;
-					mapContext.fillRect(x * 8, y * 8, 8, 8);
-				}
-			} else {
-				let color = x % 2 == y % 2 ? "#373737" : "#474747";
-				if (gridRenderCache[x][y] != color) {
-					mapContext.fillStyle = color;
-					gridRenderCache[x][y] = color;
-					mapContext.fillRect(x * 8, y * 8, 8, 8);
-				}
+			if (gridRenderCache[x][y] != grid[x][y].texture) {
+				gridRenderCache[x][y] = grid[x][y].texture;
+				mapContext.drawImage(grid[x][y].image, x * 8, y * 8);
 			}
 		}
 	}
