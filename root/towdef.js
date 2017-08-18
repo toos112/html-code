@@ -158,10 +158,8 @@ let getBestSpeed = function(p, o, grid) {
 let isColliding = function(p, o, grid) {
 	for (let x = 0; x < o.r; x++) {
 		for (let y = 0; y < o.r; y++) {
-			if (p.x + x < 0 || p.x + x >= grid.length || p.y + y < 0 || p.y + y >= grid[p.x + x].length)
-				return true;
-			if (getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid) == 0)
-				return true;
+			if (p.x + x < 0 || p.x + x >= grid.length || p.y + y < 0 || p.y + y >= grid[p.x + x].length) return true;
+			if (getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid) == 0) return true;
 		}
 	}
 	return false;
@@ -202,21 +200,21 @@ let getSpeed = function(p, o, grid) {
 	let result = 0;
 	for (let x = 0; x < o.r; x++)
 		for (let y = 0; y < o.r; y++)
-			result += getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid)
+			result += UPS / getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid)
 	return result / (o.r * o.r);
 };
 
 let moveCost = function(p, o, np, grid, isrelative) {
 	let newpos = isrelative ? { x : o.x + np.x, y : o.y + np.y } : np;
-	return (UPS / getSpeed(p, o, grid)) * odist(p, o, np, o);
+	return getSpeed(p, o, grid) * odist(p, o, np, o);
 };
 
 let avgSpeed = function(e) {
 	let result = 0, count = 0;
-	if (e.ls != -1) count++, result += e.ls;
-	if (e.ss != -1) count++, result += e.ss;
-	if (e.fs != -1) count++, result += e.fs;
-	return UPS / (result / count);
+	if (e.ls >= 0) count++, result += UPS / e.ls;
+	if (e.ss >= 0) count++, result += UPS / e.ss;
+	if (e.fs >= 0) count++, result += UPS / e.fs;
+	return result / count;
 };
 
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
@@ -337,13 +335,39 @@ let killEnemy = function(index) {
 		coins += enemy.worth;
 };
 
+let applyEffect = function(enemy, name, amp) {
+	if (enemy[name] == -1) return enemy;
+	let isFract = name.substring(0, 1) == "%";
+	if (isFract) name = name.substring(1, name.length);
+	
+	if (isFract) enemy[name] *= amp;
+	else enemy[name] += amp;
+	return enemy;
+};
+
+let revertEffect = function(enemy, name, amp) {
+	if (enemy[name] == -1) return enemy;
+	let isFract = name.substring(0, 1) == "%";
+	if (isFract) name = name.substring(1, name.length);
+	
+	if (isFract) enemy[name] /= amp;
+	else enemy[name] -= amp;
+	return enemy;
+};
+
 let giveEffect = function(enemy, effect, duration) {
-	for (let i = enemies[enemy].effects.length - 1; i >= 0; i--)
-		if (effect == enemies[enemy].effects[i].name)
+	for (let i = enemies[enemy].effects.length - 1; i >= 0; i--) {
+		if (effect == enemies[enemy].effects[i].name) {
+			for (let eff in enemies[enemy].effects[i].effects.stats)
+				enemies[enemy] = revertEffect(enemies[i], eff, enemies[enemy].effects[i].effects.stats[eff]);
 			enemies[enemy].effects.splice(i, 1);
+		}
+	}
 	let newEffect = clone(effectTypes[effect]);
 	newEffect.tl = duration * UPS;
 	newEffect.name = effect;
+	for (let eff in newEffect.effects.stats)
+		enemies[enemy] = applyEffect(enemies[enemy], eff, newEffect.effects.stats[eff]);
 	enemies[enemy].effects.push(newEffect);
 };
 
@@ -483,10 +507,15 @@ let tick = function() {
 		
 		let effects = enemies[i].effects;
 		for (let ii = effects.length - 1; ii >= 0; ii--) {
-			for (let effect in effects[ii].effects)
-				enemies[i][effect] += effects[ii].effects[effect] / UPS;
-			if (--effects[ii].tl <= 0)
+			let tickEffects = effects[ii].effects.tick;
+			let statEffects = effects[ii].effects.stats;
+			for (let effect in tickEffects)
+				enemies[i] = applyEffect(enemies[i], effect, tickEffects[effect] / UPS);
+			if (--effects[ii].tl <= 0) {
+				for (let eff in statEffects)
+					enemies[i] = revertEffect(enemies[i], eff, statEffects[eff]);
 				effects.splice(ii, 1);
+			}
 		}
 		
 		--enemies[i].dlay;
