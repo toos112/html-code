@@ -10,6 +10,23 @@
 	],
 	[
 		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":5},{"name":"E0.0.1", "count":4}],"delay":2,"order":"alt"}
+	],
+	[
+		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":6},{"name":"E0.0.1", "count":5}],"delay":1,"order":"alt"},
+		{"type":"delay","delay":5},
+		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":6},{"name":"E0.0.1", "count":5}],"delay":1,"order":"alt"}
+	],
+	[
+		{"type":"spawn","enemies":[{"name":"E0.0.2", "count":1},{"name":"E0.0.0", "count":2}],"delay":3,"order":"alt"}
 	]
+	[
+		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":10},{"name":"E0.0.1", "count":9}],"delay":2,"order":"alt"}
+	],
+	[
+		{"type":"spawn","enemies":[{"name":"E0.1.0", "count":5},{"name":"E0.0.1", "count":2}],"delay":2,"order":"alt"}
+	],
+	[
+		{"type":"spawn","enemies":[{"name":"E0.0.2", "count":2}],"delay":2,"order":"seq"}
+	],
 ]
 	
