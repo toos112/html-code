@@ -90,16 +90,17 @@ loadLevel("(js:
 let enemyTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	let result = $.replaceAll($file.read("data/towdef/enemies.txt").join(""), "\"", "\\\"");
-	for (let i in result)
-		if (result[i].texture !== undefined)
+	_.I("_scripts/json.js");
+	var result = $json.parse($file.read("data/towdef/enemies.txt").join(""));
+	for (var i in result)
+		if (result[i].texture != undefined)
 			result[i].imgdata = "" + _.img(result[i].texture);
-	result;
+	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
 for (let i in enemyTypes) {
-	if (enemyTypes[i].imgdata !== undefined) {
-		enemyTypes.image = new Image();
-		enemyTypes.image.src = enemyTypes.imgdata;
+	if (enemyTypes[i].imgdata != undefined) {
+		enemyTypes[i].image = new Image();
+		enemyTypes[i].image.src = enemyTypes[i].imgdata;
 	}
 }
 
@@ -276,7 +277,7 @@ updatePaths();
 
 let spawnAt = function(e, pos, com) {
 	et = enemyTypes[e];
-	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath, name : et.name }, pos, com === undefined ? "LT" : com);
+	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath, name : et.name, image : et.image }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
 	if (enemy.path.length > 1) enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
 	else enemy.dlay = 0;
