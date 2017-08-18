@@ -370,7 +370,7 @@ let draw = function() {
 	for (let i = 0; i < enemies.length; i++) {
 		let len = enemies[i].hp / enemies[i].shp * enemies[i].r * 8;
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
-			context.fillRect(enemies[i].tx * 8, (enemies[i].ty + enemies[i].r) * 8 - 2, len, 2);
+			context.fillRect(enemies[i].tx * 8, (enemies[i].ty + enemies[i].r) * 8, len, 2);
 	}
 	context.fillStyle = "#7f0000";
 	for (let i = 0; i < enemies.length; i++) {
