@@ -90,8 +90,18 @@ loadLevel("(js:
 let enemyTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/enemies.txt").join(""), "\"", "\\\"");
+	let result = $.replaceAll($file.read("data/towdef/enemies.txt").join(""), "\"", "\\\"");
+	for (let i in result)
+		if (result[i].texture !== undefined)
+			result[i].imgdata = "" + _.img(result[i].texture);
+	result;
 :js)");
+for (let i in enemyTypes) {
+	if (enemyTypes[i].imgdata !== undefined) {
+		enemyTypes.image = new Image();
+		enemyTypes.image.src = enemyTypes.imgdata;
+	}
+}
 
 let enemies = [];
 let pendingSpawns = [];
@@ -341,10 +351,13 @@ let draw = function() {
 	renderMap();
 	context.drawImage(mapCanvas, 0, 0);
 	
-	context.fillStyle = "#3f1f1f";
-	for (let i = 0; i < enemies.length; i++)
-		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
-			context.fillRect(enemies[i].tx * 8, enemies[i].ty * 8, 8 * enemies[i].r, 8 * enemies[i].r);
+	context.fillStyle = "#7f3f3f";
+	for (let i = 0; i < enemies.length; i++) {
+		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined) {
+			if (enemies[i].image !== undefined) context.drawImage(enemies[i].image, enemies[i].tx * 8, enemies[i].ty * 8);
+			else context.fillRect(enemies[i].tx * 8, enemies[i].ty * 8, enemies[i].r * 8, enemies[i].r * 8);
+		}
+	}
 	
 	context.beginPath();
 	context.globalAlpha = 0.2;
