@@ -215,8 +215,8 @@
 		"attackGround": true,
 		"attackFlying": true,
 		"attackSwimming": false,
-		"landSpeed": -1,
-		"flyingSpeed": 15,
+		"landSpeed": 16,
+		"flyingSpeed": -1,
 		"swimmingSpeed": -1,
 		"onDeath": [{"name":"ET0.0.2", "count":2}]
 	},
