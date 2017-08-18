@@ -31,6 +31,12 @@ let tileMap = JSON.parse("(js:
 	$.replaceAll($file.read("data/towdef/tilemap.txt").join(""), "\"", "\\\"");
 :js)");
 
+let towerMap = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/towdef/towers.txt").join(""), "\"", "\\\"");
+:js)");
+
 let clone = function(obj) {
 	if (Array.isArray(obj)) {
 		let result = [];
