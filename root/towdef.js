@@ -21,6 +21,7 @@ let EDITOR = true;
 let mx, my, mtx, mty;
 let mouseTile, mouseIsTile;
 let mouseEnemies = [];
+let spawnDelay = 0;
 
 let tileMap = JSON.parse("(js:
 	_.I("_scripts/std.js");
@@ -371,12 +372,16 @@ let waveTick = function() {
 			if (--obj.delay <= 0)
 				waveQueue.splice(0, 1);
 		} else if (obj.type == "spawn") {
-			enemy = obj.enemies[0];
-			spawnAt(enemy.name, start, ldata.spawn);
-			if (--enemy.count <= 0)
-				obj.enemies.splice(0, 1);
-			if (obj.enemies.length == 0)
-				waveQueue.splice(0, 1);
+			if (spawnDelay <= 0) {
+				enemy = obj.enemies[0];
+				spawnAt(enemy.name, start, ldata.spawn);
+				if (--enemy.count <= 0)
+					obj.enemies.splice(0, 1);
+				if (obj.length >= 1)
+					spawnDelay = obj.delay;
+				if (obj.enemies.length == 0)
+					waveQueue.splice(0, 1);
+			}
 		}
 	}
 };
