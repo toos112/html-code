@@ -12,10 +12,16 @@ for (let i = 0; i < grid.length; i++) {
 	}
 }
 
+let tileMap = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/towdef/tilemap.txt").join(""), "\"", "\\\"");
+:js)");
+
 let start, end;
 let cups = 0, cfps = 0;
 let ups = 0, fps = 0;
-let coins = 0, lives = 0;
+let coins = 0, lives = 2000;
 
 let UPS = 30;
 let EDITOR = true;
@@ -26,18 +32,6 @@ let mouseTile, mouseIsTile;
 let mouseEnemies = [];
 let spawnDelay = 0;
 let alt = 0;
-
-let tileMap = JSON.parse("(js:
-	_.I("_scripts/std.js");
-	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/tilemap.txt").join(""), "\"", "\\\"");
-:js)");
-
-let towerTypes = JSON.parse("(js:
-	_.I("_scripts/std.js");
-	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/towers.txt").join(""), "\"", "\\\"");
-:js)");
 
 let clone = function(obj) {
 	if (Array.isArray(obj)) {
@@ -96,6 +90,12 @@ loadLevel("(js:
 	$.replaceAll($file.read("data/towdef/maps/level 1/data.txt").join(""), "\"", "\\\"");
 :js)"));
 
+let towerTypes = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/towdef/towers.txt").join(""), "\"", "\\\"");
+:js)");
+
 let enemyTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
@@ -112,6 +112,12 @@ for (let i in enemyTypes) {
 		enemyTypes[i].image.src = enemyTypes[i].imgdata;
 	}
 }
+
+let effectTypes = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/towdef/effects.txt").join(""), "\"", "\\\"");
+:js)");
 
 let enemies = [];
 let pendingSpawns = [];
@@ -288,7 +294,7 @@ updatePaths();
 let spawnAt = function(e, pos, com) {
 	et = enemyTypes[e];
 	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath,
-		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth }, pos, com === undefined ? "LT" : com);
+		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth, effects : [] }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
 	if (enemy.path.length > 1) enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
 	else enemy.dlay = 0;
@@ -329,6 +335,16 @@ let killEnemy = function(index) {
 			pendingSpawns.push({ name : enemy.od[i].name, pos : enemy, ticksLeft : ++spawnDelay * 5 });
 	if (enemy.worth !== undefined)
 		coins += enemy.worth;
+};
+
+let giveEffect = function(enemy, effect, duration) {
+	for (let i = enemies[enemy].effects.length - 1; i >= 0; i--)
+		if (effect == enemies[enemy].effects[i].name)
+			enemies[enemy].effects.splice(i, 1);
+	let newEffect = clone(effectTypes[effect]);
+	newEffect.tl = duration * UPS;
+	newEffect.name = effect;
+	enemies[enemy].effects.push(newEffect);
 };
 
 let _spawn = function(e) {
@@ -400,7 +416,7 @@ let draw = function() {
 	for (let i = 0; i < enemies.length; i++) {
 		let len = enemies[i].hp / enemies[i].shp * enemies[i].r * 8;
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
-			context.fillRect(enemies[i].tx * 8 + len, (enemies[i].ty + enemies[i].r) * 8 - 2, enemies[i].r * 8 - len, 2);
+			context.fillRect(enemies[i].tx * 8 + len, (enemies[i].ty + enemies[i].r) * 8, enemies[i].r * 8 - len, 2);
 	}
 	
 	context.fillStyle = "#7f7f7f";
@@ -465,6 +481,14 @@ let tick = function() {
 			continue;
 		}
 		
+		let effects = enemies[i].effects;
+		for (let ii = effects.length - 1; ii >= 0; ii--) {
+			for (let effect in effects[ii].effects)
+				enemies[i][effect] += effects[ii].effects[effect] / UPS;
+			if (--effects[ii].tl <= 0)
+				effects.splice(ii, 1);
+		}
+		
 		--enemies[i].dlay;
 		while (enemies[i].dlay <= 0 && enemies[i].pi < enemies[i].path.length - 1) {
 			enemies[i].x = enemies[i].path[++enemies[i].pi].x;
@@ -479,7 +503,6 @@ let tick = function() {
 			enemies[i].tx = enemies[i].x + nextMove.x * fract, enemies[i].ty = enemies[i].y + nextMove.y * fract;
 		} else enemies[i].tx = enemies[i].x, enemies[i].ty = enemies[i].y;
 		
-		enemies[i].hp--;
 		if (enemies[i].hp <= 0) killEnemy(i);
 	}
 	
