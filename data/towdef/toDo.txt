@@ -7,8 +7,6 @@ hasCorpse
 
 BALANCING
 
-DISCORD
-
 towers
 
 more balancing
