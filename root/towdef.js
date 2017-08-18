@@ -22,6 +22,7 @@ let mx, my, mtx, mty;
 let mouseTile, mouseIsTile;
 let mouseEnemies = [];
 let spawnDelay = 0;
+let alt = 0;
 
 let tileMap = JSON.parse("(js:
 	_.I("_scripts/std.js");
@@ -370,14 +371,18 @@ let waveTick = function() {
 				waveQueue.splice(0, 1);
 		} else if (obj.type == "spawn") {
 			if (spawnDelay-- <= 0) {
-				enemy = obj.enemies[0];
+				enemy = obj.enemies[alt];
 				spawnAt(enemy.name, start, ldata.spawn);
 				if (--enemy.count <= 0)
-					obj.enemies.splice(0, 1);
-				if (obj.enemies.length >= 1)
-					spawnDelay = obj.delay * UPS;
-				if (obj.enemies.length == 0)
+					obj.enemies.splice(alt, 1);
+				if (obj.enemies.length == 0) {
+					alt = 0;
 					waveQueue.splice(0, 1);
+				} else {
+					spawnDelay = obj.delay * UPS;
+					if (obj.order == "alt")
+						if (++alt >= obj.enemies.length) alt = 0;
+				}
 			}
 		}
 	}
@@ -416,6 +421,7 @@ let tick = function() {
 		} else enemies[i].tx = enemies[i].x, enemies[i].ty = enemies[i].y;
 	}
 	
+	mtx = Math.floor(mx / 8), mty = Math.floor(my / 8);
 	mouseIsTile = mtx >= 0 && mtx < 64 && mty >= 0 && mty < 48
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
@@ -448,6 +454,11 @@ let changeSpeedMultiplier = function(mult) {
 	updateInterval = setInterval(tick, 1000 / (UPS * mult));
 };
 
+let mouseMove = function(e) {
+	let rect = canvas.getBoundingClientRect();
+	mx = e.clientX - rect.left, my = e.clientY - rect.top;
+};
+
 window.onload = function() {
 	canvas = document.getElementById("game");
 	context = canvas.getContext("2d");
@@ -460,10 +471,7 @@ window.onload = function() {
 	}, 1000 / 1);
 
 	canvas.addEventListener("mousemove", function(e) {
-		let rect = canvas.getBoundingClientRect();
-		mx = e.clientX - rect.left, my = e.clientY - rect.top;
-		mtx = Math.floor(mx / 8), mty = Math.floor(my / 8);
-		
+		mouseMove(e);
 		if (dragging) {
 			if (EDITOR) {
 				if (mouseIsTile) {
@@ -475,15 +483,15 @@ window.onload = function() {
 	
 	canvas.addEventListener("mousedown", function(e) {
 		dragging = true;
-	}, false);
-	
-	canvas.addEventListener("mouseup", function(e) {
-		dragging = false;
 		if (EDITOR) {
 			if (mouseIsTile) {
 				setGridTile({ x : mtx, y : mty }, current);
 			}
 		}
+	}, false);
+	
+	canvas.addEventListener("mouseup", function(e) {
+		dragging = false;
 	}, false);
 	
 	window.addEventListener("keypress", function(e) {
