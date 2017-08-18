@@ -1,9 +1,5 @@
 let img = new Image();
-img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAIAAADZr\
-BkAAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC\
-SSURBVDhP1ZDBDYAgEAQpgRIogRLo/0MplIAbFvE4LkqMH+dhVtiBU1df8akWY3TO4VlKGbnvNb\
-TGnvceme2cM3Pb70wvFNgDyKONLC+8tJSSOhLIFWlOvVULIfR0zsI89dQkEumAu6kkan1Lw++VV\
-4EtDROO30t0yfy89SzjbJoAbaImBIYG0FurElt75AdarQcegkNyqeBZYAAAAABJRU5ErkJggg==";
+img.src = "(js: _.img('data/gfx/life.png') :js)";
 
 var renderUI = function(ctx) {
 	ctx.font = "12px Arial";
