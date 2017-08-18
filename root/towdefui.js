@@ -1,7 +1,7 @@
 let life_img = new Image();
 life_img.src = "(js: _.img('data/gfx/life.png') :js)";
 let coins_img = new Image();
-coins_img.src = "(js: _.img('data/gfx/Coin.png') :js)";
+coins_img.src = "(js: _.img('data/gfx/coin.png') :js)";
 
 var renderUI = function(ctx) {
 	ctx.font = "12px Arial";
@@ -40,7 +40,7 @@ var renderUI = function(ctx) {
 	}
 	
 	ctx.drawImage(life_img, 5, 402);
-	ctx.drawImage(coins_img, 84, 402);
+	ctx.drawImage(coins_img, 84, 400);
 	
 	ctx.fillStyle = "#ff0000";
 	for (let ii = 0; ii < mouseEnemies.length; ii++){
