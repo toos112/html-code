@@ -1,10 +1,13 @@
 let canvas, context;
-let grid = new Array(64);
+let grid = new Array(64), gridChars = new Array(64);
 let ldata;
 for (let i = 0; i < grid.length; i++) {
 	grid[i] = new Array(48);
-	for (let ii = 0; ii < grid[i].length; ii++)
+	gridChars[i] = new Array(48);
+	for (let ii = 0; ii < grid[i].length; ii++) {
 		grid[i][ii] = null;
+		gridChars[i][ii] = ".";
+	}
 }
 
 let start, end;
@@ -46,11 +49,22 @@ let calculateExits = function() {
 			if (grid[x][y].name == "end") end = { x : x, y : y };
 		}
 	}
-}
+};
+
+let getMapString = function() {
+	let result = "";
+	for (let y = 0; y < grid[0].length; y++) {
+		for (let x = 0; x < grid.length; x++)
+			result += gridChars[x][y];
+		result += "\n";
+	}
+	return result;
+};
 
 let setGridTile = function(pos, tile) {
 	let obj = clone(tileMap[tile]);
 	grid[pos.x][pos.y] = obj;
+	gridChars[pos.x][pos.y] = tile;
 };
 
 let loadLevel = function(level, data) {
@@ -173,7 +187,7 @@ let avgSpeed = function(e) {
 	if (e.ls != -1) count++, result += e.ls;
 	if (e.ss != -1) count++, result += e.ss;
 	if (e.fs != -1) count++, result += e.fs;
-	return result / count;
+	return UPS / (result / count);
 };
 
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
@@ -203,6 +217,9 @@ let findPath = function(start, end, obj, grid) {
                 current = open[i];
             }
         }
+		context.globalAlpha = 0.5;
+		context.fillStyle = "#ffffff";
+		context.fillRect(current.x * 8, current.y * 8, 8, 8);
 		
 		if (isFinished(current, obj)) {
             let result = [];
@@ -471,6 +488,8 @@ window.onload = function() {
 		if (EDITOR) {
 			if (e.charCode == 32) {
 				current = getNext(tileMap, current);
+			} else if (e.charCode == 112) {
+				console.log(getMapString());
 			}
 		}
 	}, false);
