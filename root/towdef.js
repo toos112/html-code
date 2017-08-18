@@ -287,7 +287,8 @@ updatePaths();
 
 let spawnAt = function(e, pos, com) {
 	et = enemyTypes[e];
-	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath, name : et.name, image : et.image, shp : et.hp, hp : et.hp }, pos, com === undefined ? "LT" : com);
+	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath,
+		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
 	if (enemy.path.length > 1) enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
 	else enemy.dlay = 0;
@@ -326,6 +327,8 @@ let killEnemy = function(index) {
 	for (let i = 0; i < enemy.od.length; i++)
 		for (let ii = 0; ii < enemy.od[i].count; ii++)
 			pendingSpawns.push({ name : enemy.od[i].name, pos : enemy, ticksLeft : ++spawnDelay * 5 });
+	if (enemy.worth !== undefined)
+		coins += enemy.worth;
 };
 
 let _spawn = function(e) {
