@@ -1,5 +1,7 @@
-let img = new Image();
-img.src = "(js: _.img('data/gfx/life.png') :js)";
+let life_img = new Image();
+life_img.src = "(js: _.img('data/gfx/life.png') :js)";
+let coins_img = new Image();
+coins_img.src = "(js: _.img('data/gfx/Coin.png') :js)";
 
 var renderUI = function(ctx) {
 	ctx.font = "12px Arial";
@@ -7,9 +9,9 @@ var renderUI = function(ctx) {
 	ctx.fillText("fps:" + fps + " ups:" + ups,10,399);
 	ctx.font = "15px Arial";
 	ctx.fillStyle = "#FFFF00";
-	ctx.fillText(coins,35,414); 
+	ctx.fillText(coins,100,414); 
 	ctx.fillStyle = "#ff00ff";
-	ctx.fillText(lives,70,414);
+	ctx.fillText(lives,25,414);
 
 	ctx.beginPath();
 	ctx.rect(372,400,128,96);
@@ -27,8 +29,14 @@ var renderUI = function(ctx) {
 	
 	if (mouseIsTile) {
 		ctx.fillStyle = "#ffffff";
-		ctx.fillText("tilename:" + mouseTile.name,30,30);
+		ctx.fillText("tilename:" + mouseTile.name,10,435);
+		
+	}
+	if (EDITOR) {
+		ctx.fillStyle = "#ffffff";
+		ctx.fillText("tilename:" + tileMap[current].name,10,435);
 	}
 	
-	ctx.drawImage(img, 50, 50);
+	ctx.drawImage(life_img, 5, 402);
+	ctx.drawImage(coins_img, 84, 402);
 };
