@@ -16,9 +16,9 @@
 				"hp":-2.5
 			},
 			"stats":{
-				"landSpeed":-0.2,
-				"flyingSpeed":-0.2,
-				"swimmingSpeed":-0.2
+				"%ls":0.5,
+				"%fs":0.5,
+				"%ss":0.5
 			}
 		}
 	}
