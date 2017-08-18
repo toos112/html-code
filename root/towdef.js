@@ -299,7 +299,7 @@ let spawnTower = function(t, pos) {
 	let first;
 	for (let x = pos.x; x < pos.x + tt.width; x++) {
 		for (let y = pos.y; y < pos.y + tt.height; y++) {
-			if (!grid[x][y].cbt || towMap[x][y] != "n" || (first !== undefined && grid[x][y].name != first))
+			if (!grid[x][y].canBuildTower || towMap[x][y] != "n" || (first !== undefined && grid[x][y].name != first))
 				return false;
 			first = grid[x][y].name;
 		}
