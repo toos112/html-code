@@ -1,12 +1,14 @@
 let canvas, context;
-let grid = new Array(64), gridChars = new Array(64);
+let grid = new Array(64), gridChars = new Array(64), towMap = new Array(64);
 let ldata;
 for (let i = 0; i < grid.length; i++) {
 	grid[i] = new Array(48);
 	gridChars[i] = new Array(48);
+	towMap[i] = new Array(48);
 	for (let ii = 0; ii < grid[i].length; ii++) {
 		grid[i][ii] = null;
 		gridChars[i][ii] = ".";
+		towMap[i][ii] = "n";
 	}
 }
 
@@ -31,11 +33,11 @@ let tileMap = JSON.parse("(js:
 	$.replaceAll($file.read("data/towdef/tilemap.txt").join(""), "\"", "\\\"");
 :js)");
 
-/*let towerMap = JSON.parse("(js:
+let towerTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
 	$.replaceAll($file.read("data/towdef/towers.txt").join(""), "\"", "\\\"");
-:js)");*/
+:js)");
 
 let clone = function(obj) {
 	if (Array.isArray(obj)) {
@@ -119,6 +121,7 @@ let waves = JSON.parse("(js:
 	$.replaceAll($file.read("data/towdef/maps/level 1/waves.txt").join(""), "\"", "\\\"");
 :js)");
 let waveQueue = [];
+let towers = [];
 
 let spawnEnemy = function(e, start, sloc) {
 	if (sloc == "LB") {
@@ -291,6 +294,24 @@ let spawnAt = function(e, pos, com) {
 	enemies.push(enemy);
 };
 
+let spawnTower = function(t, pos) {
+	tt = towerTypes[t];
+	let first;
+	for (let x = pos.x; x < pos.x + tt.width; x++) {
+		for (let y = pos.y; y < pos.y + tt.height; y++) {
+			if (!grid[x][y].cbt || towMap[x][y] != "n" || (first !== undefined && grid[x][y].name != first))
+				return false;
+			first = grid[x][y].name;
+		}
+	}
+	for (let x = pos.x; x < pos.x + tt.width; x++)
+		for (let y = pos.y; y < pos.y + tt.height; y++)
+			towMap[x][y] = "t";
+	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height };
+	towers.push(tow);
+	return true;
+};
+
 let spawnWave = function(index) {
 	let startIndex = waveQueue.length;
 	waveQueue = waveQueue.concat(clone(waves[index]));
@@ -378,6 +399,10 @@ let draw = function() {
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
 			context.fillRect(enemies[i].tx * 8 + len, (enemies[i].ty + enemies[i].r) * 8 - 2, enemies[i].r * 8 - len, 2);
 	}
+	
+	context.fillStyle = "#7f7f7f";
+	for (let i = 0; i < towers.length; i++)
+		context.fillRect(towers[i].x * 8, towers[i].y * 8, towers[i].w * 8, towers[i].h * 8);
 	
 	context.beginPath();
 	context.globalAlpha = 0.2;
