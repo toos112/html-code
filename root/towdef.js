@@ -218,9 +218,6 @@ let findPath = function(start, end, obj, grid) {
                 current = open[i];
             }
         }
-		context.globalAlpha = 0.5;
-		context.fillStyle = "#ffffff";
-		context.fillRect(current.x * 8, current.y * 8, 8, 8);
 		
 		if (isFinished(current, obj)) {
             let result = [];
@@ -372,13 +369,13 @@ let waveTick = function() {
 			if (--obj.delay <= 0)
 				waveQueue.splice(0, 1);
 		} else if (obj.type == "spawn") {
-			if (spawnDelay <= 0) {
+			if (spawnDelay-- <= 0) {
 				enemy = obj.enemies[0];
 				spawnAt(enemy.name, start, ldata.spawn);
 				if (--enemy.count <= 0)
 					obj.enemies.splice(0, 1);
-				if (obj.length >= 1)
-					spawnDelay = obj.delay;
+				if (obj.enemies.length >= 1)
+					spawnDelay = obj.delay * UPS;
 				if (obj.enemies.length == 0)
 					waveQueue.splice(0, 1);
 			}
