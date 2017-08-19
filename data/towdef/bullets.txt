@@ -5,6 +5,8 @@
 		"damage": 1,
 		"penetration": 0,
 		"range": 1,
+		"speed": 8,
+		"pierce": false,
 		"effects":[]
 	}
 	"A0.0.1.0" : {
@@ -13,6 +15,8 @@
 		"damage": 0.8,
 		"penetration": 0,
 		"range": 1,
+		"speed": 1,
+		"pierce": true,
 		"effects":[{"name": "burning","duration": 2.5}]
 	}
 }
