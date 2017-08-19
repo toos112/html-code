@@ -2,7 +2,7 @@
 	"T0.0.0" : {
 		"name": "Machine Gun Tower",
 		"texture": "data/gfx/machineGunTower.png",
-		"ammo": [{"name":"A0.0.0.0"}],
+		"ammo": ["A0.0.0.0"],
 		"worth": 25,
 		"width": 2,
 		"height": 2,
@@ -21,7 +21,7 @@
 	"T0.0.1" : {
 		"name": "Flame Tower",
 		"texture": "data/gfx/flameTower.png",
-		"ammo": [{"name":"A0.0.1.0"}],
+		"ammo": ["A0.0.1.0"],
 		"worth": 40,
 		"width": 3,
 		"height": 3,
