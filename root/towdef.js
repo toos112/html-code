@@ -1,4 +1,3 @@
-"use asm";
 "use strict";
 
 let canvas, context;
@@ -20,6 +19,9 @@ let toHex = function(i) {
 	return str.length == 1 ? ("0" + str) : str;
 };
 
+let imgcanvas = document.createElement("canvas");
+imgcanvas.width = 8, imgcanvas.height = 8;
+let imgcontext = imgcanvas.getContext("2d");
 let tileMap = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
@@ -30,12 +32,9 @@ let tileMap = JSON.parse("(js:
 	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
 for (let i in tileMap) {
-	if (tileMap[i].imgdata != undefined) {
-		tileMap[i].image = new Image();
-		tileMap[i].image.src = tileMap[i].imgdata;
-		let imgcanvas = document.createElement("canvas");
-		imgcanvas.width = 8, imgcanvas.height = 8;
-		let imgcontext = imgcanvas.getContext("2d");
+	tileMap[i].image = new Image();
+	tileMap[i].image.onload = function() {
+		tileMap[i].loaded = true;
 		imgcontext.drawImage(tileMap[i].image, 0, 0);
 		let data = imgcontext.getImageData(0, 0, 8, 8).data;
 		tileMap[i].interdat = new Array(64);
@@ -46,6 +45,8 @@ for (let i in tileMap) {
 				tileMap[i].interdat[x][y] = "#" + toHex(data[(x * 8 + y) * 4 + 0])
 					+ toHex(data[(x * 8 + y) * 4 + 1]) + toHex(data[(x * 8 + y) * 4 + 2]);
 	}
+	tileMap[i].loaded = false;
+	tileMap[i].image.src = tileMap[i].imgdata;
 }
 
 let start, end;
@@ -115,14 +116,6 @@ let loadLevel = function(level, data) {
 	calculateExits();
 	ldata = data;
 };
-loadLevel("(js:
-	_.I("_scripts/file.js");
-	$file.read("data/towdef/maps/level 1/level.txt").join("|");
-:js)".split("|"), JSON.parse("(js:
-	_.I("_scripts/std.js");
-	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/maps/level 1/data.txt").join(""), "\"", "\\\"");
-:js)"));
 
 let inter = "(js:
 	_.I("_scripts/file.js");
@@ -698,7 +691,25 @@ let mouseMove = function(e) {
 	omx = mx / ZOOM - OX + (256 - 256 / ZOOM), omy = my / ZOOM - OY + (192 - 192 / ZOOM);
 };
 
-window.onload = function() {
+let scrollMove = function(e) {
+	let delta = -e.detail * 40 | e.wheelDelta;
+	if (delta > 0) ZOOM *= (1 + delta / 500);
+	else if (delta < 0) ZOOM /= (1 + -delta / 500);
+	if (ZOOM < ldata.mz) ZOOM = ldata.mz;
+	if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom;
+	if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom;
+};
+
+let run = function() {
+	loadLevel("(js:
+		_.I("_scripts/file.js");
+		$file.read("data/towdef/maps/level 1/level.txt").join("|");
+	:js)".split("|"), JSON.parse("(js:
+		_.I("_scripts/std.js");
+		_.I("_scripts/file.js");
+		$.replaceAll($file.read("data/towdef/maps/level 1/data.txt").join(""), "\"", "\\\"");
+	:js)"));
+	
 	canvas = document.getElementById("game");
 	context = canvas.getContext("2d");
 	
@@ -743,7 +754,7 @@ window.onload = function() {
 		}
 	}, false);
 	
-	window.onkeydown =  function(e) {
+	window.onkeydown = function(e) {
 		if (e.keyCode == 65) A = true;
 		else if (e.keyCode == 68) D = true;
 		else if (e.keyCode == 87) W = true;
@@ -757,11 +768,18 @@ window.onload = function() {
 		else if (e.keyCode == 83) S = false;
 	};
 	
-	window.addEventListener("mousewheel", function(e) {
-		if (e.wheelDelta > 0) ZOOM *= (1 + e.wheelDelta / 500);
-		else if (e.wheelDelta < 0) ZOOM /= (1 + -e.wheelDelta / 500);
-		if (ZOOM < ldata.mz) ZOOM = ldata.mz;
-		if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom;
-		if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom;
-	}, false);
+	window.addEventListener("mousewheel", scrollMove, false);
+	window.addEventListener("DOMMouseScroll", scrollMove, false);
 };
+
+let winLoaded = false;
+window.onload = function() { winLoaded = true; };
+let checkLoaded = function() {
+	let tilesLoaded = true;
+	for (let i in tileMap)
+		if (!tileMap[i].loaded)
+			tilesLoaded = false;
+	if (winLoaded && tilesLoaded) run();
+	else setTimeout(checkLoaded, 50);
+};
+checkLoaded();
