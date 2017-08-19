@@ -19,7 +19,8 @@ var renderUI = function(ctx) {
 	ctx.fillText(lives,25,414);
 	ctx.fillStyle = "#ff0000";
 	ctx.fillText(enemies.length,25,435);
-
+	
+	ctx.lineWidth = 2;
 	ctx.beginPath();
 	ctx.rect(372,400,128,96);
 	ctx.moveTo(404,400);
