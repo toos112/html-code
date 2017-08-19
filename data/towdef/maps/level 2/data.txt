@@ -1,4 +1,6 @@
 {
 	"name":"Template",
 	"spawn":"LB",
+	"minZoom":0.8,
+	"maxZoom":10
 }
