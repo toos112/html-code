@@ -361,7 +361,7 @@ let spawnTower = function(t, pos) {
 	for (let x = pos.x; x < pos.x + tt.width; x++)
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
-	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range };
+	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], as : tt.attackSpeed, dlay : UPS / tt.attackSpeed };
 	towers.push(tow);
 	return true;
 };
@@ -499,6 +499,10 @@ let angleToPos = function(angle, spd) {
 	return { x : Math.cos(angle) * spd, y : Math.sin(angle) * spd };
 };
 
+let getAngle = function(a, b) {
+	return Math.atan2(b.y - a.y, b.x - a.x);
+};
+
 let draw = function() {
 	canvas.width = canvas.width;
 	
@@ -629,6 +633,23 @@ let tick = function() {
 		} else enemies[i].tx = enemies[i].x, enemies[i].ty = enemies[i].y;
 		
 		if (enemies[i].hp <= 0) killEnemy(i);
+	}
+	
+	for (let i = towers.length - 1; i>= 0; i--) {
+		if (--towers[i].dlay <= 0) {
+			let enemy, ldist = Infinity;
+			for (let i = 0; i < enemies.length; i++) {
+				let d = dist({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
+					{ x : enemies[i].x + enemies[i].r / 2, y : enemies[i].y + enemies[i].r / 2 });
+				if (d < ldist) enemy = enemies[i], ldist = d;
+			}
+			if (enemy !== undefined) {
+				let a = getAngle({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
+					{ x : enemy.x + enemy.r / 2, y : enemy.y + enemy.r / 2 });
+				spawnBullet(towers[i].ammo, towers[i], a);
+				towers[i].dlay += UPS / towers[i].as;
+			} else ++towers[i].dlay;
+		}
 	}
 	
 	for (let i = bullets.length - 1; i >= 0; i--) {
