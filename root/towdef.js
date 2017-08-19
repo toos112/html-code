@@ -520,7 +520,7 @@ let draw = function() {
 	
 	for (let i = 0; i < enemies.length; i++)
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
-			context.drawImage(enemies[i].image, addOffset(enemies[i].tx * 8, "x"), addOffset(enemies[i].ty * 8, "y"), 8 * ZOOM, 8 * ZOOM);
+			context.drawImage(enemies[i].image, addOffset(enemies[i].tx * 8, "x"), addOffset(enemies[i].ty * 8, "y"), 8 * enemies[i].r * ZOOM, 8 * enemies[i].r * ZOOM);
 		
 	context.fillStyle = "#ff0000";
 	for (let i = 0; i < enemies.length; i++) {
@@ -638,12 +638,12 @@ let tick = function() {
 	for (let i = towers.length - 1; i>= 0; i--) {
 		if (--towers[i].dlay <= 0) {
 			let enemy, ldist = Infinity;
-			for (let i = 0; i < enemies.length; i++) {
+			for (let ii = 0; ii < enemies.length; ii++) {
 				let d = dist({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
-					{ x : enemies[i].x + enemies[i].r / 2, y : enemies[i].y + enemies[i].r / 2 });
-				if (d < ldist) enemy = enemies[i], ldist = d;
+					{ x : enemies[ii].x + enemies[ii].r / 2, y : enemies[ii].y + enemies[ii].r / 2 });
+				if (d < ldist) enemy = enemies[ii], ldist = d;
 			}
-			if (enemy !== undefined) {
+			if (enemy !== undefined && ldist < bulletTypes[towers[i].ammo].range * towers[i].ra) {
 				let a = getAngle({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
 					{ x : enemy.x + enemy.r / 2, y : enemy.y + enemy.r / 2 });
 				spawnBullet(towers[i].ammo, towers[i], a);
