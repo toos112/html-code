@@ -44,7 +44,7 @@ for (let i in tileMap) {
 			for (let y = 0; y < 8; y++)
 				tileMap[i].interdat[x][y] = "#" + toHex(data[(x * 8 + y) * 4 + 0])
 					+ toHex(data[(x * 8 + y) * 4 + 1]) + toHex(data[(x * 8 + y) * 4 + 2]);
-	}
+	};
 	tileMap[i].loaded = false;
 	tileMap[i].image.src = tileMap[i].imgdata;
 }
@@ -60,6 +60,7 @@ let STARTED = true;
 let ZOOM = 1;
 let OX = 0, OY = 0;
 let A = false, S = false, D = false, W = false;
+let INTERPOLATE = true;
 
 let mx, my, mtx, mty, omx, omy;
 let mouseTile, mouseIsTile;
@@ -436,27 +437,26 @@ let mapCanvas = document.createElement("canvas");
 mapCanvas.width = 64 * 8;
 mapCanvas.height = 48 * 8;
 let mapContext = mapCanvas.getContext("2d");
-let gridRenderCache = new Array(64);
+let gridRenderCache = new Array(64), updateMap = new Array(64);
 for (let i = 0; i < gridRenderCache.length; i++) {
 	gridRenderCache[i] = new Array(48);
-	for (let ii = 0; ii < gridRenderCache[i].length; ii++)
+	updateMap[i] = new Array(48);
+	for (let ii = 0; ii < gridRenderCache[i].length; ii++) {
 		gridRenderCache[i][ii] = "#373737";
+		updateMap[i][ii] = false;
+	}
 }
 let renderMap = function() {
-	let updateMap = new Array(64);
-	for (let i = 0; i < updateMap.length; i++) {
-		updateMap[i] = new Array(48);
-		for (let ii = 0; ii < updateMap[i].length; ii++)
-			updateMap[i][ii] = false;
-	}
 	for (let x = 0; x < grid.length; x++) {
 		for (let y = 0; y < grid[x].length; y++) {
 			if (gridRenderCache[x][y] != grid[x][y].texture) {
-				updateMap[x + 0][y + 0] = true;
-				if (x + 1 >= 0 && x + 1 < updateMap.length) updateMap[x + 1][y + 0] = true;
-				if (y + 1 >= 0 && y + 1 < updateMap[x].length) updateMap[x + 0][y + 1] = true;
-				if (x - 1 >= 0 && x - 1 < updateMap.length) updateMap[x - 1][y - 0] = true;
-				if (y - 1 >= 0 && y - 1 < updateMap[x].length) updateMap[x - 0][y - 1] = true;
+				updateMap[x][y] = true;
+				if (INTERPOLATE) {
+					if (x + 1 >= 0 && x + 1 < updateMap.length) updateMap[x + 1][y] = true;
+					if (y + 1 >= 0 && y + 1 < updateMap[x].length) updateMap[x][y + 1] = true;
+					if (x - 1 >= 0 && x - 1 < updateMap.length) updateMap[x - 1][y] = true;
+					if (y - 1 >= 0 && y - 1 < updateMap[x].length) updateMap[x][y - 1] = true;
+				}
 				gridRenderCache[x][y] = grid[x][y].texture;
 			}
 		}
@@ -465,19 +465,22 @@ let renderMap = function() {
 		for (let y = 0; y < grid[x].length; y++) {
 			if (updateMap[x][y]) {
 				mapContext.drawImage(grid[x][y].image, x * 8, y * 8);
-				let imageMap = {
-					"l" : ((y - 1 >= 0 && y - 1 < updateMap[x].length) ? grid[x - 0][y - 1].interdat : grid[x][y].interdat),
-					"r" : ((y + 1 >= 0 && y + 1 < updateMap[x].length) ? grid[x + 0][y + 1].interdat : grid[x][y].interdat),
-					"u" : ((x - 1 >= 0 && x - 1 < updateMap.length) ? grid[x - 1][y - 0].interdat : grid[x][y].interdat),
-					"d" : ((x + 1 >= 0 && x + 1 < updateMap.length) ? grid[x + 1][y + 0].interdat : grid[x][y].interdat)
-				};
-				for (let xx = 0; xx < 8; xx++) {
-					for (let yy = 0; yy < 8; yy++) {
-						if (inter[xx][yy] == ".") continue;
-						mapContext.fillStyle = imageMap[inter[xx][yy]][xx][yy];
-						mapContext.fillRect(x * 8 + xx, y * 8 + yy, 1, 1);
+				if (INTERPOLATE) {
+					let imageMap = {
+						"u" : ((x - 1 >= 0 && x - 1 < updateMap.length) ? grid[x - 1][y].interdat : grid[x][y].interdat),
+						"d" : ((x + 1 >= 0 && x + 1 < updateMap.length) ? grid[x + 1][y].interdat : grid[x][y].interdat),
+						"l" : ((y - 1 >= 0 && y - 1 < updateMap[x].length) ? grid[x][y - 1].interdat : grid[x][y].interdat),
+						"r" : ((y + 1 >= 0 && y + 1 < updateMap[x].length) ? grid[x][y + 1].interdat : grid[x][y].interdat)
+					};
+					for (let xx = 0; xx < 8; xx++) {
+						for (let yy = 0; yy < 8; yy++) {
+							if (inter[xx][yy] == ".") continue;
+							mapContext.fillStyle = imageMap[inter[xx][yy]][xx][yy];
+							mapContext.fillRect(x * 8 + xx, y * 8 + yy, 1, 1);
+						}
 					}
 				}
+				updateMap[x][y] = false;
 			}
 		}
 	}
@@ -494,6 +497,12 @@ let angleToPos = function(angle, spd) {
 
 let getAngle = function(a, b) {
 	return Math.atan2(b.y - a.y, b.x - a.x);
+};
+
+let refreshMap = function() {
+	for (let x = 0; x < updateMap.length; x++)
+		for (let y = 0; y < updateMap[y].length; y++)
+			updateMap[x][y] = true;
 };
 
 let draw = function() {
@@ -693,11 +702,11 @@ let mouseMove = function(e) {
 
 let scrollMove = function(e) {
 	let delta = -e.detail * 40 | e.wheelDelta;
+	let pzoom = ZOOM;
 	if (delta > 0) ZOOM *= (1 + delta / 500);
 	else if (delta < 0) ZOOM /= (1 + -delta / 500);
-	if (ZOOM < ldata.mz) ZOOM = ldata.mz;
-	if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom;
-	if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom;
+	if (ZOOM < ldata.minZoom) ZOOM = pzoom;
+	if (ZOOM > ldata.maxZoom) ZOOM = pzoom;
 };
 
 let run = function() {
