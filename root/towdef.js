@@ -15,6 +15,11 @@ for (let i = 0; i < grid.length; i++) {
 	}
 }
 
+let toHex = function(i) {
+	let str = i.toString(16);
+	return str.length == 1 ? ("0" + str) : str;
+};
+
 let tileMap = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
@@ -28,6 +33,18 @@ for (let i in tileMap) {
 	if (tileMap[i].imgdata != undefined) {
 		tileMap[i].image = new Image();
 		tileMap[i].image.src = tileMap[i].imgdata;
+		let imgcanvas = document.createElement("canvas");
+		imgcanvas.width = 8, imgcanvas.height = 8;
+		let imgcontext = imgcanvas.getContext("2d");
+		imgcontext.drawImage(tileMap[i].image, 0, 0);
+		let data = imgcontext.getImageData(0, 0, 8, 8).data;
+		tileMap[i].interdat = new Array(64);
+		for (let ii = 0; ii < tileMap[i].interdat.length; ii++)
+			tileMap[i].interdat[ii] = new Array(48);
+		for (let x = 0; x < 8; x++)
+			for (let y = 0; y < 8; y++)
+				tileMap[i].interdat[x][y] = "#" + toHex(data[(x * 8 + y) * 4 + 0])
+					+ toHex(data[(x * 8 + y) * 4 + 1]) + toHex(data[(x * 8 + y) * 4 + 2]);
 	}
 }
 
@@ -43,7 +60,7 @@ let ZOOM = 1;
 let OX = 0, OY = 0;
 let A = false, S = false, D = false, W = false;
 
-let mx, my, mtx, mty;
+let mx, my, mtx, mty, omx, omy;
 let mouseTile, mouseIsTile;
 let mouseEnemies = [];
 let spawnDelay = 0;
@@ -84,7 +101,7 @@ let getMapString = function() {
 
 let setGridTile = function(pos, tile) {
 	let tt = tileMap[tile];
-	let obj = { name : tt.name, water : tt.water, land : tt.land, flight : tt.flight, canBuildTower : tt.canBuildTower, texture : tt.texture, image : tt.image };
+	let obj = { name : tt.name, water : tt.water, land : tt.land, flight : tt.flight, canBuildTower : tt.canBuildTower, texture : tt.texture, image : tt.image, interdat : tt.interdat };
 	grid[pos.x][pos.y] = obj;
 	gridChars[pos.x][pos.y] = tile;
 };
@@ -409,11 +426,6 @@ let _spawnrandom = function(e) {
 	spawnAt(e, pos);
 };
 
-let toHex = function(i) {
-	let str = i.toString(16);
-	return str.length == 1 ? ("0" + str) : str;
-};
-
 let mapCanvas = document.createElement("canvas");
 mapCanvas.width = 64 * 8;
 mapCanvas.height = 48 * 8;
@@ -424,9 +436,6 @@ for (let i = 0; i < gridRenderCache.length; i++) {
 	for (let ii = 0; ii < gridRenderCache[i].length; ii++)
 		gridRenderCache[i][ii] = "#373737";
 }
-let imgcanvas = document.createElement("canvas");
-imgcanvas.width = 8, imgcanvas.height = 8;
-let imgcontext = imgcanvas.getContext("2d");
 let renderMap = function() {
 	let updateMap = new Array(64);
 	for (let i = 0; i < updateMap.length; i++) {
@@ -450,19 +459,16 @@ let renderMap = function() {
 		for (let y = 0; y < grid[x].length; y++) {
 			if (updateMap[x][y]) {
 				mapContext.drawImage(grid[x][y].image, x * 8, y * 8);
-				let ti = grid[x][y].image;
 				let imageMap = {
-					"l" : ((y - 1 >= 0 && y - 1 < updateMap[x].length) ? grid[x - 0][y - 1].image : grid[x][y].image),
-					"r" : ((y + 1 >= 0 && y + 1 < updateMap[x].length) ? grid[x + 0][y + 1].image : grid[x][y].image),
-					"u" : ((x - 1 >= 0 && x - 1 < updateMap.length) ? grid[x - 1][y - 0].image : grid[x][y].image),
-					"d" : ((x + 1 >= 0 && x + 1 < updateMap.length) ? grid[x + 1][y + 0].image : grid[x][y].image)
+					"l" : ((y - 1 >= 0 && y - 1 < updateMap[x].length) ? grid[x - 0][y - 1].interdat : grid[x][y].interdat),
+					"r" : ((y + 1 >= 0 && y + 1 < updateMap[x].length) ? grid[x + 0][y + 1].interdat : grid[x][y].interdat),
+					"u" : ((x - 1 >= 0 && x - 1 < updateMap.length) ? grid[x - 1][y - 0].interdat : grid[x][y].interdat),
+					"d" : ((x + 1 >= 0 && x + 1 < updateMap.length) ? grid[x + 1][y + 0].interdat : grid[x][y].interdat)
 				};
 				for (let xx = 0; xx < 8; xx++) {
 					for (let yy = 0; yy < 8; yy++) {
 						if (inter[xx][yy] == ".") continue;
-						imgcontext.drawImage(imageMap[inter[xx][yy]], 0, 0);
-						let data = imgcontext.getImageData(xx, yy, 1, 1).data;
-						mapContext.fillStyle = "#" + toHex(data[0]) + toHex(data[1]) + toHex(data[2]);
+						mapContext.fillStyle = imageMap[inter[xx][yy]][xx][yy];
 						mapContext.fillRect(x * 8 + xx, y * 8 + yy, 1, 1);
 					}
 				}
@@ -471,51 +477,56 @@ let renderMap = function() {
 	}
 };
 
+let addOffset = function(val, axis) {
+	let o = (axis == "x") ? (OX * ZOOM - (256 - 256 / ZOOM) * ZOOM) : (OY * ZOOM - (192 - 192 / ZOOM) * ZOOM);
+	return val * ZOOM + o;
+};
+
 let draw = function() {
 	canvas.width = canvas.width;
 	
-	if (A) OX += 5;
-	if (D) OX -= 5;
-	if (W) OY += 5;
-	if (S) OY -= 5;
+	if (A) OX += 5 / ZOOM;
+	if (D) OX -= 5 / ZOOM;
+	if (W) OY += 5 / ZOOM;
+	if (S) OY -= 5 / ZOOM;
+	
+	let ox = OX * ZOOM - (256 - 256 / ZOOM) * ZOOM;
+	let oy = OY * ZOOM - (192 - 192 / ZOOM) * ZOOM;
 	
 	renderMap();
 	context.imageSmoothingEnabled = false;
-	context.drawImage(mapCanvas, OX * ZOOM - (256 - 256 / ZOOM) * ZOOM, OY * ZOOM - (192 - 192 / ZOOM) * ZOOM, mapCanvas.width * ZOOM, mapCanvas.height * ZOOM);
+	context.drawImage(mapCanvas, addOffset(0, "x"), addOffset(0, "y"), mapCanvas.width * ZOOM, mapCanvas.height * ZOOM);
 	
-	context.fillStyle = "#7f3f3f";
-	for (let i = 0; i < enemies.length; i++) {
-		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined) {
-			if (enemies[i].image !== undefined) context.drawImage(enemies[i].image, enemies[i].tx * 8, enemies[i].ty * 8);
-			else context.fillRect(enemies[i].tx * 8, enemies[i].ty * 8, enemies[i].r * 8, enemies[i].r * 8);
-		}
-	}
+	for (let i = 0; i < enemies.length; i++)
+		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
+			context.drawImage(enemies[i].image, addOffset(enemies[i].tx * 8, "x"), addOffset(enemies[i].ty * 8, "y"), 8 * ZOOM, 8 * ZOOM);
+		
 	context.fillStyle = "#ff0000";
 	for (let i = 0; i < enemies.length; i++) {
 		let len = enemies[i].hp / enemies[i].shp * enemies[i].r * 8;
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
-			context.fillRect(enemies[i].tx * 8, (enemies[i].ty + enemies[i].r) * 8, len, 2);
+			context.fillRect(addOffset(enemies[i].tx * 8, "x"), addOffset((enemies[i].ty + enemies[i].r) * 8, "y"), len * ZOOM, 2 * ZOOM);
 	}
 	context.fillStyle = "#7f0000";
 	for (let i = 0; i < enemies.length; i++) {
 		let len = enemies[i].hp / enemies[i].shp * enemies[i].r * 8;
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
-			context.fillRect(enemies[i].tx * 8 + len, (enemies[i].ty + enemies[i].r) * 8, enemies[i].r * 8 - len, 2);
+			context.fillRect(addOffset(enemies[i].tx * 8 + len, "x"), addOffset((enemies[i].ty + enemies[i].r) * 8, "y"), (enemies[i].r * 8 - len) * ZOOM, 2 * ZOOM);
 	}
 	
 	context.fillStyle = "#7f7f7f";
 	for (let i = 0; i < towers.length; i++)
-		context.fillRect(towers[i].x * 8, towers[i].y * 8, towers[i].w * 8, towers[i].h * 8);
+		context.fillRect(addOffset(towers[i].x * 8, "x"), addOffset(towers[i].y * 8, "y"), towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM);
 	
 	context.beginPath();
 	context.globalAlpha = 0.2;
 	context.strokeStyle = "#ff0000";
-	context.lineWidth = 2;
+	context.lineWidth = 2 * ZOOM;
 	for (let i = 0; i < mouseEnemies.length; i++) {
 		let en = mouseEnemies[i];
-		context.moveTo(en.x * 8 + en.r * 4, en.y * 8 + en.r * 4);
+		context.moveTo(addOffset(en.x * 8 + en.r * 4, "x"), addOffset(en.y * 8 + en.r * 4, "y"));
 		for (let ii = en.pi; ii < en.path.length - 1; ii++)
-			context.lineTo(en.path[ii + 1].x * 8 + en.r * 4, en.path[ii + 1].y * 8 + en.r * 4);
+			context.lineTo(addOffset(en.path[ii + 1].x * 8 + en.r * 4, "x"), addOffset(en.path[ii + 1].y * 8 + en.r * 4, "y"));
 	}
 	context.stroke();
 	context.globalAlpha = 1;
@@ -595,15 +606,15 @@ let tick = function() {
 		if (enemies[i].hp <= 0) killEnemy(i);
 	}
 	
-	mtx = Math.floor(mx / 8), mty = Math.floor(my / 8);
+	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
 	mouseIsTile = mtx >= 0 && mtx < 64 && mty >= 0 && mty < 48
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
 	mouseEnemies = [];
 	for (let i = 0; i < enemies.length; i++) {
 		let en = enemies[i];
-		if (mx / 8 < en.tx || mx / 8 >= en.tx + en.r
-			|| my / 8 < en.ty || my / 8 >= en.ty + en.r) continue;
+		if (omx / 8 < en.tx || omx / 8 >= en.tx + en.r
+			|| omy / 8 < en.ty || omy / 8 >= en.ty + en.r) continue;
 		mouseEnemies.push(en);
 	}
 	
@@ -631,13 +642,14 @@ let changeSpeedMultiplier = function(mult) {
 let mouseMove = function(e) {
 	let rect = canvas.getBoundingClientRect();
 	mx = e.clientX - rect.left, my = e.clientY - rect.top;
+	omx = mx / ZOOM - OX + (256 - 256 / ZOOM), omy = my / ZOOM - OY + (192 - 192 / ZOOM);
 };
 
 window.onload = function() {
 	canvas = document.getElementById("game");
 	context = canvas.getContext("2d");
 	
-	setInterval(draw, 1000 / 20);
+	setInterval(draw, 1000 / 200);
 	updateInterval = setInterval(tick, 1000 / UPS);
 	setInterval(function() {
 		fps = cfps, ups = cups;
@@ -695,5 +707,8 @@ window.onload = function() {
 	window.addEventListener("mousewheel", function(e) {
 		if (e.wheelDelta > 0) ZOOM *= (1 + e.wheelDelta / 500);
 		else if (e.wheelDelta < 0) ZOOM /= (1 + -e.wheelDelta / 500);
+		if (ZOOM < ldata.mz) ZOOM = ldata.mz;
+		if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom;
+		if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom;
 	}, false);
 };
