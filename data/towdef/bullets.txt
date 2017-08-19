@@ -5,7 +5,7 @@
 		"damage": 1,
 		"penetration": 0,
 		"range": 1,
-		"speed": 8,
+		"speed": 10,
 		"pierce": false,
 		"effects":[]
 	},
