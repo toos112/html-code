@@ -8,7 +8,7 @@
 		"speed": 8,
 		"pierce": false,
 		"effects":[]
-	}
+	},
 	"A0.0.1.0" : {
 		"name": "Flame Trower Canisters",
 		"texture": "data/gfx/flameTrowerCanisters.png",
