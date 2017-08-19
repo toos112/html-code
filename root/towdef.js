@@ -138,6 +138,12 @@ let towerTypes = JSON.parse("(js:
 	$.replaceAll($file.read("data/towdef/towers.txt").join(""), "\"", "\\\"");
 :js)");
 
+let bulletTypes = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/towdef/bullets.txt").join(""), "\"", "\\\"");
+:js)");
+
 let enemyTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
@@ -170,6 +176,7 @@ let waves = JSON.parse("(js:
 :js)");
 let waveQueue = [];
 let towers = [];
+let bullets = [];
 
 let spawnEnemy = function(e, start, sloc) {
 	if (sloc == "LB") {
@@ -354,9 +361,15 @@ let spawnTower = function(t, pos) {
 	for (let x = pos.x; x < pos.x + tt.width; x++)
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
-	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height };
+	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range };
 	towers.push(tow);
 	return true;
+};
+
+let spawnBullet = function(b, t, a) {
+	let bt = bulletTypes[b];
+	let bul = { x : pos.x, y : pos.y, sx : pos.x, sy : pos.y, ra : t.ra * bt.range, sp : bt.speed };
+	bullets.push(bul);
 };
 
 let spawnWave = function(index) {
@@ -649,7 +662,7 @@ window.onload = function() {
 	canvas = document.getElementById("game");
 	context = canvas.getContext("2d");
 	
-	setInterval(draw, 1000 / 200);
+	setInterval(draw, 1000 / 20);
 	updateInterval = setInterval(tick, 1000 / UPS);
 	setInterval(function() {
 		fps = cfps, ups = cups;
