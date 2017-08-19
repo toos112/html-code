@@ -1,3 +1,6 @@
+"use asm";
+"use strict";
+
 let canvas, context;
 let grid = new Array(64), gridChars = new Array(64), towMap = new Array(64);
 let ldata;
@@ -301,7 +304,7 @@ let updatePaths = function() {
 updatePaths();
 
 let spawnAt = function(e, pos, com) {
-	et = enemyTypes[e];
+	let et = enemyTypes[e];
 	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath,
 		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth, effects : [] }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
@@ -311,7 +314,7 @@ let spawnAt = function(e, pos, com) {
 };
 
 let spawnTower = function(t, pos) {
-	tt = towerTypes[t];
+	let tt = towerTypes[t];
 	let first;
 	for (let x = pos.x; x < pos.x + tt.width; x++) {
 		for (let y = pos.y; y < pos.y + tt.height; y++) {
@@ -370,7 +373,7 @@ let giveEffect = function(enemy, effect, duration) {
 	for (let i = enemies[enemy].effects.length - 1; i >= 0; i--) {
 		if (effect == enemies[enemy].effects[i].name) {
 			for (let eff in enemies[enemy].effects[i].effects.stats)
-				enemies[enemy] = revertEffect(enemies[i], eff, enemies[enemy].effects[i].effects.stats[eff]);
+				enemies[enemy] = revertEffect(enemies[enemy], eff, enemies[enemy].effects[i].effects.stats[eff]);
 			enemies[enemy].effects.splice(i, 1);
 		}
 	}
@@ -387,7 +390,7 @@ let _spawn = function(e) {
 };
 
 let _spawnrandom = function(e) {
-	et = enemyTypes[e];
+	let et = enemyTypes[e];
 	let enemy = { r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath };
 	let pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
 	while (isColliding(pos, enemy, grid))
@@ -398,7 +401,7 @@ let _spawnrandom = function(e) {
 let mapCanvas = document.createElement("canvas");
 mapCanvas.width = 64 * 8;
 mapCanvas.height = 48 * 8;
-mapContext = mapCanvas.getContext("2d");
+let mapContext = mapCanvas.getContext("2d");
 let gridRenderCache = new Array(64);
 for (let i = 0; i < gridRenderCache.length; i++) {
 	gridRenderCache[i] = new Array(48);
@@ -509,7 +512,7 @@ let tick = function() {
 			let tickEffects = effects[ii].effects.tick;
 			let statEffects = effects[ii].effects.stats;
 			for (let effect in tickEffects)
-				enemies[i] = applyEffect(enemies[i], effect, tickEffects[effect] / UPS);
+				enemies[i] = applyEffect(enemies[i], effect, effect.substring(0, 1) == "%" ? tickEffects[effect] : tickEffects[effect] / UPS);
 			if (--effects[ii].tl <= 0) {
 				for (let eff in statEffects)
 					enemies[i] = revertEffect(enemies[i], eff, statEffects[eff]);
