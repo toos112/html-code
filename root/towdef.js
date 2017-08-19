@@ -37,8 +37,11 @@ let ups = 0, fps = 0;
 let coins = 0, lives = 2000;
 
 let UPS = 30;
-let EDITOR = true;
-let STARTED
+let EDITOR = false;
+let STARTED = true;
+let ZOOM = 1;
+let OX = 0, OY = 0;
+let A = false, S = false, D = false, W = false;
 
 let mx, my, mtx, mty;
 let mouseTile, mouseIsTile;
@@ -103,6 +106,14 @@ loadLevel("(js:
 	_.I("_scripts/file.js");
 	$.replaceAll($file.read("data/towdef/maps/level 1/data.txt").join(""), "\"", "\\\"");
 :js)"));
+
+let inter = "(js:
+	_.I("_scripts/file.js");
+	$file.read("data/towdef/inter.txt").join("|");
+:js)".split("|");
+
+for (let i = 0; i < inter.length; i++)
+	inter[i] = inter[i].split("");
 
 let towerTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
@@ -398,6 +409,11 @@ let _spawnrandom = function(e) {
 	spawnAt(e, pos);
 };
 
+let toHex = function(i) {
+	let str = i.toString(16);
+	return str.length == 1 ? ("0" + str) : str;
+};
+
 let mapCanvas = document.createElement("canvas");
 mapCanvas.width = 64 * 8;
 mapCanvas.height = 48 * 8;
@@ -408,12 +424,48 @@ for (let i = 0; i < gridRenderCache.length; i++) {
 	for (let ii = 0; ii < gridRenderCache[i].length; ii++)
 		gridRenderCache[i][ii] = "#373737";
 }
+let imgcanvas = document.createElement("canvas");
+imgcanvas.width = 8, imgcanvas.height = 8;
+let imgcontext = imgcanvas.getContext("2d");
 let renderMap = function() {
+	let updateMap = new Array(64);
+	for (let i = 0; i < updateMap.length; i++) {
+		updateMap[i] = new Array(48);
+		for (let ii = 0; ii < updateMap[i].length; ii++)
+			updateMap[i][ii] = false;
+	}
 	for (let x = 0; x < grid.length; x++) {
 		for (let y = 0; y < grid[x].length; y++) {
 			if (gridRenderCache[x][y] != grid[x][y].texture) {
+				updateMap[x + 0][y + 0] = true;
+				if (x + 1 >= 0 && x + 1 < updateMap.length) updateMap[x + 1][y + 0] = true;
+				if (y + 1 >= 0 && y + 1 < updateMap[x].length) updateMap[x + 0][y + 1] = true;
+				if (x - 1 >= 0 && x - 1 < updateMap.length) updateMap[x - 1][y - 0] = true;
+				if (y - 1 >= 0 && y - 1 < updateMap[x].length) updateMap[x - 0][y - 1] = true;
 				gridRenderCache[x][y] = grid[x][y].texture;
+			}
+		}
+	}
+	for (let x = 0; x < grid.length; x++) {
+		for (let y = 0; y < grid[x].length; y++) {
+			if (updateMap[x][y]) {
 				mapContext.drawImage(grid[x][y].image, x * 8, y * 8);
+				let ti = grid[x][y].image;
+				let imageMap = {
+					"l" : ((y - 1 >= 0 && y - 1 < updateMap[x].length) ? grid[x - 0][y - 1].image : grid[x][y].image),
+					"r" : ((y + 1 >= 0 && y + 1 < updateMap[x].length) ? grid[x + 0][y + 1].image : grid[x][y].image),
+					"u" : ((x - 1 >= 0 && x - 1 < updateMap.length) ? grid[x - 1][y - 0].image : grid[x][y].image),
+					"d" : ((x + 1 >= 0 && x + 1 < updateMap.length) ? grid[x + 1][y + 0].image : grid[x][y].image)
+				};
+				for (let xx = 0; xx < 8; xx++) {
+					for (let yy = 0; yy < 8; yy++) {
+						if (inter[xx][yy] == ".") continue;
+						imgcontext.drawImage(imageMap[inter[xx][yy]], 0, 0);
+						let data = imgcontext.getImageData(xx, yy, 1, 1).data;
+						mapContext.fillStyle = "#" + toHex(data[0]) + toHex(data[1]) + toHex(data[2]);
+						mapContext.fillRect(x * 8 + xx, y * 8 + yy, 1, 1);
+					}
+				}
 			}
 		}
 	}
@@ -422,8 +474,14 @@ let renderMap = function() {
 let draw = function() {
 	canvas.width = canvas.width;
 	
+	if (A) OX += 5;
+	if (D) OX -= 5;
+	if (W) OY += 5;
+	if (S) OY -= 5;
+	
 	renderMap();
-	context.drawImage(mapCanvas, 0, 0);
+	context.imageSmoothingEnabled = false;
+	context.drawImage(mapCanvas, OX * ZOOM - (256 - 256 / ZOOM) * ZOOM, OY * ZOOM - (192 - 192 / ZOOM) * ZOOM, mapCanvas.width * ZOOM, mapCanvas.height * ZOOM);
 	
 	context.fillStyle = "#7f3f3f";
 	for (let i = 0; i < enemies.length; i++) {
@@ -474,7 +532,7 @@ let waveTick = function() {
 				waveQueue.splice(0, 1);
 		} else if (obj.type == "spawn") {
 			if (spawnDelay-- <= 0) {
-				enemy = obj.enemies[alt];
+				let enemy = obj.enemies[alt];
 				spawnAt(enemy.name, start, ldata.spawn);
 				if (--enemy.count <= 0)
 					obj.enemies.splice(alt, 1);
@@ -618,5 +676,24 @@ window.onload = function() {
 				console.log(getMapString());
 			}
 		}
+	}, false);
+	
+	window.onkeydown =  function(e) {
+		if (e.keyCode == 65) A = true;
+		else if (e.keyCode == 68) D = true;
+		else if (e.keyCode == 87) W = true;
+		else if (e.keyCode == 83) S = true;
+	};
+	
+	window.onkeyup = function(e) {
+		if (e.keyCode == 65) A = false;
+		else if (e.keyCode == 68) D = false;
+		else if (e.keyCode == 87) W = false;
+		else if (e.keyCode == 83) S = false;
+	};
+	
+	window.addEventListener("mousewheel", function(e) {
+		if (e.wheelDelta > 0) ZOOM *= (1 + e.wheelDelta / 500);
+		else if (e.wheelDelta < 0) ZOOM /= (1 + -e.wheelDelta / 500);
 	}, false);
 };
