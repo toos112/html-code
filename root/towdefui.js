@@ -6,6 +6,9 @@ let enemies_img = new Image();
 enemies_img.src = "(js: _.img('data/gfx/enemy.png') :js)";
 
 var renderUI = function(ctx) {
+	ctx.fillStyle = "#000000";
+	ctx.fillRect(0, 384, 512, 128);
+	
 	ctx.font = "12px Arial";
 	ctx.fillStyle = "#00ffff";
 	ctx.fillText("fps:" + fps + " ups:" + ups,10,399);
