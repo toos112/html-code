@@ -368,7 +368,7 @@ let spawnTower = function(t, pos) {
 
 let spawnBullet = function(b, t, a) {
 	let bt = bulletTypes[b];
-	let bul = { x : pos.x, y : pos.y, sx : pos.x, sy : pos.y, ra : t.ra * bt.range, sp : bt.speed };
+	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8, ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a };
 	bullets.push(bul);
 };
 
@@ -495,6 +495,10 @@ let addOffset = function(val, axis) {
 	return val * ZOOM + o;
 };
 
+let angleToPos = function(angle, spd) {
+	return { x : Math.cos(angle) * spd, y : Math.sin(angle) * spd };
+};
+
 let draw = function() {
 	canvas.width = canvas.width;
 	
@@ -532,7 +536,7 @@ let draw = function() {
 		context.fillRect(addOffset(towers[i].x * 8, "x"), addOffset(towers[i].y * 8, "y"), towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM);
 	
 	context.beginPath();
-	context.globalAlpha = 0.2;
+	context.globalAlpha = 0.25;
 	context.strokeStyle = "#ff0000";
 	context.lineWidth = 2 * ZOOM;
 	for (let i = 0; i < mouseEnemies.length; i++) {
@@ -543,6 +547,14 @@ let draw = function() {
 	}
 	context.stroke();
 	context.globalAlpha = 1;
+	
+	context.strokeStyle = "#7f7f00";
+	context.lineWidth = 1 * ZOOM;
+	for (let i = 0; i < bullets.length; i++) {
+		context.beginPath();
+		context.arc(addOffset(bullets[i].x, "x"), addOffset(bullets[i].y, "y"), 2 * ZOOM, 0, 2 * Math.PI);
+		context.stroke();
+	}
 	
 	renderUI(context);
 	cfps++;
@@ -617,6 +629,13 @@ let tick = function() {
 		} else enemies[i].tx = enemies[i].x, enemies[i].ty = enemies[i].y;
 		
 		if (enemies[i].hp <= 0) killEnemy(i);
+	}
+	
+	for (let i = bullets.length - 1; i >= 0; i--) {
+		let offset = angleToPos(bullets[i].a, bullets[i].sp);
+		bullets[i].x += offset.x, bullets[i].y += offset.y;
+		if (dist(bullets[i], { x : bullets[i].sx, y : bullets[i].sy }) > bullets[i].ra * 8)
+			bullets.splice(i, 1);
 	}
 	
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
