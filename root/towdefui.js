@@ -5,6 +5,16 @@ coins_img.src = "(js: _.img('data/gfx/coin.png') :js)";
 let enemies_img = new Image();
 enemies_img.src = "(js: _.img('data/gfx/enemy.png') :js)";
 
+let mapButtons = [];
+var initUI = function() {
+	for (let i = 0; i < maps.length; i++) {
+		mapButtons.push(new CanvasButton(256, 16, 128, 2, canvas, function() {
+			loadLevel(maps[i]);
+			STARTED = true;
+		}, { text : maps[i].name, color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" }));
+	}
+};
+
 var renderUI = function(ctx) {
 	ctx.fillStyle = "#000000";
 	ctx.fillRect(0, 384, 512, 128);
@@ -56,4 +66,9 @@ var renderUI = function(ctx) {
 	for (let ii = 0; ii < mouseEnemies.length; ii++){
 		ctx.fillText("enemy:" + mouseEnemies[ii].name, 10, 450+i++*15);
 	}
+};
+
+var renderStart = function(ctx) {
+	for (let i = 0; i < mapButtons.length; i++)
+		mapButtons[i].draw(ctx);
 };
