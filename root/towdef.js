@@ -57,7 +57,7 @@ let tilecount = { water : 0, land : 0, flight : 0, total : 0 };
 
 let UPS = 30;
 let EDITOR = false;
-let STARTED = true;
+let STARTED = false;
 let ZOOM = 1;
 let OX = 0, OY = 0;
 let A = false, S = false, D = false, W = false;
@@ -532,8 +532,6 @@ let refreshMap = function() {
 };
 
 let draw = function() {
-	canvas.width = canvas.width;
-	
 	if (A) OX += 5 / ZOOM;
 	if (D) OX -= 5 / ZOOM;
 	if (W) OY += 5 / ZOOM;
@@ -735,13 +733,19 @@ let scrollMove = function(e) {
 };
 
 let run = function() {
-	loadLevel(maps[0]);
-	
 	canvas = document.getElementById("game");
 	context = canvas.getContext("2d");
 	
-	setInterval(draw, 1000 / 20);
-	updateInterval = setInterval(tick, 1000 / UPS);
+	initUI();
+	
+	setInterval(function() {
+		canvas.width = canvas.width;
+		if (STARTED) draw();
+		else renderStart(context);
+	}, 1000 / 20);
+	updateInterval = setInterval(function() {
+		if (STARTED) tick();
+	}, 1000 / UPS);
 	setInterval(function() {
 		fps = cfps, ups = cups;
 		cups = 0, cfps = 0;
