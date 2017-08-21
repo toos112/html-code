@@ -8,7 +8,7 @@ enemies_img.src = "(js: _.img('data/gfx/enemy.png') :js)";
 let mapButtons = [];
 var initUI = function() {
 	for (let i = 0; i < maps.length; i++) {
-		mapButtons.push(new CanvasButton(256, 16, 128, 2, canvas, function() {
+		mapButtons.push(new CanvasButton(256, 16, 128, 2 + 18 * i, canvas, function() {
 			loadLevel(maps[i]);
 			STARTED = true;
 		}, { text : maps[i].name, color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" }));
