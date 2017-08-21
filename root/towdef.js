@@ -2,7 +2,6 @@
 
 let canvas, context;
 let grid = new Array(64), gridChars = new Array(64), towMap = new Array(64);
-let ldata;
 for (let i = 0; i < grid.length; i++) {
 	grid[i] = new Array(48);
 	gridChars[i] = new Array(48);
@@ -42,7 +41,7 @@ for (let i in tileMap) {
 			tileMap[i].interdat[ii] = new Array(48);
 		for (let x = 0; x < 8; x++)
 			for (let y = 0; y < 8; y++)
-				tileMap[i].interdat[x][y] = "#" + toHex(data[(x * 8 + y) * 4 + 0])
+				tileMap[i].interdat[y][x] = "#" + toHex(data[(x * 8 + y) * 4 + 0])
 					+ toHex(data[(x * 8 + y) * 4 + 1]) + toHex(data[(x * 8 + y) * 4 + 2]);
 	};
 	tileMap[i].loaded = false;
@@ -53,6 +52,8 @@ let start, end;
 let cups = 0, cfps = 0;
 let ups = 0, fps = 0;
 let coins = 0, lives = 2000;
+let ldata, waves;
+let tilecount = { water : 0, land : 0, flight : 0, total : 0 };
 
 let UPS = 30;
 let EDITOR = false;
@@ -104,18 +105,30 @@ let getMapString = function() {
 let setGridTile = function(pos, tile) {
 	let tt = tileMap[tile];
 	let obj = { name : tt.name, water : tt.water, land : tt.land, flight : tt.flight, canBuildTower : tt.canBuildTower, texture : tt.texture, image : tt.image, interdat : tt.interdat };
+	
+	if (grid[pos.x][pos.y] != null) {
+		if (grid[pos.x][pos.y].water) tilecount.water--;
+		if (grid[pos.x][pos.y].land) tilecount.land--;
+		if (grid[pos.x][pos.y].flight) tilecount.flight--;
+	}
+	if (obj.water) tilecount.water++;
+	if (obj.land) tilecount.land++;
+	if (obj.flight) tilecount.flight++;
+	tilecount.total = tilecount.water + tilecount.land + tilecount.flight;
+	
 	grid[pos.x][pos.y] = obj;
 	gridChars[pos.x][pos.y] = tile;
 };
 
-let loadLevel = function(level, data) {
-	for (let y = 0; y < level.length; y++) {
-		let row = level[y].split("");
+let loadLevel = function(level) {
+	for (let y = 0; y < level.level.length; y++) {
+		let row = level.level[y].split("");
 		for (let x = 0; x < row.length; x++)
 			setGridTile({ x : x, y : y }, row[x]);
 	}
 	calculateExits();
-	ldata = data;
+	ldata = level.data;
+	waves = level.waves;
 };
 
 let inter = "(js:
@@ -163,14 +176,27 @@ let effectTypes = JSON.parse("(js:
 
 let enemies = [];
 let pendingSpawns = [];
-let waves = JSON.parse("(js:
-	_.I("_scripts/std.js");
-	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/maps/level 1/waves.txt").join(""), "\"", "\\\"");
-:js)");
 let waveQueue = [];
 let towers = [];
 let bullets = [];
+
+let maps = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	_.I("_scripts/json.js");
+	var result = [];
+	var mapdata = $json.parse($file.read("data/towdef/maps/mapdata.txt").join(""));
+	for (var i = 0; i < mapdata.length; i++) {
+		var name = mapdata[i];
+		var data = $json.parse($file.read("data/towdef/maps/" + name + "/data.txt").join(""));
+		var waves = $json.parse($file.read("data/towdef/maps/" + name + "/waves.txt").join(""));
+		var level = $file.read("data/towdef/maps/" + name + "/level.txt").join("|");
+		result.push({ data : data, waves : waves, level : level, name : name });
+	}
+	$.replaceAll($json.stringify(result), "\"", "\\\"");
+:js)");
+for (let i = 0; i < maps.length; i++)
+	maps[i].level = maps[i].level.split("|");
 
 let spawnEnemy = function(e, start, sloc) {
 	if (sloc == "LB") {
@@ -254,10 +280,10 @@ let moveCost = function(p, o, np, grid, isrelative) {
 
 let avgSpeed = function(e) {
 	let result = 0, count = 0;
-	if (e.ls >= 0) count++, result += UPS / e.ls;
-	if (e.ss >= 0) count++, result += UPS / e.ss;
-	if (e.fs >= 0) count++, result += UPS / e.fs;
-	return result / count;
+	if (e.ls >= 0) count++, result += UPS / e.ls * tilecount.land;
+	if (e.ss >= 0) count++, result += UPS / e.ss * tilecount.water;
+	if (e.fs >= 0) count++, result += UPS / e.fs * tilecount.flight;
+	return result / count / tilecount.total;
 };
 
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
@@ -702,22 +728,14 @@ let mouseMove = function(e) {
 
 let scrollMove = function(e) {
 	let delta = -e.detail * 40 | e.wheelDelta;
-	let pzoom = ZOOM;
 	if (delta > 0) ZOOM *= (1 + delta / 500);
 	else if (delta < 0) ZOOM /= (1 + -delta / 500);
-	if (ZOOM < ldata.minZoom) ZOOM = pzoom;
-	if (ZOOM > ldata.maxZoom) ZOOM = pzoom;
+	if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom;
+	if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom;
 };
 
 let run = function() {
-	loadLevel("(js:
-		_.I("_scripts/file.js");
-		$file.read("data/towdef/maps/level 1/level.txt").join("|");
-	:js)".split("|"), JSON.parse("(js:
-		_.I("_scripts/std.js");
-		_.I("_scripts/file.js");
-		$.replaceAll($file.read("data/towdef/maps/level 1/data.txt").join(""), "\"", "\\\"");
-	:js)"));
+	loadLevel(maps[0]);
 	
 	canvas = document.getElementById("game");
 	context = canvas.getContext("2d");
