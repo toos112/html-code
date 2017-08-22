@@ -1,7 +1,7 @@
 {
 	"E0.0.0" : {
 		"name": "Small Fly",
-		"texture": "data/gfx/smallFly.png",
+		"texture": "data/gfx/enemies/smallFly.png",
 		"worth": 5,
 		"width": 1,
 		"height": 1,
@@ -22,7 +22,7 @@
 	},
 	"E0.0.1" : {
 		"name": "Fly",
-		"texture": "data/gfx/fly.png",
+		"texture": "data/gfx/enemies/fly.png",
 		"worth": 10,
 		"width": 1,
 		"height": 1,
@@ -43,7 +43,7 @@
 	},
 	"E0.0.2" : {
 		"name": "Big Fly",
-		"texture": "data/gfx/bigFly.png",
+		"texture": "data/gfx/enemies/bigFly.png",
 		"worth": 15,
 		"width": 1,
 		"height": 1,
@@ -64,7 +64,7 @@
 	},
 	"E0.1.0" : {
 		"name": "Small Crawler",
-		"texture": "data/gfx/smallCrawler.png",
+		"texture": "data/gfx/enemies/smallCrawler.png",
 		"worth": 10,
 		"width": 2,
 		"height": 2,
@@ -85,7 +85,7 @@
 	},
 	"E0.1.1" : {
 		"name": "Crawler",
-		"texture": "data/gfx/crawler.png",
+		"texture": "data/gfx/enemies/crawler.png",
 		"worth": 25,
 		"width": 2,
 		"height": 2,
@@ -106,7 +106,7 @@
 	},
 	"E0.1.2" : {
 		"name": "Big Crawler",
-		"texture": "data/gfx/bigCrawler.png",
+		"texture": "data/gfx/enemies/bigCrawler.png",
 		"width": 3,
 		"height": 3,
 		"hp": 80,
@@ -126,7 +126,7 @@
 	},
 	"E0.2.0" : {
 		"name": "Small Zombie",
-		"texture": "data/gfx/smallZombie.png",
+		"texture": "data/gfx/enemies/smallZombie.png",
 		"width": 2,
 		"height": 2,
 		"hp": 40,
@@ -146,7 +146,7 @@
 	},
 	"E0.2.1" : {
 		"name": "Zombie",
-		"texture": "data/gfx/zombie.png",
+		"texture": "data/gfx/enemies/zombie.png",
 		"width": 2,
 		"height": 2,
 		"hp": 80,
@@ -166,7 +166,7 @@
 	},
 	"E0.2.2" : {
 		"name": "Big Zombie",
-		"texture": "data/gfx/bigZombie.png",
+		"texture": "data/gfx/enemies/bigZombie.png",
 		"width": 3,
 		"height": 3,
 		"hp": 160,
@@ -189,7 +189,7 @@
 	},
 	"ET0.0.0" : {
 		"name": "Test 00",
-		"texture": "data/gfx/test00.png",
+		"texture": "data/gfx/enemies/test00.png",
 		"width": 1,
 		"height": 1,
 		"hp": 10,
@@ -209,7 +209,7 @@
 	},
 	"ET0.0.1" : {
 		"name": "Test 01",
-		"texture": "data/gfx/test01.png",
+		"texture": "data/gfx/enemies/test01.png",
 		"width": 1,
 		"height": 1,
 		"hp": 10,
@@ -229,7 +229,7 @@
 	},
 	"ET0.0.2" : {
 		"name": "Test 02",
-		"texture": "data/gfx/test02.png",
+		"texture": "data/gfx/enemies/test02.png",
 		"width": 1,
 		"height": 1,
 		"hp": 10,
@@ -249,7 +249,7 @@
 	},
 	"ET0.0.3" : {
 		"name": "Test 03",
-		"texture": "data/gfx/test03.png",
+		"texture": "data/gfx/enemies/test03.png",
 		"width": 2,
 		"height": 2,
 		"hp": 10,
