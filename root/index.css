@@ -68,3 +68,5 @@ textarea:active, input:active, button:active { background-color: #555; }
 
 ::selection { background-color: transparent; }
 ::-moz-selection { background-color: transparent; }
+
+canvas { image-rendering: pixelated; }

@@ -1,2 +1,22 @@
 {
+	"A0.0.0.0" : {
+		"name": "Machine Gun Ammo",
+		"texture": "data/gfx/machineGunAmmo.png",
+		"damage": 1,
+		"penetration": 0,
+		"range": 1,
+		"speed": 10,
+		"pierce": false,
+		"effects":[]
+	},
+	"A0.0.1.0" : {
+		"name": "Flame Trower Canisters",
+		"texture": "data/gfx/flameTrowerCanisters.png",
+		"damage": 0.8,
+		"penetration": 0,
+		"range": 1,
+		"speed": 1,
+		"pierce": true,
+		"effects":[{"name": "burning","duration": 2.5}]
+	}
 }
