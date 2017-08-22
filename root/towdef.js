@@ -532,13 +532,11 @@ let refreshMap = function() {
 };
 
 let draw = function() {
-	if (A) OX += 5 / ZOOM;
-	if (D) OX -= 5 / ZOOM;
-	if (W) OY += 5 / ZOOM;
-	if (S) OY -= 5 / ZOOM;
-	
-	let ox = OX * ZOOM - (256 - 256 / ZOOM) * ZOOM;
-	let oy = OY * ZOOM - (192 - 192 / ZOOM) * ZOOM;
+	let mm = 5;
+	if (A && OX + mm < 64 / 2 * 8) OX += mm / ZOOM;
+	if (D && OX - mm > -(64 / 2 * 8)) OX -= mm / ZOOM;
+	if (W && OY + mm < 48 / 2 * 8) OY += mm / ZOOM;
+	if (S && OY - mm > -(48 / 2 * 8)) OY -= mm / ZOOM;
 	
 	renderMap();
 	context.imageSmoothingEnabled = false;
