@@ -9,7 +9,7 @@
 		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":3},{"name":"E0.1.0", "count":2}],"delay":2,"order":"alt"}
 	],
 	[
-		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":5},{"name":"E0.0.1", "count":4}],"delay":2,"order":"alt"},
+		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":5},{"name":"E0.0.1", "count":4}],"delay":2,"order":"alt"}
 	]
 ]
 	

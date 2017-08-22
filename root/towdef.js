@@ -1,6 +1,7 @@
+"use strict";
+
 let canvas, context;
 let grid = new Array(64), gridChars = new Array(64), towMap = new Array(64);
-let ldata;
 for (let i = 0; i < grid.length; i++) {
 	grid[i] = new Array(48);
 	gridChars[i] = new Array(48);
@@ -12,6 +13,14 @@ for (let i = 0; i < grid.length; i++) {
 	}
 }
 
+let toHex = function(i) {
+	let str = i.toString(16);
+	return str.length == 1 ? ("0" + str) : str;
+};
+
+let imgcanvas = document.createElement("canvas");
+imgcanvas.width = 8, imgcanvas.height = 8;
+let imgcontext = imgcanvas.getContext("2d");
 let tileMap = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
@@ -22,22 +31,39 @@ let tileMap = JSON.parse("(js:
 	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
 for (let i in tileMap) {
-	if (tileMap[i].imgdata != undefined) {
-		tileMap[i].image = new Image();
-		tileMap[i].image.src = tileMap[i].imgdata;
-	}
+	tileMap[i].image = new Image();
+	tileMap[i].image.onload = function() {
+		tileMap[i].loaded = true;
+		imgcontext.drawImage(tileMap[i].image, 0, 0);
+		let data = imgcontext.getImageData(0, 0, 8, 8).data;
+		tileMap[i].interdat = new Array(64);
+		for (let ii = 0; ii < tileMap[i].interdat.length; ii++)
+			tileMap[i].interdat[ii] = new Array(48);
+		for (let x = 0; x < 8; x++)
+			for (let y = 0; y < 8; y++)
+				tileMap[i].interdat[y][x] = "#" + toHex(data[(x * 8 + y) * 4 + 0])
+					+ toHex(data[(x * 8 + y) * 4 + 1]) + toHex(data[(x * 8 + y) * 4 + 2]);
+	};
+	tileMap[i].loaded = false;
+	tileMap[i].image.src = tileMap[i].imgdata;
 }
 
 let start, end;
 let cups = 0, cfps = 0;
 let ups = 0, fps = 0;
 let coins = 0, lives = 2000;
+let ldata, waves;
+let tilecount = { water : 0, land : 0, flight : 0, total : 0 };
 
 let UPS = 30;
-let EDITOR = true;
-let STARTED
+let EDITOR = false;
+let STARTED = false;
+let ZOOM = 1;
+let OX = 0, OY = 0;
+let A = false, S = false, D = false, W = false;
+let INTERPOLATE = true;
 
-let mx, my, mtx, mty;
+let mx, my, mtx, mty, omx, omy;
 let mouseTile, mouseIsTile;
 let mouseEnemies = [];
 let spawnDelay = 0;
@@ -78,33 +104,51 @@ let getMapString = function() {
 
 let setGridTile = function(pos, tile) {
 	let tt = tileMap[tile];
-	let obj = { name : tt.name, water : tt.water, land : tt.land, flight : tt.flight, canBuildTower : tt.canBuildTower, texture : tt.texture, image : tt.image };
+	let obj = { name : tt.name, water : tt.water, land : tt.land, flight : tt.flight, canBuildTower : tt.canBuildTower, texture : tt.texture, image : tt.image, interdat : tt.interdat };
+	
+	if (grid[pos.x][pos.y] != null) {
+		if (grid[pos.x][pos.y].water) tilecount.water--;
+		if (grid[pos.x][pos.y].land) tilecount.land--;
+		if (grid[pos.x][pos.y].flight) tilecount.flight--;
+	}
+	if (obj.water) tilecount.water++;
+	if (obj.land) tilecount.land++;
+	if (obj.flight) tilecount.flight++;
+	tilecount.total = tilecount.water + tilecount.land + tilecount.flight;
+	
 	grid[pos.x][pos.y] = obj;
 	gridChars[pos.x][pos.y] = tile;
 };
 
-let loadLevel = function(level, data) {
-	for (let y = 0; y < level.length; y++) {
-		let row = level[y].split("");
+let loadLevel = function(level) {
+	for (let y = 0; y < level.level.length; y++) {
+		let row = level.level[y].split("");
 		for (let x = 0; x < row.length; x++)
 			setGridTile({ x : x, y : y }, row[x]);
 	}
 	calculateExits();
-	ldata = data;
+	ldata = level.data;
+	waves = level.waves;
 };
-loadLevel("(js:
+
+let inter = "(js:
 	_.I("_scripts/file.js");
-	$file.read("data/towdef/maps/level 1/level.txt").join("|");
-:js)".split("|"), JSON.parse("(js:
-	_.I("_scripts/std.js");
-	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/maps/level 1/data.txt").join(""), "\"", "\\\"");
-:js)"));
+	$file.read("data/towdef/inter.txt").join("|");
+:js)".split("|");
+
+for (let i = 0; i < inter.length; i++)
+	inter[i] = inter[i].split("");
 
 let towerTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
 	$.replaceAll($file.read("data/towdef/towers.txt").join(""), "\"", "\\\"");
+:js)");
+
+let bulletTypes = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/towdef/bullets.txt").join(""), "\"", "\\\"");
 :js)");
 
 let enemyTypes = JSON.parse("(js:
@@ -132,13 +176,27 @@ let effectTypes = JSON.parse("(js:
 
 let enemies = [];
 let pendingSpawns = [];
-let waves = JSON.parse("(js:
-	_.I("_scripts/std.js");
-	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/maps/level 1/waves.txt").join(""), "\"", "\\\"");
-:js)");
 let waveQueue = [];
 let towers = [];
+let bullets = [];
+
+let maps = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	_.I("_scripts/json.js");
+	var result = [];
+	var mapdata = $json.parse($file.read("data/towdef/maps/mapdata.txt").join(""));
+	for (var i = 0; i < mapdata.length; i++) {
+		var name = mapdata[i];
+		var data = $json.parse($file.read("data/towdef/maps/" + name + "/data.txt").join(""));
+		var waves = $json.parse($file.read("data/towdef/maps/" + name + "/waves.txt").join(""));
+		var level = $file.read("data/towdef/maps/" + name + "/level.txt").join("|");
+		result.push({ data : data, waves : waves, level : level, name : name });
+	}
+	$.replaceAll($json.stringify(result), "\"", "\\\"");
+:js)");
+for (let i = 0; i < maps.length; i++)
+	maps[i].level = maps[i].level.split("|");
 
 let spawnEnemy = function(e, start, sloc) {
 	if (sloc == "LB") {
@@ -222,10 +280,10 @@ let moveCost = function(p, o, np, grid, isrelative) {
 
 let avgSpeed = function(e) {
 	let result = 0, count = 0;
-	if (e.ls >= 0) count++, result += UPS / e.ls;
-	if (e.ss >= 0) count++, result += UPS / e.ss;
-	if (e.fs >= 0) count++, result += UPS / e.fs;
-	return result / count;
+	if (e.ls >= 0) count++, result += UPS / e.ls * tilecount.land;
+	if (e.ss >= 0) count++, result += UPS / e.ss * tilecount.water;
+	if (e.fs >= 0) count++, result += UPS / e.fs * tilecount.flight;
+	return result / count / tilecount.total;
 };
 
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
@@ -301,7 +359,7 @@ let updatePaths = function() {
 updatePaths();
 
 let spawnAt = function(e, pos, com) {
-	et = enemyTypes[e];
+	let et = enemyTypes[e];
 	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath,
 		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth, effects : [] }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
@@ -311,7 +369,7 @@ let spawnAt = function(e, pos, com) {
 };
 
 let spawnTower = function(t, pos) {
-	tt = towerTypes[t];
+	let tt = towerTypes[t];
 	let first;
 	for (let x = pos.x; x < pos.x + tt.width; x++) {
 		for (let y = pos.y; y < pos.y + tt.height; y++) {
@@ -323,9 +381,15 @@ let spawnTower = function(t, pos) {
 	for (let x = pos.x; x < pos.x + tt.width; x++)
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
-	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height };
+	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], as : tt.attackSpeed, dlay : UPS / tt.attackSpeed };
 	towers.push(tow);
 	return true;
+};
+
+let spawnBullet = function(b, t, a) {
+	let bt = bulletTypes[b];
+	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8, ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a };
+	bullets.push(bul);
 };
 
 let spawnWave = function(index) {
@@ -370,7 +434,7 @@ let giveEffect = function(enemy, effect, duration) {
 	for (let i = enemies[enemy].effects.length - 1; i >= 0; i--) {
 		if (effect == enemies[enemy].effects[i].name) {
 			for (let eff in enemies[enemy].effects[i].effects.stats)
-				enemies[enemy] = revertEffect(enemies[i], eff, enemies[enemy].effects[i].effects.stats[eff]);
+				enemies[enemy] = revertEffect(enemies[enemy], eff, enemies[enemy].effects[i].effects.stats[eff]);
 			enemies[enemy].effects.splice(i, 1);
 		}
 	}
@@ -387,7 +451,7 @@ let _spawn = function(e) {
 };
 
 let _spawnrandom = function(e) {
-	et = enemyTypes[e];
+	let et = enemyTypes[e];
 	let enemy = { r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath };
 	let pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
 	while (isColliding(pos, enemy, grid))
@@ -398,66 +462,129 @@ let _spawnrandom = function(e) {
 let mapCanvas = document.createElement("canvas");
 mapCanvas.width = 64 * 8;
 mapCanvas.height = 48 * 8;
-mapContext = mapCanvas.getContext("2d");
-let gridRenderCache = new Array(64);
+let mapContext = mapCanvas.getContext("2d");
+let gridRenderCache = new Array(64), updateMap = new Array(64);
 for (let i = 0; i < gridRenderCache.length; i++) {
 	gridRenderCache[i] = new Array(48);
-	for (let ii = 0; ii < gridRenderCache[i].length; ii++)
+	updateMap[i] = new Array(48);
+	for (let ii = 0; ii < gridRenderCache[i].length; ii++) {
 		gridRenderCache[i][ii] = "#373737";
+		updateMap[i][ii] = false;
+	}
 }
 let renderMap = function() {
 	for (let x = 0; x < grid.length; x++) {
 		for (let y = 0; y < grid[x].length; y++) {
 			if (gridRenderCache[x][y] != grid[x][y].texture) {
+				updateMap[x][y] = true;
+				if (INTERPOLATE) {
+					if (x + 1 >= 0 && x + 1 < updateMap.length) updateMap[x + 1][y] = true;
+					if (y + 1 >= 0 && y + 1 < updateMap[x].length) updateMap[x][y + 1] = true;
+					if (x - 1 >= 0 && x - 1 < updateMap.length) updateMap[x - 1][y] = true;
+					if (y - 1 >= 0 && y - 1 < updateMap[x].length) updateMap[x][y - 1] = true;
+				}
 				gridRenderCache[x][y] = grid[x][y].texture;
+			}
+		}
+	}
+	for (let x = 0; x < grid.length; x++) {
+		for (let y = 0; y < grid[x].length; y++) {
+			if (updateMap[x][y]) {
 				mapContext.drawImage(grid[x][y].image, x * 8, y * 8);
+				if (INTERPOLATE) {
+					let imageMap = {
+						"u" : ((x - 1 >= 0 && x - 1 < updateMap.length) ? grid[x - 1][y].interdat : grid[x][y].interdat),
+						"d" : ((x + 1 >= 0 && x + 1 < updateMap.length) ? grid[x + 1][y].interdat : grid[x][y].interdat),
+						"l" : ((y - 1 >= 0 && y - 1 < updateMap[x].length) ? grid[x][y - 1].interdat : grid[x][y].interdat),
+						"r" : ((y + 1 >= 0 && y + 1 < updateMap[x].length) ? grid[x][y + 1].interdat : grid[x][y].interdat)
+					};
+					for (let xx = 0; xx < 8; xx++) {
+						for (let yy = 0; yy < 8; yy++) {
+							if (inter[xx][yy] == ".") continue;
+							mapContext.fillStyle = imageMap[inter[xx][yy]][xx][yy];
+							mapContext.fillRect(x * 8 + xx, y * 8 + yy, 1, 1);
+						}
+					}
+				}
+				updateMap[x][y] = false;
 			}
 		}
 	}
 };
 
+let addOffset = function(val, axis) {
+	let o = (axis == "x") ? (OX * ZOOM - (256 - 256 / ZOOM) * ZOOM) : (OY * ZOOM - (192 - 192 / ZOOM) * ZOOM);
+	return val * ZOOM + o;
+};
+
+let angleToPos = function(angle, spd) {
+	return { x : Math.cos(angle) * spd, y : Math.sin(angle) * spd };
+};
+
+let getAngle = function(a, b) {
+	return Math.atan2(b.y - a.y, b.x - a.x);
+};
+
+let refreshMap = function() {
+	for (let x = 0; x < updateMap.length; x++)
+		for (let y = 0; y < updateMap[y].length; y++)
+			updateMap[x][y] = true;
+};
+
 let draw = function() {
-	canvas.width = canvas.width;
+	if (A) OX += 5 / ZOOM;
+	if (D) OX -= 5 / ZOOM;
+	if (W) OY += 5 / ZOOM;
+	if (S) OY -= 5 / ZOOM;
+	
+	let ox = OX * ZOOM - (256 - 256 / ZOOM) * ZOOM;
+	let oy = OY * ZOOM - (192 - 192 / ZOOM) * ZOOM;
 	
 	renderMap();
-	context.drawImage(mapCanvas, 0, 0);
+	context.imageSmoothingEnabled = false;
+	context.drawImage(mapCanvas, addOffset(0, "x"), addOffset(0, "y"), mapCanvas.width * ZOOM, mapCanvas.height * ZOOM);
 	
-	context.fillStyle = "#7f3f3f";
-	for (let i = 0; i < enemies.length; i++) {
-		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined) {
-			if (enemies[i].image !== undefined) context.drawImage(enemies[i].image, enemies[i].tx * 8, enemies[i].ty * 8);
-			else context.fillRect(enemies[i].tx * 8, enemies[i].ty * 8, enemies[i].r * 8, enemies[i].r * 8);
-		}
-	}
+	for (let i = 0; i < enemies.length; i++)
+		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
+			context.drawImage(enemies[i].image, addOffset(enemies[i].tx * 8, "x"), addOffset(enemies[i].ty * 8, "y"), 8 * enemies[i].r * ZOOM, 8 * enemies[i].r * ZOOM);
+		
 	context.fillStyle = "#ff0000";
 	for (let i = 0; i < enemies.length; i++) {
 		let len = enemies[i].hp / enemies[i].shp * enemies[i].r * 8;
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
-			context.fillRect(enemies[i].tx * 8, (enemies[i].ty + enemies[i].r) * 8, len, 2);
+			context.fillRect(addOffset(enemies[i].tx * 8, "x"), addOffset((enemies[i].ty + enemies[i].r) * 8, "y"), len * ZOOM, 2 * ZOOM);
 	}
 	context.fillStyle = "#7f0000";
 	for (let i = 0; i < enemies.length; i++) {
 		let len = enemies[i].hp / enemies[i].shp * enemies[i].r * 8;
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
-			context.fillRect(enemies[i].tx * 8 + len, (enemies[i].ty + enemies[i].r) * 8, enemies[i].r * 8 - len, 2);
+			context.fillRect(addOffset(enemies[i].tx * 8 + len, "x"), addOffset((enemies[i].ty + enemies[i].r) * 8, "y"), (enemies[i].r * 8 - len) * ZOOM, 2 * ZOOM);
 	}
 	
 	context.fillStyle = "#7f7f7f";
 	for (let i = 0; i < towers.length; i++)
-		context.fillRect(towers[i].x * 8, towers[i].y * 8, towers[i].w * 8, towers[i].h * 8);
+		context.fillRect(addOffset(towers[i].x * 8, "x"), addOffset(towers[i].y * 8, "y"), towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM);
 	
 	context.beginPath();
-	context.globalAlpha = 0.2;
+	context.globalAlpha = 0.25;
 	context.strokeStyle = "#ff0000";
-	context.lineWidth = 2;
+	context.lineWidth = 2 * ZOOM;
 	for (let i = 0; i < mouseEnemies.length; i++) {
 		let en = mouseEnemies[i];
-		context.moveTo(en.x * 8 + en.r * 4, en.y * 8 + en.r * 4);
+		context.moveTo(addOffset(en.x * 8 + en.r * 4, "x"), addOffset(en.y * 8 + en.r * 4, "y"));
 		for (let ii = en.pi; ii < en.path.length - 1; ii++)
-			context.lineTo(en.path[ii + 1].x * 8 + en.r * 4, en.path[ii + 1].y * 8 + en.r * 4);
+			context.lineTo(addOffset(en.path[ii + 1].x * 8 + en.r * 4, "x"), addOffset(en.path[ii + 1].y * 8 + en.r * 4, "y"));
 	}
 	context.stroke();
 	context.globalAlpha = 1;
+	
+	context.strokeStyle = "#7f7f00";
+	context.lineWidth = 1 * ZOOM;
+	for (let i = 0; i < bullets.length; i++) {
+		context.beginPath();
+		context.arc(addOffset(bullets[i].x, "x"), addOffset(bullets[i].y, "y"), 2 * ZOOM, 0, 2 * Math.PI);
+		context.stroke();
+	}
 	
 	renderUI(context);
 	cfps++;
@@ -471,7 +598,7 @@ let waveTick = function() {
 				waveQueue.splice(0, 1);
 		} else if (obj.type == "spawn") {
 			if (spawnDelay-- <= 0) {
-				enemy = obj.enemies[alt];
+				let enemy = obj.enemies[alt];
 				spawnAt(enemy.name, start, ldata.spawn);
 				if (--enemy.count <= 0)
 					obj.enemies.splice(alt, 1);
@@ -509,7 +636,7 @@ let tick = function() {
 			let tickEffects = effects[ii].effects.tick;
 			let statEffects = effects[ii].effects.stats;
 			for (let effect in tickEffects)
-				enemies[i] = applyEffect(enemies[i], effect, tickEffects[effect] / UPS);
+				enemies[i] = applyEffect(enemies[i], effect, effect.substring(0, 1) == "%" ? tickEffects[effect] : tickEffects[effect] / UPS);
 			if (--effects[ii].tl <= 0) {
 				for (let eff in statEffects)
 					enemies[i] = revertEffect(enemies[i], eff, statEffects[eff]);
@@ -534,15 +661,39 @@ let tick = function() {
 		if (enemies[i].hp <= 0) killEnemy(i);
 	}
 	
-	mtx = Math.floor(mx / 8), mty = Math.floor(my / 8);
+	for (let i = towers.length - 1; i>= 0; i--) {
+		if (--towers[i].dlay <= 0) {
+			let enemy, ldist = Infinity;
+			for (let ii = 0; ii < enemies.length; ii++) {
+				let d = dist({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
+					{ x : enemies[ii].x + enemies[ii].r / 2, y : enemies[ii].y + enemies[ii].r / 2 });
+				if (d < ldist) enemy = enemies[ii], ldist = d;
+			}
+			if (enemy !== undefined && ldist < bulletTypes[towers[i].ammo].range * towers[i].ra) {
+				let a = getAngle({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
+					{ x : enemy.x + enemy.r / 2, y : enemy.y + enemy.r / 2 });
+				spawnBullet(towers[i].ammo, towers[i], a);
+				towers[i].dlay += UPS / towers[i].as;
+			} else ++towers[i].dlay;
+		}
+	}
+	
+	for (let i = bullets.length - 1; i >= 0; i--) {
+		let offset = angleToPos(bullets[i].a, bullets[i].sp);
+		bullets[i].x += offset.x, bullets[i].y += offset.y;
+		if (dist(bullets[i], { x : bullets[i].sx, y : bullets[i].sy }) > bullets[i].ra * 8)
+			bullets.splice(i, 1);
+	}
+	
+	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
 	mouseIsTile = mtx >= 0 && mtx < 64 && mty >= 0 && mty < 48
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
 	mouseEnemies = [];
 	for (let i = 0; i < enemies.length; i++) {
 		let en = enemies[i];
-		if (mx / 8 < en.tx || mx / 8 >= en.tx + en.r
-			|| my / 8 < en.ty || my / 8 >= en.ty + en.r) continue;
+		if (omx / 8 < en.tx || omx / 8 >= en.tx + en.r
+			|| omy / 8 < en.ty || omy / 8 >= en.ty + en.r) continue;
 		mouseEnemies.push(en);
 	}
 	
@@ -570,14 +721,31 @@ let changeSpeedMultiplier = function(mult) {
 let mouseMove = function(e) {
 	let rect = canvas.getBoundingClientRect();
 	mx = e.clientX - rect.left, my = e.clientY - rect.top;
+	omx = mx / ZOOM - OX + (256 - 256 / ZOOM), omy = my / ZOOM - OY + (192 - 192 / ZOOM);
 };
 
-window.onload = function() {
+let scrollMove = function(e) {
+	let delta = -e.detail * 40 | e.wheelDelta;
+	if (delta > 0) ZOOM *= (1 + delta / 500);
+	else if (delta < 0) ZOOM /= (1 + -delta / 500);
+	if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom;
+	if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom;
+};
+
+let run = function() {
 	canvas = document.getElementById("game");
 	context = canvas.getContext("2d");
 	
-	setInterval(draw, 1000 / 20);
-	updateInterval = setInterval(tick, 1000 / UPS);
+	initUI();
+	
+	setInterval(function() {
+		canvas.width = canvas.width;
+		if (STARTED) draw();
+		else renderStart(context);
+	}, 1000 / 20);
+	updateInterval = setInterval(function() {
+		if (STARTED) tick();
+	}, 1000 / UPS);
 	setInterval(function() {
 		fps = cfps, ups = cups;
 		cups = 0, cfps = 0;
@@ -616,4 +784,33 @@ window.onload = function() {
 			}
 		}
 	}, false);
+	
+	window.onkeydown = function(e) {
+		if (e.keyCode == 65) A = true;
+		else if (e.keyCode == 68) D = true;
+		else if (e.keyCode == 87) W = true;
+		else if (e.keyCode == 83) S = true;
+	};
+	
+	window.onkeyup = function(e) {
+		if (e.keyCode == 65) A = false;
+		else if (e.keyCode == 68) D = false;
+		else if (e.keyCode == 87) W = false;
+		else if (e.keyCode == 83) S = false;
+	};
+	
+	window.addEventListener("mousewheel", scrollMove, false);
+	window.addEventListener("DOMMouseScroll", scrollMove, false);
 };
+
+let winLoaded = false;
+window.onload = function() { winLoaded = true; };
+let checkLoaded = function() {
+	let tilesLoaded = true;
+	for (let i in tileMap)
+		if (!tileMap[i].loaded)
+			tilesLoaded = false;
+	if (winLoaded && tilesLoaded) run();
+	else setTimeout(checkLoaded, 50);
+};
+checkLoaded();
