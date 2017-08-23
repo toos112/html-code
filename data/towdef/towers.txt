@@ -1,7 +1,10 @@
 {
 	"T0.0.0" : {
 		"name": "Machine Gun Tower",
-		"texture": "data/gfx/machineGunTower.png",
+		"texture": {
+			"base": "data/gfx/towers/base_machineGun.png",
+			"gun": "data/gfx/towers/gun_machineGun.png"
+		},
 		"ammo": ["A0.0.0.0"],
 		"worth": 25,
 		"width": 2,
@@ -19,8 +22,11 @@
 		"swimmingSpeed": -1
 	},
 	"T0.0.1" : {
-		"name": "Flame Tower",
-		"texture": "data/gfx/flameTower.png",
+		"name": "Flame Thrower",
+		"texture": {
+			"base": "data/gfx/towers/base_flameThrower.png",
+			"gun": "data/gfx/towers/gun_flameThrower.png"
+		},
 		"ammo": ["A0.0.1.0"],
 		"worth": 40,
 		"width": 3,

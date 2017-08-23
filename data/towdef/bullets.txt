@@ -10,7 +10,7 @@
 		"effects":[]
 	},
 	"A0.0.1.0" : {
-		"name": "Flame Trower Canisters",
+		"name": "Flame Thrower Canisters",
 		"texture": "data/gfx/flameTrowerCanisters.png",
 		"damage": 0.8,
 		"penetration": 0,

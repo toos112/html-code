@@ -1,9 +1,9 @@
 let life_img = new Image();
-life_img.src = "(js: _.img('data/gfx/life.png') :js)";
+life_img.src = "(js: _.img('data/gfx/icons/life.png') :js)";
 let coins_img = new Image();
-coins_img.src = "(js: _.img('data/gfx/coin.png') :js)";
+coins_img.src = "(js: _.img('data/gfx/icons/coin.png') :js)";
 let enemies_img = new Image();
-enemies_img.src = "(js: _.img('data/gfx/enemy.png') :js)";
+enemies_img.src = "(js: _.img('data/gfx/icons/enemy.png') :js)";
 
 let mapButtons = [];
 var initUI = function() {
