@@ -1,8 +1,8 @@
 {
-	"^" : { "name" : "hill", "water" : false, "land" : false, "flight" : true, "canBuildTower": false, "texture" : "data/gfx/hill.png" },
-	"w" : { "name" : "water", "water" : true, "land" : false, "flight" : true, "canBuildTower": false, "texture" : "data/gfx/water.png" },
-	"." : { "name" : "nothing", "water" : false, "land" : true, "flight" : true, "canBuildTower": true, "texture" : "data/gfx/nothing.png" },
-	"#" : { "name" : "wall", "water" : false, "land" : false, "flight" : false, "canBuildTower": true, "texture" : "data/gfx/wall.png" },
-	"E" : { "name" : "end", "water" : true, "land" : true, "flight" : true, "canBuildTower": false, "texture" : "data/gfx/end.png" },
-	"S" : { "name" : "start", "water" : true, "land" : true, "flight" : true, "canBuildTower": false, "texture" : "data/gfx/start.png" }
+	"^" : { "name" : "hill", "water" : false, "land" : false, "flight" : true, "canBuildTower": false, "texture" : "data/gfx/tiles/hill.png" },
+	"w" : { "name" : "water", "water" : true, "land" : false, "flight" : true, "canBuildTower": false, "texture" : "data/gfx/tiles/water.png" },
+	"." : { "name" : "nothing", "water" : false, "land" : true, "flight" : true, "canBuildTower": true, "texture" : "data/gfx/tiles/nothing.png" },
+	"#" : { "name" : "wall", "water" : false, "land" : false, "flight" : false, "canBuildTower": true, "texture" : "data/gfx/tiles/wall.png" },
+	"E" : { "name" : "end", "water" : true, "land" : true, "flight" : true, "canBuildTower": false, "texture" : "data/gfx/tiles/end.png" },
+	"S" : { "name" : "start", "water" : true, "land" : true, "flight" : true, "canBuildTower": false, "texture" : "data/gfx/tiles/start.png" }
 }

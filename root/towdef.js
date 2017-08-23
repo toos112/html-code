@@ -26,8 +26,7 @@ let tileMap = JSON.parse("(js:
 	_.I("_scripts/file.js");
 	var result = $json.parse($file.read("data/towdef/tilemap.txt").join(""));
 	for (var i in result)
-		if (result[i].texture != undefined)
-			result[i].imgdata = "" + _.img(result[i].texture);
+		result[i].imgdata = "" + _.img(result[i].texture);
 	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
 for (let i in tileMap) {
@@ -142,8 +141,19 @@ for (let i = 0; i < inter.length; i++)
 let towerTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/towers.txt").join(""), "\"", "\\\"");
+	var result = $json.parse($file.read("data/towdef/towers.txt").join(""));
+	for (var i in result) {
+		result[i].baseimgdata = "" + _.img(result[i].texture.base);
+		result[i].gunimgdata = "" + _.img(result[i].texture.gun);
+	}
+	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
+for (let i in towerTypes) {
+	towerTypes[i].baseimage = new Image();
+	towerTypes[i].baseimage.src = towerTypes[i].baseimgdata;
+	towerTypes[i].gunimage = new Image();
+	towerTypes[i].gunimage.src = towerTypes[i].gunimgdata;
+}
 
 let bulletTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
@@ -157,15 +167,12 @@ let enemyTypes = JSON.parse("(js:
 	_.I("_scripts/json.js");
 	var result = $json.parse($file.read("data/towdef/enemies.txt").join(""));
 	for (var i in result)
-		if (result[i].texture != undefined)
-			result[i].imgdata = "" + _.img(result[i].texture);
+		result[i].imgdata = "" + _.img(result[i].texture);
 	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
 for (let i in enemyTypes) {
-	if (enemyTypes[i].imgdata != undefined) {
-		enemyTypes[i].image = new Image();
-		enemyTypes[i].image.src = enemyTypes[i].imgdata;
-	}
+	enemyTypes[i].image = new Image();
+	enemyTypes[i].image.src = enemyTypes[i].imgdata;
 }
 
 let effectTypes = JSON.parse("(js:
@@ -381,7 +388,8 @@ let spawnTower = function(t, pos) {
 	for (let x = pos.x; x < pos.x + tt.width; x++)
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
-	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], as : tt.attackSpeed, dlay : UPS / tt.attackSpeed };
+	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0],
+		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage };
 	towers.push(tow);
 	return true;
 };
@@ -532,13 +540,11 @@ let refreshMap = function() {
 };
 
 let draw = function() {
-	if (A) OX += 5 / ZOOM;
-	if (D) OX -= 5 / ZOOM;
-	if (W) OY += 5 / ZOOM;
-	if (S) OY -= 5 / ZOOM;
-	
-	let ox = OX * ZOOM - (256 - 256 / ZOOM) * ZOOM;
-	let oy = OY * ZOOM - (192 - 192 / ZOOM) * ZOOM;
+	let mm = 5;
+	if (A && OX + mm < 64 / 2 * 8) OX += mm / ZOOM;
+	if (D && OX - mm > -(64 / 2 * 8)) OX -= mm / ZOOM;
+	if (W && OY + mm < 48 / 2 * 8) OY += mm / ZOOM;
+	if (S && OY - mm > -(48 / 2 * 8)) OY -= mm / ZOOM;
 	
 	renderMap();
 	context.imageSmoothingEnabled = false;
@@ -561,9 +567,14 @@ let draw = function() {
 			context.fillRect(addOffset(enemies[i].tx * 8 + len, "x"), addOffset((enemies[i].ty + enemies[i].r) * 8, "y"), (enemies[i].r * 8 - len) * ZOOM, 2 * ZOOM);
 	}
 	
-	context.fillStyle = "#7f7f7f";
-	for (let i = 0; i < towers.length; i++)
-		context.fillRect(addOffset(towers[i].x * 8, "x"), addOffset(towers[i].y * 8, "y"), towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM);
+	for (let i = 0; i < towers.length; i++) {
+		context.drawImage(towers[i].baseimage, addOffset(towers[i].x * 8, "x"), addOffset(towers[i].y * 8, "y"), towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM);
+		context.save();
+		context.translate(addOffset(towers[i].x * 8, "x") + towers[i].w * 4 * ZOOM, addOffset(towers[i].y * 8, "y") + towers[i].h * 4 * ZOOM);
+		context.rotate(towers[i].rot + Math.PI / 2);
+		context.drawImage(towers[i].gunimage, -towers[i].w * 4 * ZOOM, -towers[i].h * 4 * ZOOM, towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM)
+		context.restore();
+	}
 	
 	context.beginPath();
 	context.globalAlpha = 0.25;
