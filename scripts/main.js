@@ -2,9 +2,11 @@ _.I("_scripts/std.js");
 _.I("_scripts/file.js");
 _.I("_scripts/event.js");
 _.I("_scripts/websocket.js");
+_.I("_scripts/cmd.js");
 _.I("_scripts/encode.js");
 _.I("scripts/login.js");
 _.I("scripts/command.js");
+_.I("scripts/svrcmd.js");
 
 var chatList = [];
 
@@ -93,6 +95,10 @@ $event.handler("ws_close", new EventListener(function(e) {
 		if (name != "" && !udata.ghost)
 			broadcast("<-" + name);
 	}
+}, null));
+
+$event.handler("cmd", new EventListener(function(e) {
+	handlecmd(e.cmd);
 }, null));
 
 _.loop(60000, function() {

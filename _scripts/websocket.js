@@ -48,5 +48,5 @@ _.event("ws.new", function(e) {
 _.event("ws.close", function(e) {
 	$event._trigger("ws_close", {
 		ws: new _WebSocketWrapper(e)
-	})
+	});
 });
