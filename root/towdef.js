@@ -67,6 +67,7 @@ let mouseTile, mouseIsTile;
 let mouseEnemies = [];
 let spawnDelay = 0;
 let alt = 0;
+let shift = false;
 
 let clone = function(obj) {
 	if (Array.isArray(obj)) {
@@ -540,7 +541,7 @@ let refreshMap = function() {
 };
 
 let draw = function() {
-	let mm = 5;
+	let mm = shift ? 10 : 5;
 	if (A && OX + mm < 64 / 2 * 8) OX += mm / ZOOM;
 	if (D && OX - mm > -(64 / 2 * 8)) OX -= mm / ZOOM;
 	if (W && OY + mm < 48 / 2 * 8) OY += mm / ZOOM;
@@ -787,6 +788,7 @@ let run = function() {
 	}, false);
 	
 	window.addEventListener("keypress", function(e) {
+		shift = e.shiftKey;
 		if (EDITOR) {
 			if (e.charCode == 32) {
 				current = getNext(tileMap, current);
@@ -795,6 +797,9 @@ let run = function() {
 			}
 		}
 	}, false);
+	
+	window.addEventListener("keydown", function(e) { shift = e.shiftKey; }, false);
+	window.addEventListener("keyup", function(e) { shift = e.shiftKey; }, false);
 	
 	window.onkeydown = function(e) {
 		if (e.keyCode == 65) A = true;
