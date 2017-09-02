@@ -180,8 +180,15 @@ for (let i in towerTypes) {
 let bulletTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/bullets.txt").join(""), "\"", "\\\"");
+	var result = $json.parse($file.read("data/towdef/bullets.txt").join(""));
+	for (var i in result)
+		result[i].imgdata = "" + _.img(result[i].texture);
+	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
+for (let i in bulletTypes) {
+	bulletTypes[i].image = new Image();
+	bulletTypes[i].image.src = bulletTypes[i].imgdata;
+}
 
 let enemyTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
@@ -449,7 +456,8 @@ let buildTower = function(t, pos) {
 
 let spawnBullet = function(b, t, a) {
 	let bt = bulletTypes[b];
-	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8, ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage };
+	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8,
+		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage, image : bt.image };
 	bullets.push(bul);
 };
 
@@ -636,13 +644,8 @@ let draw = function() {
 	context.stroke();
 	context.globalAlpha = 1;
 	
-	context.strokeStyle = "#7f7f00";
-	context.lineWidth = 1 * ZOOM;
-	for (let i = 0; i < bullets.length; i++) {
-		context.beginPath();
-		context.arc(addOffset(bullets[i].x, "x"), addOffset(bullets[i].y, "y"), 2 * ZOOM, 0, 2 * Math.PI);
-		context.stroke();
-	}
+	for (let i = 0; i < bullets.length; i++)
+		context.drawImage(bullets[i].image, addOffset(bullets[i].x - 4, "x"), addOffset(bullets[i].y - 4, "y"), 8 * ZOOM, 8 * ZOOM);
 	
 	if (mouseIsTile && currentTower != "") {
 		context.globalAlpha = 0.5;
