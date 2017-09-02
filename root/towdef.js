@@ -644,7 +644,6 @@ let waveTick = function() {
 };
 
 let tick = function() {
-	updatePaths();
 	waveTick();
 	
 	for (let i = pendingSpawns.length - 1; i >= 0; i--) {
