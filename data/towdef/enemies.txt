@@ -63,8 +63,8 @@
 		"onDeath": []
 	},
 	"E0.1.0" : {
-		"name": "Small Crawler",
-		"texture": "data/gfx/enemies/smallCrawler.png",
+		"name": "Small Roller",
+		"texture": "data/gfx/enemies/smallRoller.png",
 		"worth": 10,
 		"width": 2,
 		"height": 2,
@@ -84,8 +84,8 @@
 		"onDeath": [{"name":"E0.0.0", "count":2}]
 	},
 	"E0.1.1" : {
-		"name": "Crawler",
-		"texture": "data/gfx/enemies/crawler.png",
+		"name": "Roller",
+		"texture": "data/gfx/enemies/roller.png",
 		"worth": 25,
 		"width": 2,
 		"height": 2,
@@ -105,8 +105,8 @@
 		"onDeath": [{"name":"E0.0.0", "count":1},{"name":"E0.0.1", "count":2}]
 	},
 	"E0.1.2" : {
-		"name": "Big Crawler",
-		"texture": "data/gfx/enemies/bigCrawler.png",
+		"name": "Big Roller",
+		"texture": "data/gfx/enemies/bigRoller.png",
 		"width": 3,
 		"height": 3,
 		"hp": 80,
