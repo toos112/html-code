@@ -257,7 +257,7 @@ let isColliding = function(p, o, grid) {
 		for (let y = 0; y < o.r; y++) {
 			if (p.x + x < 0 || p.x + x >= grid.length || p.y + y < 0 || p.y + y >= grid[p.x + x].length) return true;
 			if (getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid) == 0) return true;
-			if (towMap[p.x + x][p.y + y] == "t") return true;
+			if (towMap[p.x + x][p.y + y] == "t" && o.fs == -1) return true;
 		}
 	}
 	return false;
