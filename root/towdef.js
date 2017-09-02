@@ -1,17 +1,8 @@
 "use strict";
 
 let canvas, context;
-let grid = new Array(64), gridChars = new Array(64), towMap = new Array(64);
-for (let i = 0; i < grid.length; i++) {
-	grid[i] = new Array(48);
-	gridChars[i] = new Array(48);
-	towMap[i] = new Array(48);
-	for (let ii = 0; ii < grid[i].length; ii++) {
-		grid[i][ii] = null;
-		gridChars[i][ii] = ".";
-		towMap[i][ii] = "n";
-	}
-}
+let grid, gridChars, towMap;
+let mapCanvas, mapContext, gridRenderCache, updateMap;
 
 let toHex = function(i) {
 	let str = i.toString(16);
@@ -35,9 +26,9 @@ for (let i in tileMap) {
 		tileMap[i].loaded = true;
 		imgcontext.drawImage(tileMap[i].image, 0, 0);
 		let data = imgcontext.getImageData(0, 0, 8, 8).data;
-		tileMap[i].interdat = new Array(64);
+		tileMap[i].interdat = new Array(8);
 		for (let ii = 0; ii < tileMap[i].interdat.length; ii++)
-			tileMap[i].interdat[ii] = new Array(48);
+			tileMap[i].interdat[ii] = new Array(8);
 		for (let x = 0; x < 8; x++)
 			for (let y = 0; y < 8; y++)
 				tileMap[i].interdat[y][x] = "#" + toHex(data[(x * 8 + y) * 4 + 0])
@@ -57,10 +48,11 @@ let tilecount = { water : 0, land : 0, flight : 0, total : 0 };
 let UPS = 30;
 let EDITOR = false;
 let STARTED = false;
-let ZOOM = 1;
+let ZOOM = 1, ZOOMPOW = 1;
 let OX = 0, OY = 0;
 let A = false, S = false, D = false, W = false;
 let INTERPOLATE = true;
+let SHOWALLPATHS = false;
 
 let mx, my, mtx, mty, omx, omy;
 let mouseTile, mouseIsTile;
@@ -121,14 +113,41 @@ let setGridTile = function(pos, tile) {
 };
 
 let loadLevel = function(level) {
+	ldata = level.data;
+	waves = level.waves;
+	
+	grid = new Array(ldata.width), gridChars = new Array(ldata.width), towMap = new Array(ldata.width);
+	for (let i = 0; i < grid.length; i++) {
+		grid[i] = new Array(ldata.height);
+		gridChars[i] = new Array(ldata.height);
+		towMap[i] = new Array(ldata.height);
+		for (let ii = 0; ii < grid[i].length; ii++) {
+			grid[i][ii] = null;
+			gridChars[i][ii] = ".";
+			towMap[i][ii] = "n";
+		}
+	}
+
+	mapCanvas = document.createElement("canvas");
+	mapCanvas.width = ldata.width * 8;
+	mapCanvas.height = ldata.height * 8;
+	mapContext = mapCanvas.getContext("2d");
+	gridRenderCache = new Array(ldata.width), updateMap = new Array(ldata.width);
+	for (let i = 0; i < gridRenderCache.length; i++) {
+		gridRenderCache[i] = new Array(ldata.height);
+		updateMap[i] = new Array(ldata.height);
+		for (let ii = 0; ii < gridRenderCache[i].length; ii++) {
+			gridRenderCache[i][ii] = "#373737";
+			updateMap[i][ii] = false;
+		}
+	}
+	
 	for (let y = 0; y < level.level.length; y++) {
 		let row = level.level[y].split("");
 		for (let x = 0; x < row.length; x++)
 			setGridTile({ x : x, y : y }, row[x]);
 	}
 	calculateExits();
-	ldata = level.data;
-	waves = level.waves;
 };
 
 let inter = "(js:
@@ -296,7 +315,7 @@ let avgSpeed = function(e) {
 
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
 let findPath = function(start, end, obj, grid) {
-	let open = [start];
+	let open = [{ x : start.x, y : start.y }];
 	let openMap = new Array(grid.length);
 	let closed = new Array(grid.length);
 	for (let i = 0; i < closed.length; i++) {
@@ -354,8 +373,19 @@ let findPath = function(start, end, obj, grid) {
 	}
 };
 
+let i = 0;
 let updatePath = function(e) {
+	i++;
+	let pNext = undefined;
+	if (e.path !== undefined)
+		pNext = e.path[e.pi + 1];
 	e.path = findPath(e, end, e, grid);
+	let nNext = e.path[1];
+	if (pNext !== undefined && (pNext.x != nNext.x || pNext.y != nNext.y)) {
+		e.x = pNext.x, e.y = pNext.y;
+		e.fract = 1 - e.fract;
+		e.path.unshift({ x : e.x, y : e.y });
+	}
 	e.pi = 0;
 	return e;
 };
@@ -369,10 +399,8 @@ updatePaths();
 let spawnAt = function(e, pos, com) {
 	let et = enemyTypes[e];
 	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath,
-		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth, effects : [] }, pos, com === undefined ? "LT" : com);
+		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth, effects : [], fract : 0 }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
-	if (enemy.path.length > 1) enemy.dlay = moveCost(enemy, enemy, enemy.path[enemy.pi + 1], grid, false);
-	else enemy.dlay = 0;
 	enemies.push(enemy);
 };
 
@@ -462,25 +490,12 @@ let _spawn = function(e) {
 let _spawnrandom = function(e) {
 	let et = enemyTypes[e];
 	let enemy = { r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath };
-	let pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
+	let pos = { x : Math.floor(Math.random() * ldata.width), y : Math.floor(Math.random() * ldata.height) };
 	while (isColliding(pos, enemy, grid))
-		pos = { x : Math.floor(Math.random() * 64), y : Math.floor(Math.random() * 48) };
+		pos = { x : Math.floor(Math.random() * ldata.width), y : Math.floor(Math.random() * ldata.height) };
 	spawnAt(e, pos);
 };
 
-let mapCanvas = document.createElement("canvas");
-mapCanvas.width = 64 * 8;
-mapCanvas.height = 48 * 8;
-let mapContext = mapCanvas.getContext("2d");
-let gridRenderCache = new Array(64), updateMap = new Array(64);
-for (let i = 0; i < gridRenderCache.length; i++) {
-	gridRenderCache[i] = new Array(48);
-	updateMap[i] = new Array(48);
-	for (let ii = 0; ii < gridRenderCache[i].length; ii++) {
-		gridRenderCache[i][ii] = "#373737";
-		updateMap[i][ii] = false;
-	}
-}
 let renderMap = function() {
 	for (let x = 0; x < grid.length; x++) {
 		for (let y = 0; y < grid[x].length; y++) {
@@ -522,7 +537,7 @@ let renderMap = function() {
 };
 
 let addOffset = function(val, axis) {
-	let o = (axis == "x") ? (OX * ZOOM - (256 - 256 / ZOOM) * ZOOM) : (OY * ZOOM - (192 - 192 / ZOOM) * ZOOM);
+	let o = (axis == "x") ? (OX * ZOOM - (ldata.width * 4 - ldata.width * 4 / ZOOM) * ZOOM) : (OY * ZOOM - (ldata.height * 4 - ldata.height * 4 / ZOOM) * ZOOM);
 	return val * ZOOM + o;
 };
 
@@ -541,11 +556,11 @@ let refreshMap = function() {
 };
 
 let draw = function() {
-	let mm = shift ? 10 : 5;
-	if (A && OX + mm < 64 / 2 * 8) OX += mm / ZOOM;
-	if (D && OX - mm > -(64 / 2 * 8)) OX -= mm / ZOOM;
-	if (W && OY + mm < 48 / 2 * 8) OY += mm / ZOOM;
-	if (S && OY - mm > -(48 / 2 * 8)) OY -= mm / ZOOM;
+	let mm = shift ? 6 : 3;
+	if (A && OX + mm < ldata.width * 4) OX += mm / ZOOM;
+	if (D && OX - mm > -ldata.width * 4) OX -= mm / ZOOM;
+	if (W && OY + mm < ldata.height * 4) OY += mm / ZOOM;
+	if (S && OY - mm > -ldata.height * 4) OY -= mm / ZOOM;
 	
 	renderMap();
 	context.imageSmoothingEnabled = false;
@@ -581,8 +596,9 @@ let draw = function() {
 	context.globalAlpha = 0.25;
 	context.strokeStyle = "#ff0000";
 	context.lineWidth = 2 * ZOOM;
-	for (let i = 0; i < mouseEnemies.length; i++) {
-		let en = mouseEnemies[i];
+	let pathEnemies = SHOWALLPATHS ? enemies : mouseEnemies;
+	for (let i = 0; i < pathEnemies.length; i++) {
+		let en = pathEnemies[i];
 		context.moveTo(addOffset(en.x * 8 + en.r * 4, "x"), addOffset(en.y * 8 + en.r * 4, "y"));
 		for (let ii = en.pi; ii < en.path.length - 1; ii++)
 			context.lineTo(addOffset(en.path[ii + 1].x * 8 + en.r * 4, "x"), addOffset(en.path[ii + 1].y * 8 + en.r * 4, "y"));
@@ -628,6 +644,7 @@ let waveTick = function() {
 };
 
 let tick = function() {
+	updatePaths();
 	waveTick();
 	
 	for (let i = pendingSpawns.length - 1; i >= 0; i--) {
@@ -656,18 +673,20 @@ let tick = function() {
 			}
 		}
 		
-		--enemies[i].dlay;
-		while (enemies[i].dlay <= 0 && enemies[i].pi < enemies[i].path.length - 1) {
+		enemies[i].fract += 1 / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+		while (enemies[i].fract >= 1 && enemies[i].pi < enemies[i].path.length - 1) {
+			let emc = moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 			enemies[i].x = enemies[i].path[++enemies[i].pi].x;
 			enemies[i].y = enemies[i].path[enemies[i].pi].y;
-			if (enemies[i].pi < enemies[i].path.length - 1)
-				enemies[i].dlay += moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+			if (enemies[i].pi < enemies[i].path.length - 1) {
+				enemies[i].fract--;
+				enemies[i].fract *= emc / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+			}
 		}
 		
 		if (enemies[i].pi < enemies[i].path.length - 1) {
 			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
-			let fract = 1 - enemies[i].dlay / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
-			enemies[i].tx = enemies[i].x + nextMove.x * fract, enemies[i].ty = enemies[i].y + nextMove.y * fract;
+			enemies[i].tx = enemies[i].x + nextMove.x * enemies[i].fract, enemies[i].ty = enemies[i].y + nextMove.y * enemies[i].fract;
 		} else enemies[i].tx = enemies[i].x, enemies[i].ty = enemies[i].y;
 		
 		if (enemies[i].hp <= 0) killEnemy(i);
@@ -698,7 +717,7 @@ let tick = function() {
 	}
 	
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
-	mouseIsTile = mtx >= 0 && mtx < 64 && mty >= 0 && mty < 48
+	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height;
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
 	mouseEnemies = [];
@@ -733,15 +752,16 @@ let changeSpeedMultiplier = function(mult) {
 let mouseMove = function(e) {
 	let rect = canvas.getBoundingClientRect();
 	mx = e.clientX - rect.left, my = e.clientY - rect.top;
-	omx = mx / ZOOM - OX + (256 - 256 / ZOOM), omy = my / ZOOM - OY + (192 - 192 / ZOOM);
+	if (STARTED)
+		omx = mx / ZOOM - OX + (ldata.width * 4 - ldata.width * 4 / ZOOM), omy = my / ZOOM - OY + (ldata.height * 4 - ldata.height * 4 / ZOOM);
 };
 
 let scrollMove = function(e) {
-	let delta = -e.detail * 40 | e.wheelDelta;
-	if (delta > 0) ZOOM *= (1 + delta / 500);
-	else if (delta < 0) ZOOM /= (1 + -delta / 500);
-	if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom;
-	if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom;
+	let delta = (-e.detail * 40 | e.wheelDelta) / 120;
+	ZOOMPOW += delta;
+	ZOOM = Math.round(Math.pow(Math.pow(2, 1 / 7), ZOOMPOW) * 256) / 256;
+	if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom, ZOOMPOW -= delta;
+	if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom, ZOOMPOW -= delta;
 };
 
 let run = function() {
