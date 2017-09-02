@@ -5,6 +5,8 @@ coins_img.src = "(js: _.img('data/gfx/icons/coin.png') :js)";
 let enemies_img = new Image();
 enemies_img.src = "(js: _.img('data/gfx/icons/enemy.png') :js)";
 
+let nextWaveButton;
+
 let mapButtons = [];
 var initUI = function() {
 	for (let i = 0; i < maps.length; i++) {
@@ -13,11 +15,18 @@ var initUI = function() {
 			STARTED = true;
 		}, { text : maps[i].name, color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" }));
 	}
+	nextWaveButton = new CanvasButton(16, 16, 325, 400, canvas, function() {
+		spawnWave(currentWave);
+		currentWave = currentWave + 1;
+	}, { text :"next wave", color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" });
 };
 
 var renderUI = function(ctx) {
+	
 	ctx.fillStyle = "#000000";
 	ctx.fillRect(0, 384, 512, 128);
+	
+	nextWaveButton.draw(ctx);
 	
 	ctx.font = "12px Arial";
 	ctx.fillStyle = "#00ffff";
