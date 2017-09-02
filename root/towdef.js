@@ -41,7 +41,7 @@ for (let i in tileMap) {
 let start, end;
 let cups = 0, cfps = 0;
 let ups = 0, fps = 0;
-let coins = 0, lives = 2000;
+let coins = 25, lives = 2000;
 let ldata, waves;
 let tilecount = { water : 0, land : 0, flight : 0, total : 0 };
 
@@ -423,6 +423,15 @@ let spawnTower = function(t, pos) {
 	towers.push(tow);
 	updatePaths();
 	return true;
+};
+
+let buildTower = function(t, pos) {
+	let tt = towerTypes[t];
+	if (coins >= tt.cost) {
+		let result = spawnTower(t, pos);
+		if (result) coins -= tt.cost;
+		return result;
+	} else return false;
 };
 
 let spawnBullet = function(b, t, a) {
@@ -815,6 +824,8 @@ let run = function() {
 				setGridTile({ x : mtx, y : mty }, current);
 			}
 		}
+		
+		if (STARTED) buildTower("T0.0.0", { x : mtx, y : mty });
 	}, false);
 	
 	canvas.addEventListener("mouseup", function(e) {

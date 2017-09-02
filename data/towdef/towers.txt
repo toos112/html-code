@@ -6,7 +6,7 @@
 			"gun": "data/gfx/towers/gun_machineGun.png"
 		},
 		"ammo": ["A0.0.0.0"],
-		"worth": 25,
+		"cost": 25,
 		"width": 2,
 		"height": 2,
 		"hp": 5,
@@ -28,7 +28,7 @@
 			"gun": "data/gfx/towers/gun_flameThrower.png"
 		},
 		"ammo": ["A0.0.1.0"],
-		"worth": 40,
+		"cost": 40,
 		"width": 3,
 		"height": 3,
 		"hp": 5,
