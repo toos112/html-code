@@ -256,6 +256,7 @@ let isColliding = function(p, o, grid) {
 		for (let y = 0; y < o.r; y++) {
 			if (p.x + x < 0 || p.x + x >= grid.length || p.y + y < 0 || p.y + y >= grid[p.x + x].length) return true;
 			if (getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid) == 0) return true;
+			if (towMap[p.x + x][p.y + y] == "t") return true;
 		}
 	}
 	return false;
@@ -420,12 +421,13 @@ let spawnTower = function(t, pos) {
 	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0],
 		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage };
 	towers.push(tow);
+	updatePaths();
 	return true;
 };
 
 let spawnBullet = function(b, t, a) {
 	let bt = bulletTypes[b];
-	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8, ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a };
+	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8, ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage };
 	bullets.push(bul);
 };
 
@@ -653,6 +655,25 @@ let tick = function() {
 		}
 	}
 	
+	for (let i = bullets.length - 1; i >= 0; i--) {
+		let offset = angleToPos(bullets[i].a, bullets[i].sp);
+		bullets[i].x += offset.x, bullets[i].y += offset.y;
+		
+		let hitEnemy = false;
+		for (let ii = 0; ii < enemies.length; ii++) {
+			if (dist({ x : enemies[ii].tx * 8 + enemies[ii].r * 4, y : enemies[ii].ty * 8 + enemies[ii].r * 4 }, bullets[i]) < enemies[ii].r * 4) {
+				enemies[ii].hp -= bullets[i].dmg;
+				bullets.splice(i, 1);
+				hitEnemy = true;
+				break;
+			}
+		}
+		if (hitEnemy) continue;
+		
+		if (dist(bullets[i], { x : bullets[i].sx, y : bullets[i].sy }) > bullets[i].ra * 8)
+			bullets.splice(i, 1);
+	}
+	
 	for (let i = enemies.length - 1; i >= 0; i--) {
 		if (isFinished(enemies[i], enemies[i]) || isColliding(enemies[i], enemies[i], grid)) {
 			enemies.splice(i, 1);
@@ -701,18 +722,12 @@ let tick = function() {
 			}
 			if (enemy !== undefined && ldist < bulletTypes[towers[i].ammo].range * towers[i].ra) {
 				let a = getAngle({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
-					{ x : enemy.x + enemy.r / 2, y : enemy.y + enemy.r / 2 });
+					{ x : enemy.tx + enemy.r / 2, y : enemy.ty + enemy.r / 2 });
 				spawnBullet(towers[i].ammo, towers[i], a);
+				towers[i].rot = a;
 				towers[i].dlay += UPS / towers[i].as;
 			} else ++towers[i].dlay;
 		}
-	}
-	
-	for (let i = bullets.length - 1; i >= 0; i--) {
-		let offset = angleToPos(bullets[i].a, bullets[i].sp);
-		bullets[i].x += offset.x, bullets[i].y += offset.y;
-		if (dist(bullets[i], { x : bullets[i].sx, y : bullets[i].sy }) > bullets[i].ra * 8)
-			bullets.splice(i, 1);
 	}
 	
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
