@@ -61,6 +61,7 @@ let mouseEnemies = [];
 let spawnDelay = 0;
 let alt = 0;
 let shift = false;
+let currentWave = 0;
 
 let clone = function(obj) {
 	if (Array.isArray(obj)) {
@@ -439,7 +440,7 @@ let canBuildTower = function(t, pos) {
 };
 
 let buildTower = function(t, pos) {
-	if (canSpawnTower(t, pos)) {
+	if (canBuildTower(t, pos)) {
 		let tt = towerTypes[t];
 		coins -= tt.cost;
 		return spawnTower(t, pos);
