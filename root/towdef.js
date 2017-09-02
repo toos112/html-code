@@ -44,6 +44,7 @@ let ups = 0, fps = 0;
 let coins = 25, lives = 2000;
 let ldata, waves;
 let tilecount = { water : 0, land : 0, flight : 0, total : 0 };
+let currentTower = "T0.0.0";
 
 let UPS = 30;
 let EDITOR = false;
@@ -405,16 +406,23 @@ let spawnAt = function(e, pos, com) {
 	enemies.push(enemy);
 };
 
-let spawnTower = function(t, pos) {
-	let tt = towerTypes[t];
-	let first;
+let canSpawnTower = function(t, pos) {
+	let tt = towerTypes[t], first;
 	for (let x = pos.x; x < pos.x + tt.width; x++) {
+		if (x < 0 || x >= ldata.width) return false;
 		for (let y = pos.y; y < pos.y + tt.height; y++) {
+			if (y < 0 || y >= ldata.height) return false;
 			if (!grid[x][y].canBuildTower || towMap[x][y] != "n" || (first !== undefined && grid[x][y].name != first))
 				return false;
 			first = grid[x][y].name;
 		}
 	}
+	return true;
+};
+
+let spawnTower = function(t, pos) {
+	if (!canSpawnTower(t, pos)) return false;
+	let tt = towerTypes[t];
 	for (let x = pos.x; x < pos.x + tt.width; x++)
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
@@ -425,12 +433,16 @@ let spawnTower = function(t, pos) {
 	return true;
 };
 
-let buildTower = function(t, pos) {
+let canBuildTower = function(t, pos) {
 	let tt = towerTypes[t];
-	if (coins >= tt.cost) {
-		let result = spawnTower(t, pos);
-		if (result) coins -= tt.cost;
-		return result;
+	return coins >= tt.cost && canSpawnTower(t, pos);
+};
+
+let buildTower = function(t, pos) {
+	if (canSpawnTower(t, pos)) {
+		let tt = towerTypes[t];
+		coins -= tt.cost;
+		return spawnTower(t, pos);
 	} else return false;
 };
 
@@ -567,11 +579,17 @@ let refreshMap = function() {
 };
 
 let draw = function() {
-	let mm = shift ? 6 : 3;
+	let mm = shift ? 8 : 4;
 	if (A && OX + mm < ldata.width * 4) OX += mm / ZOOM;
 	if (D && OX - mm > -ldata.width * 4) OX -= mm / ZOOM;
 	if (W && OY + mm < ldata.height * 4) OY += mm / ZOOM;
 	if (S && OY - mm > -ldata.height * 4) OY -= mm / ZOOM;
+	
+	if (STARTED) omx = mx / ZOOM - OX + (ldata.width * 4 - ldata.width * 4 / ZOOM), omy = my / ZOOM - OY + (ldata.height * 4 - ldata.height * 4 / ZOOM);
+	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
+	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height;
+	if (mouseIsTile) mouseTile = grid[mtx][mty];
+	else mouseTile = undefined;
 	
 	renderMap();
 	context.imageSmoothingEnabled = false;
@@ -623,6 +641,16 @@ let draw = function() {
 		context.beginPath();
 		context.arc(addOffset(bullets[i].x, "x"), addOffset(bullets[i].y, "y"), 2 * ZOOM, 0, 2 * Math.PI);
 		context.stroke();
+	}
+	
+	if (mouseIsTile && currentTower != "") {
+		context.globalAlpha = 0.5;
+		if (!canBuildTower(currentTower, { x : mtx, y : mty })) {
+			context.fillStyle = "#ff0000";
+			context.fillRect(addOffset(mtx * 8, "x"), addOffset(mty * 8, "y"), towerTypes[currentTower].width * 8 * ZOOM, towerTypes[currentTower].height * 8 * ZOOM);
+		}
+		context.drawImage(towerTypes[currentTower].baseimage, addOffset(mtx * 8, "x"), addOffset(mty * 8, "y"), towerTypes[currentTower].width * 8 * ZOOM, towerTypes[currentTower].height * 8 * ZOOM);
+		context.globalAlpha = 1;
 	}
 	
 	renderUI(context);
@@ -739,10 +767,6 @@ let tick = function() {
 		}
 	}
 	
-	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
-	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height;
-	if (mouseIsTile) mouseTile = grid[mtx][mty];
-	else mouseTile = undefined;
 	mouseEnemies = [];
 	for (let i = 0; i < enemies.length; i++) {
 		let en = enemies[i];
@@ -775,8 +799,6 @@ let changeSpeedMultiplier = function(mult) {
 let mouseMove = function(e) {
 	let rect = canvas.getBoundingClientRect();
 	mx = e.clientX - rect.left, my = e.clientY - rect.top;
-	if (STARTED)
-		omx = mx / ZOOM - OX + (ldata.width * 4 - ldata.width * 4 / ZOOM), omy = my / ZOOM - OY + (ldata.height * 4 - ldata.height * 4 / ZOOM);
 };
 
 let scrollMove = function(e) {
@@ -825,7 +847,8 @@ let run = function() {
 			}
 		}
 		
-		if (STARTED) buildTower("T0.0.0", { x : mtx, y : mty });
+		if (STARTED && mouseIsTile && currentTower != "")
+			buildTower(currentTower, { x : mtx, y : mty });
 	}, false);
 	
 	canvas.addEventListener("mouseup", function(e) {
