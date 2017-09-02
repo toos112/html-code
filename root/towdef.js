@@ -12,30 +12,67 @@ let toHex = function(i) {
 let imgcanvas = document.createElement("canvas");
 imgcanvas.width = 8, imgcanvas.height = 8;
 let imgcontext = imgcanvas.getContext("2d");
+
 let tileMap = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
 	var result = $json.parse($file.read("data/towdef/tilemap.txt").join(""));
-	for (var i in result)
-		result[i].imgdata = "" + _.img(result[i].texture);
+	for (var i in result) {
+		result[i].imgdatas = [];
+		for (var ii = 0; ii < result[i].textures.length; ii++)
+			result[i].imgdatas[ii] = "" + _.img(result[i].textures[ii]);
+	}
 	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
 for (let i in tileMap) {
-	tileMap[i].image = new Image();
-	tileMap[i].image.onload = function() {
-		tileMap[i].loaded = true;
-		imgcontext.drawImage(tileMap[i].image, 0, 0);
-		let data = imgcontext.getImageData(0, 0, 8, 8).data;
-		tileMap[i].interdat = new Array(8);
-		for (let ii = 0; ii < tileMap[i].interdat.length; ii++)
-			tileMap[i].interdat[ii] = new Array(8);
-		for (let x = 0; x < 8; x++)
-			for (let y = 0; y < 8; y++)
-				tileMap[i].interdat[y][x] = "#" + toHex(data[(x * 8 + y) * 4 + 0])
-					+ toHex(data[(x * 8 + y) * 4 + 1]) + toHex(data[(x * 8 + y) * 4 + 2]);
-	};
+	tileMap[i].images = [];
 	tileMap[i].loaded = false;
-	tileMap[i].image.src = tileMap[i].imgdata;
+	for (let imgi = 0; imgi < tileMap[i].imgdatas.length; imgi++) {
+		tileMap[i].images[imgi] = new Image();
+		tileMap[i].images[imgi].onload = function() {
+			imgcontext.drawImage(tileMap[i].images[imgi], 0, 0);
+			let data = imgcontext.getImageData(0, 0, 8, 8).data;
+			tileMap[i].interdat = new Array(8);
+			for (let ii = 0; ii < tileMap[i].interdat.length; ii++)
+				tileMap[i].interdat[ii] = new Array(8);
+			for (let x = 0; x < 8; x++)
+				for (let y = 0; y < 8; y++)
+					tileMap[i].interdat[y][x] = "#" + toHex(data[(x * 8 + y) * 4 + 0])
+						+ toHex(data[(x * 8 + y) * 4 + 1]) + toHex(data[(x * 8 + y) * 4 + 2]);
+			
+			if (tileMap[i].rotatable) {
+				tileMap[i].images[imgi].imgcache = [];
+				tileMap[i].images[imgi].intercache = [];
+				for (let ii = 0; ii < 4; ii++) {
+					tileMap[i].images[imgi].intercache[ii] = rotArray(tileMap[i].interdat, ii);
+					imgcontext.save();
+					imgcontext.translate(4, 4);
+					imgcontext.rotate(ii * Math.PI / 2);
+					imgcontext.drawImage(tileMap[i].images[imgi], -4, -4);
+					imgcontext.restore();
+					tileMap[i].images[imgi].imgcache[ii] = new Image();
+					tileMap[i].images[imgi].imgcache[ii].onload = function() {
+						tileMap[i].images[imgi].imgcache[ii].loaded = true;
+						for (let iii = 0; iii < 4; iii++)
+							if (tileMap[i].images[imgi].imgcache[ii] === undefined || !tileMap[i].images[imgi].imgcache[ii].loaded) return;
+			
+							tileMap[i].images[imgi].loaded = true;
+							for (let iii = 0; iii < tileMap[i].imgdatas.length; iii++)
+								if (tileMap[i].images[iii] === undefined || !tileMap[i].images[iii].loaded) return;
+							tileMap[i].loaded = true;
+					};
+					tileMap[i].images[imgi].imgcache[ii].loaded = false
+					tileMap[i].images[imgi].imgcache[ii].src = imgcanvas.toDataURL();
+				}
+			} else {
+				tileMap[i].images[imgi].loaded = true;
+				for (let ii = 0; ii < tileMap[i].imgdatas.length; ii++)
+					if (tileMap[i].images[ii] === undefined || !tileMap[i].images[ii].loaded) return;
+				tileMap[i].loaded = true;
+			}
+		};
+		tileMap[i].images[imgi].src = tileMap[i].imgdatas[imgi];
+	}
 }
 
 let start, end;
@@ -62,6 +99,23 @@ let spawnDelay = 0;
 let alt = 0;
 let shift = false;
 let currentWave = 0;
+
+let rotArray = function(arr, count) {
+	let newArr = new Array(arr.length);
+	for (let i = 0; i < newArr.length; i++)
+		newArr[i] = new Array(arr[i].length);
+
+	for (let x = 0; x < arr.length; x++) {
+		for (let y = 0; y < arr[x].length; y++) {
+			let nx = arr.length - y - 1;
+			let ny = x;
+			newArr[nx][ny] = arr[x][y];
+		}
+	}
+	
+	if (count == 0) return newArr;
+	else return rotArray(newArr, count - 1);
+};
 
 let clone = function(obj) {
 	if (Array.isArray(obj)) {
@@ -97,8 +151,15 @@ let getMapString = function() {
 };
 
 let setGridTile = function(pos, tile) {
-	let tt = tileMap[tile];
-	let obj = { name : tt.name, water : tt.water, land : tt.land, flight : tt.flight, canBuildTower : tt.canBuildTower, texture : tt.texture, image : tt.image, interdat : tt.interdat };
+	let tt = tileMap[tile]
+	let variant = Math.floor(Math.random() * tt.images.length);
+	let image = tt.images[variant], interdat = tt.interdat, rotation = "";
+	if (tt.rotatable) {
+		rotation = Math.floor(Math.random() * 4);
+		interdat = image.intercache[rotation];
+		image = image.imgcache[rotation];
+	}
+	let obj = { name : tt.name, water : tt.water, land : tt.land, flight : tt.flight, canBuildTower : tt.canBuildTower, id : tt.name + "," + rotation + "," + variant, image : image, interdat : interdat };
 	
 	if (grid[pos.x][pos.y] != null) {
 		if (grid[pos.x][pos.y].water) tilecount.water--;
@@ -531,7 +592,7 @@ let _spawnrandom = function(e) {
 let renderMap = function() {
 	for (let x = 0; x < grid.length; x++) {
 		for (let y = 0; y < grid[x].length; y++) {
-			if (gridRenderCache[x][y] != grid[x][y].texture) {
+			if (gridRenderCache[x][y] != grid[x][y].id) {
 				updateMap[x][y] = true;
 				if (INTERPOLATE) {
 					if (x + 1 >= 0 && x + 1 < updateMap.length) updateMap[x + 1][y] = true;
@@ -539,7 +600,7 @@ let renderMap = function() {
 					if (x - 1 >= 0 && x - 1 < updateMap.length) updateMap[x - 1][y] = true;
 					if (y - 1 >= 0 && y - 1 < updateMap[x].length) updateMap[x][y - 1] = true;
 				}
-				gridRenderCache[x][y] = grid[x][y].texture;
+				gridRenderCache[x][y] = grid[x][y].id;
 			}
 		}
 	}

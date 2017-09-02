@@ -11,13 +11,17 @@ let mapButtons = [];
 var initUI = function() {
 	for (let i = 0; i < maps.length; i++) {
 		mapButtons.push(new CanvasButton(256, 16, 128, 2 + 18 * i, canvas, function() {
-			loadLevel(maps[i]);
-			STARTED = true;
+			if (!STARTED) {
+				loadLevel(maps[i]);
+				STARTED = true;
+			}
 		}, { text : maps[i].name, color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" }));
 	}
 	nextWaveButton = new CanvasButton(16, 16, 325, 400, canvas, function() {
-		spawnWave(currentWave);
-		currentWave = currentWave + 1;
+		if (STARTED) {
+			spawnWave(currentWave);
+			currentWave = currentWave + 1;
+		}
 	}, { text :"next wave", color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" });
 };
 
