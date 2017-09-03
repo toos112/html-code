@@ -321,15 +321,16 @@ let getBestSpeed = function(p, o, grid) {
 	return result;
 };
 
-let getTowerCollision = function(pos, obj, tows) {
+let getTowerCollisions = function(pos, obj, tows) {
+	let result = [];
 	for (let i = 0; i < tows.length; i++)
 		for (let x = 0; x < obj.r; x++)
 			for (let y = 0; y < obj.r; y++)
 				for (let xx = 0; xx < tows[i].w; xx++)
 					for (let yy = 0; yy < tows[i].h; yy++)
 						if (pos.x + x == tows[i].x + xx && pos.y + y == tows[i].y + yy)
-							return tows[i];
-	return undefined;
+							if (result.indexOf(tows[i]) == -1) result.push(tows[i]);
+	return result;
 };
 
 let isColliding = function(p, o, grid, checkTowers) {
@@ -437,10 +438,13 @@ let findPath = function(start, end, obj, grid, checkTowers) {
 				let collisionsHad = [];
 				for (let i = 0; i < result.length; i++) {
 					if (result[i].type != "move") continue;
-					let towerCollision = getTowerCollision(result[i], obj, towers);
-					if (towerCollision === undefined || collisionsHad.indexOf(towerCollision) != -1) continue;
-					collisionsHad.push(towerCollision);
-					result.splice(i, 0, { tow : towerCollision, type : "attack" });
+					let towerCollisions = getTowerCollisions(result[i], obj, towers);
+					for (let ii = 0; ii < towerCollisions.length; ii++) {
+						let towerCollision = towerCollisions[ii];
+						if (towerCollision === undefined || collisionsHad.indexOf(towerCollision) != -1) continue;
+						collisionsHad.push(towerCollision);
+						result.splice(i, 0, { tow : towerCollision, type : "attack" });
+					}
 				}
 			}
             return result;
@@ -508,9 +512,9 @@ let canSpawnTower = function(t, pos) {
 	}
 	
 	for (let i = 0; i < enemies.length; i++) {
-		if (getTowerCollision(enemies[i], enemies[i], [{ x : pos.x, y : pos.y, w : tt.width, h : tt.height }]) !== undefined) return false;
+		if (getTowerCollisions(enemies[i], enemies[i], [{ x : pos.x, y : pos.y, w : tt.width, h : tt.height }]).length > 0) return false;
 		if (enemies[i].path[enemies[i].pi + 1].type == "move")
-			if (getTowerCollision(enemies[i].path[enemies[i].pi + 1], enemies[i], [{ x : pos.x, y : pos.y, w : tt.width, h : tt.height }]) !== undefined) return false;
+			if (getTowerCollisions(enemies[i].path[enemies[i].pi + 1], enemies[i], [{ x : pos.x, y : pos.y, w : tt.width, h : tt.height }]).length > 0) return false;
 	}
 	
 	return true;
@@ -699,6 +703,15 @@ let draw = function() {
 	context.imageSmoothingEnabled = false;
 	context.drawImage(mapCanvas, addOffset(0, "x"), addOffset(0, "y"), mapCanvas.width * ZOOM, mapCanvas.height * ZOOM);
 	
+	for (let i = 0; i < towers.length; i++) {
+		context.drawImage(towers[i].baseimage, addOffset(towers[i].x * 8, "x"), addOffset(towers[i].y * 8, "y"), towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM);
+		context.save();
+		context.translate(addOffset(towers[i].x * 8, "x") + towers[i].w * 4 * ZOOM, addOffset(towers[i].y * 8, "y") + towers[i].h * 4 * ZOOM);
+		context.rotate(towers[i].rot + Math.PI / 2);
+		context.drawImage(towers[i].gunimage, -towers[i].w * 4 * ZOOM, -towers[i].h * 4 * ZOOM, towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM)
+		context.restore();
+	}
+	
 	for (let i = 0; i < enemies.length; i++)
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
 			context.drawImage(enemies[i].image, addOffset(enemies[i].tx * 8, "x"), addOffset(enemies[i].ty * 8, "y"), 8 * enemies[i].r * ZOOM, 8 * enemies[i].r * ZOOM);
@@ -716,15 +729,6 @@ let draw = function() {
 			context.fillRect(addOffset(enemies[i].tx * 8 + len, "x"), addOffset((enemies[i].ty + enemies[i].r) * 8, "y"), (enemies[i].r * 8 - len) * ZOOM, 2 * ZOOM);
 	}
 	
-	for (let i = 0; i < towers.length; i++) {
-		context.drawImage(towers[i].baseimage, addOffset(towers[i].x * 8, "x"), addOffset(towers[i].y * 8, "y"), towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM);
-		context.save();
-		context.translate(addOffset(towers[i].x * 8, "x") + towers[i].w * 4 * ZOOM, addOffset(towers[i].y * 8, "y") + towers[i].h * 4 * ZOOM);
-		context.rotate(towers[i].rot + Math.PI / 2);
-		context.drawImage(towers[i].gunimage, -towers[i].w * 4 * ZOOM, -towers[i].h * 4 * ZOOM, towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM)
-		context.restore();
-	}
-	
 	context.beginPath();
 	context.globalAlpha = 0.25;
 	context.strokeStyle = "#ff0000";
@@ -739,8 +743,13 @@ let draw = function() {
 	context.stroke();
 	context.globalAlpha = 1;
 	
-	for (let i = 0; i < bullets.length; i++)
-		context.drawImage(bullets[i].image, addOffset(bullets[i].x - 4, "x"), addOffset(bullets[i].y - 4, "y"), 8 * ZOOM, 8 * ZOOM);
+	for (let i = 0; i < bullets.length; i++) {
+		context.save();
+		context.translate(addOffset(bullets[i].x - 4, "x") + 4 * ZOOM, addOffset(bullets[i].y - 4, "y") + 4 * ZOOM);
+		context.rotate(bullets[i].a);
+		context.drawImage(bullets[i].image, -4 * ZOOM, -4 * ZOOM, 8 * ZOOM, 8 * ZOOM);
+		context.restore();
+	}
 	
 	if (mouseIsTile && currentTower != "") {
 		context.globalAlpha = 0.5;
