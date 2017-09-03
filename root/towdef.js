@@ -820,7 +820,12 @@ let tick = function() {
 	}
 	
 	for (let i = bullets.length - 1; i >= 0; i--) {
-		bullets[i].a = getAngle(bullets[i], { x : bullets[i].target.tx * 8 + bullets[i].target.r * 4, y : bullets[i].target.ty * 8 + bullets[i].target.r * 4 });
+		if (bullets[i].homing && enemies.indexOf(bullets[i].target) == -1) {
+			bullets.splice(i, 1);
+			continue;
+		}
+		
+		if (bullets[i].homing) bullets[i].a = getAngle(bullets[i], { x : bullets[i].target.tx * 8 + bullets[i].target.r * 4, y : bullets[i].target.ty * 8 + bullets[i].target.r * 4 });
 		let offset = angleToPos(bullets[i].a, bullets[i].sp);
 		bullets[i].x += offset.x, bullets[i].y += offset.y;
 		
