@@ -2,7 +2,7 @@
 	"^" : { "name" : "hill", "water" : false, "land" : false, "flight" : true, "canBuildTower": false, "textures" : ["data/gfx/tiles/hill.png"], "rotatable" : true },
 	"w" : { "name" : "water", "water" : true, "land" : false, "flight" : true, "canBuildTower": false, "textures" : ["data/gfx/tiles/water.png"], "rotatable" : true },
 	"." : { "name" : "nothing", "water" : false, "land" : true, "flight" : true, "canBuildTower": true, "textures" : ["data/gfx/tiles/nothing.png"], "rotatable" : true },
-	"#" : { "name" : "wall", "water" : false, "land" : false, "flight" : false, "canBuildTower": true, "textures" : ["data/gfx/tiles/wall.png"], "rotatable" : false },
+	"#" : { "name" : "wall", "water" : false, "land" : false, "flight" : false, "canBuildTower": true, "textures" : ["data/gfx/tiles/wall_01.png","data/gfx/tiles/wall_02.png","data/gfx/tiles/wall_03.png"], "rotatable" : false },
 	"E" : { "name" : "end", "water" : true, "land" : true, "flight" : true, "canBuildTower": false, "textures" : ["data/gfx/tiles/end.png"], "rotatable" : false },
 	"S" : { "name" : "start", "water" : true, "land" : true, "flight" : true, "canBuildTower": false, "textures" : ["data/gfx/tiles/start.png"], "rotatable" : false }
 }
