@@ -81,7 +81,7 @@ for (let i in tileMap) {
 let start, end;
 let cups = 0, cfps = 0;
 let ups = 0, fps = 0;
-let coins = 25, lives = 2000;
+let coins = 25, lives = 200;
 let ldata, waves;
 let tilecount = { water : 0, land : 0, flight : 0, total : 0 };
 let currentTower = "";
