@@ -471,18 +471,11 @@ let findPath = function(start, end, obj, grid, checkTowers) {
 	if (checkTowers) return findPath(start, end, obj, grid, false);
 };
 
-let i = 0;
 let updatePath = function(e) {
-	i++;
-	let pNext = undefined;
-	if (e.path !== undefined)
-		pNext = e.path[e.pi + 1];
-	e.path = findPath(e, end, e, grid);
-	let nNext = e.path[1];
-	if (pNext !== undefined && (pNext.x != nNext.x || pNext.y != nNext.y)) {
-		e.x = pNext.x, e.y = pNext.y;
-		e.fract = 1 - e.fract;
-		e.path.unshift({ x : e.x, y : e.y });
+	if (e.path === undefined || e.pi + 1 >= e.path.length || e.path[e.pi + 1].type == "attack") e.path = findPath(e, end, e, grid);
+	else {
+		e.path = findPath(e.path[e.pi + 1], end, e, grid)
+		e.path.unshift({ x : e.x, y : e.y, type : "move" });
 	}
 	e.pi = 0;
 	return e;
@@ -514,6 +507,12 @@ let canSpawnTower = function(t, pos) {
 		}
 	}
 	
+	for (let i = 0; i < enemies.length; i++) {
+		if (getTowerCollision(enemies[i], enemies[i], [{ x : pos.x, y : pos.y, w : tt.width, h : tt.height }]) !== undefined) return false;
+		if (enemies[i].path[enemies[i].pi + 1].type == "move")
+			if (getTowerCollision(enemies[i].path[enemies[i].pi + 1], enemies[i], [{ x : pos.x, y : pos.y, w : tt.width, h : tt.height }]) !== undefined) return false;
+	}
+	
 	return true;
 };
 
@@ -524,7 +523,7 @@ let spawnTower = function(t, pos) {
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
 	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], hp : tt.hp,
-		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage };
+		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage };
 	towers.push(tow);
 	updatePaths();
 	return true;
@@ -553,7 +552,7 @@ let removeTower = function(t) {
 let spawnBullet = function(b, t, a) {
 	let bt = bulletTypes[b];
 	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8,
-		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage, image : bt.image };
+		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage * t.dmg, image : bt.image };
 	bullets.push(bul);
 };
 
@@ -812,7 +811,8 @@ let tick = function() {
 	}
 	
 	for (let i = enemies.length - 1; i >= 0; i--) {
-		if (isFinished(enemies[i], enemies[i]) || isColliding(enemies[i], enemies[i], grid)) {
+		if (isFinished(enemies[i], enemies[i])) {
+			lives -= enemies[i].dmg;
 			enemies.splice(i, 1);
 			continue;
 		}
