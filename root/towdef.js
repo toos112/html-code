@@ -565,11 +565,12 @@ let removeTower = function(t) {
 			towMap[x][y] = "n";
 };
 
-let spawnBullet = function(b, t, a) {
+let spawnBullet = function(b, t, a, e) {
 	let bt = bulletTypes[b];
 	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8, pierce : bt.pierce,
-		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage * t.dmg, image : bt.image, effects : bt.effects };
+		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage * t.dmg, image : bt.image, effects : bt.effects, homing : bt.homing };
 	if (bt.pierce) bul.hitEnemies = [];
+	if (bt.homing) bul.target = e;
 	bullets.push(bul);
 };
 
@@ -819,6 +820,7 @@ let tick = function() {
 	}
 	
 	for (let i = bullets.length - 1; i >= 0; i--) {
+		bullets[i].a = getAngle(bullets[i], { x : bullets[i].target.tx * 8 + bullets[i].target.r * 4, y : bullets[i].target.ty * 8 + bullets[i].target.r * 4 });
 		let offset = angleToPos(bullets[i].a, bullets[i].sp);
 		bullets[i].x += offset.x, bullets[i].y += offset.y;
 		
@@ -905,13 +907,13 @@ let tick = function() {
 			let enemy, ldist = Infinity;
 			for (let ii = 0; ii < enemies.length; ii++) {
 				let d = dist({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
-					{ x : enemies[ii].x + enemies[ii].r / 2, y : enemies[ii].y + enemies[ii].r / 2 });
+					{ x : enemies[ii].tx + enemies[ii].r / 2, y : enemies[ii].ty + enemies[ii].r / 2 });
 				if (d < ldist) enemy = enemies[ii], ldist = d;
 			}
 			if (enemy !== undefined && ldist < bulletTypes[towers[i].ammo].range * towers[i].ra) {
 				let a = getAngle({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
 					{ x : enemy.tx + enemy.r / 2, y : enemy.ty + enemy.r / 2 });
-				spawnBullet(towers[i].ammo, towers[i], a);
+				spawnBullet(towers[i].ammo, towers[i], a, enemy);
 				towers[i].rot = a;
 				towers[i].dlay += UPS / towers[i].as;
 			} else ++towers[i].dlay;
