@@ -13,6 +13,9 @@ let imgcanvas = document.createElement("canvas");
 imgcanvas.width = 8, imgcanvas.height = 8;
 let imgcontext = imgcanvas.getContext("2d");
 
+let gridOverlayCanvas = document.createElement("canvas");
+let gridOverlayContext = gridOverlayCanvas.getContext("2d");
+
 let tileMap = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
@@ -81,7 +84,7 @@ let ups = 0, fps = 0;
 let coins = 25, lives = 2000;
 let ldata, waves;
 let tilecount = { water : 0, land : 0, flight : 0, total : 0 };
-let currentTower = "T0.0.0";
+let currentTower = "";
 
 let UPS = 30;
 let EDITOR = false;
@@ -91,6 +94,7 @@ let OX = 0, OY = 0;
 let A = false, S = false, D = false, W = false;
 let INTERPOLATE = true;
 let SHOWALLPATHS = false;
+let RENDERGRID = true;
 
 let mx, my, mtx, mty, omx, omy;
 let mouseTile, mouseIsTile;
@@ -211,6 +215,14 @@ let loadLevel = function(level) {
 			setGridTile({ x : x, y : y }, row[x]);
 	}
 	calculateExits();
+	
+	gridOverlayCanvas.width = ldata.width, gridOverlayCanvas.height = ldata.height;
+	gridOverlayContext.fillStyle = "#000000"
+	gridOverlayContext.fillRect(0, 0, ldata.width, ldata.height);
+	gridOverlayContext.fillStyle = "#5f5f5f"
+	for (let x = 0; x < ldata.width; x++)
+		for (let y = 0; y < ldata.height; y++)
+			if (x % 2 == y % 2) gridOverlayContext.fillRect(x, y, 1, 1);
 };
 
 let inter = "(js:
@@ -556,7 +568,7 @@ let removeTower = function(t) {
 let spawnBullet = function(b, t, a) {
 	let bt = bulletTypes[b];
 	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8,
-		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage * t.dmg, image : bt.image };
+		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage * t.dmg, image : bt.image, effects : bt.effects };
 	bullets.push(bul);
 };
 
@@ -695,13 +707,18 @@ let draw = function() {
 	
 	omx = mx / ZOOM - OX + (ldata.width * 4 - ldata.width * 4 / ZOOM), omy = my / ZOOM - OY + (ldata.height * 4 - ldata.height * 4 / ZOOM);
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
-	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height;
+	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height && my < 512 / 4 * 3;
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
 	
 	renderMap();
 	context.imageSmoothingEnabled = false;
 	context.drawImage(mapCanvas, addOffset(0, "x"), addOffset(0, "y"), mapCanvas.width * ZOOM, mapCanvas.height * ZOOM);
+	if (RENDERGRID) {
+		context.globalAlpha = 0.25;
+		context.drawImage(gridOverlayCanvas, addOffset(0, "x"), addOffset(0, "y"), mapCanvas.width * ZOOM, mapCanvas.height * ZOOM)
+		context.globalAlpha = 1;
+	}
 	
 	for (let i = 0; i < towers.length; i++) {
 		context.drawImage(towers[i].baseimage, addOffset(towers[i].x * 8, "x"), addOffset(towers[i].y * 8, "y"), towers[i].w * 8 * ZOOM, towers[i].h * 8 * ZOOM);
@@ -808,6 +825,8 @@ let tick = function() {
 		for (let ii = 0; ii < enemies.length; ii++) {
 			if (dist({ x : enemies[ii].tx * 8 + enemies[ii].r * 4, y : enemies[ii].ty * 8 + enemies[ii].r * 4 }, bullets[i]) < enemies[ii].r * 4) {
 				enemies[ii].hp -= bullets[i].dmg;
+				for (let iii = 0; iii < bullets[i].effects.length; iii++)
+					giveEffect(ii, bullets[i].effects[iii].name, bullets[i].effects[iii].duration);
 				bullets.splice(i, 1);
 				hitEnemy = true;
 				break;
@@ -999,6 +1018,7 @@ let run = function() {
 		else if (e.keyCode == 68) D = true;
 		else if (e.keyCode == 87) W = true;
 		else if (e.keyCode == 83) S = true;
+		else if (e.keyCode == 27) currentTower = "";
 	};
 	
 	window.onkeyup = function(e) {

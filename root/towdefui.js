@@ -6,9 +6,7 @@ let enemies_img = new Image();
 enemies_img.src = "(js: _.img('data/gfx/icons/enemy.png') :js)";
 
 let nextWaveButton;
-let machinegun;
-let flamethrower;
-let rocketlauncher;
+let towerButtons = [];
 
 let mapButtons = [];
 var initUI = function() {
@@ -18,30 +16,21 @@ var initUI = function() {
 				loadLevel(maps[i]);
 				STARTED = true;
 			}
-		}, { text : maps[i].name, color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" }));
+		}, { type : "text", txt : maps[i].name, txtcol : "#ffffff", col : "#7f7f7f", hovercol : "#bfbfbf" }));
 	}
-	nextWaveButton = new CanvasButton(16, 16, 325, 400, canvas, function() {
+	nextWaveButton = new CanvasButton(48, 16, 325, 400, canvas, function() {
 		if (STARTED) {
 			spawnWave(currentWave);
 			currentWave = currentWave + 1;
-			
 		}
-	}, { text :"next wave", color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" });
-	machinegun = new CanvasButton(32, 32, 372, 400, canvas, function() {
-		if (STARTED) {
-			currentTower = "T0.0.0";
-		}
-	}, { text :"machine gun", color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" });
-	flamethrower = new CanvasButton(32, 32, 404, 400, canvas, function() {
-		if (STARTED) {
-			currentTower = "T0.0.1";
-		}
-	}, { text :"flamethrower", color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" });
-	rocketlauncher = new CanvasButton(32, 32, 436, 400, canvas, function() {
-		if (STARTED) {
-			currentTower = "T0.0.2";
-		}
-	}, { text :"rocketlauncher", color : "#ffffff" }, { color : "#7f7f7f", hover : "#bfbfbf" });
+	}, { type : "text", txt : "next wave", txtcol : "#ffffff", col : "#7f7f7f", hovercol : "#bfbfbf" });
+	let i = 0;
+	for (let tow in towerTypes) {
+		towerButtons.push(new CanvasButton(32, 32, 372 + (i % 4) * 32, 400 + Math.floor(i / 4) * 32, canvas, function() {
+			if (STARTED) currentTower = tow;
+		}, { type : "img", img : towerTypes[tow].baseimage }));
+		i++;
+	}
 };
 
 var renderUI = function(ctx) {
@@ -50,9 +39,8 @@ var renderUI = function(ctx) {
 	ctx.fillRect(0, 384, 512, 128);
 	
 	nextWaveButton.draw(ctx);
-	machinegun.draw(ctx);
-	flamethrower.draw(ctx);
-	rocketlauncher.draw(ctx);
+	for (let i = 0; i < towerButtons.length; i++)
+		towerButtons[i].draw(ctx);
 	
 	ctx.font = "12px Arial";
 	ctx.fillStyle = "#00ffff";
