@@ -872,6 +872,7 @@ let tick = function() {
 			}
 		}
 		
+		let shouldUpdatePaths = false;
 		if (enemies[i].path[enemies[i].pi + 1].type == "attack") enemies[i].fract += 1 / (UPS / enemies[i].atkspd);
 		else enemies[i].fract += 1 / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 		while (enemies[i].fract >= 1 && enemies[i].pi < enemies[i].path.length - 1) {
@@ -895,9 +896,11 @@ let tick = function() {
 						if (enemies[i].path[enemies[i].pi + 1].type == "attack") enemies[i].fract *= emc / (UPS / enemies[i].atkspd);
 						else enemies[i].fract *= emc / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 					}
+					shouldUpdatePaths = true;
 				}
 			}
 		}
+		if (shouldUpdatePaths) updatePaths();
 		
 		if (enemies[i].pi < enemies[i].path.length - 1 && enemies[i].path[enemies[i].pi + 1].type == "move") {
 			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
