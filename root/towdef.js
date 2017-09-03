@@ -321,22 +321,34 @@ let getBestSpeed = function(p, o, grid) {
 	return result;
 };
 
-let isColliding = function(p, o, grid) {
+let getTowerCollision = function(pos, obj, tows) {
+	for (let i = 0; i < tows.length; i++)
+		for (let x = 0; x < obj.r; x++)
+			for (let y = 0; y < obj.r; y++)
+				for (let xx = 0; xx < tows[i].w; xx++)
+					for (let yy = 0; yy < tows[i].h; yy++)
+						if (pos.x + x == tows[i].x + xx && pos.y + y == tows[i].y + yy)
+							return tows[i];
+	return undefined;
+};
+
+let isColliding = function(p, o, grid, checkTowers) {
+	if (checkTowers === undefined) checkTowers = true;
 	for (let x = 0; x < o.r; x++) {
 		for (let y = 0; y < o.r; y++) {
 			if (p.x + x < 0 || p.x + x >= grid.length || p.y + y < 0 || p.y + y >= grid[p.x + x].length) return true;
 			if (getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid) == 0) return true;
-			if (towMap[p.x + x][p.y + y] == "t" && o.fs == -1) return true;
+			if (towMap[p.x + x][p.y + y] == "t" && o.fs == -1 && checkTowers) return true;
 		}
 	}
 	return false;
 };
 	
-let canMove = function(pos, move, grid, obj) {
+let canMove = function(pos, move, grid, obj, checkTowers) {
 	if (move.x != 0 && move.y != 0)
 		if (!canMove(pos, { x : move.x, y : 0 }, grid, obj) || !canMove(pos, { x : 0, y : move.y }, grid, obj)) return false;
 	let nobj = { x : pos.x + move.x, y : pos.y + move.y };
-	return !isColliding(nobj, obj, grid);
+	return !isColliding(nobj, obj, grid, checkTowers);
 };
 
 let mdist = function(a, b) {
@@ -385,7 +397,9 @@ let avgSpeed = function(e) {
 };
 
 let possible = [{ x : 0, y : 1 }, { x : 0, y : -1 }, { x : 1, y : 0 }, { x : -1, y : 0 }, { x : 1, y : 1 }, { x : 1, y : -1 }, { x : -1, y : 1 }, { x : -1, y : -1 }];
-let findPath = function(start, end, obj, grid) {
+let findPath = function(start, end, obj, grid, checkTowers) {
+	if (checkTowers === undefined) checkTowers = true;
+	
 	let open = [{ x : start.x, y : start.y }];
 	let openMap = new Array(grid.length);
 	let closed = new Array(grid.length);
@@ -415,10 +429,21 @@ let findPath = function(start, end, obj, grid) {
 		if (isFinished(current, obj)) {
             let result = [];
             while (current !== undefined) {
-                result.push(current);
+                result.push({ x : current.x, y : current.y, type : "move" });
                 current = grid[current.x][current.y].p;
             }
-            return result.reverse();
+			result = result.reverse();
+			if (!checkTowers) {
+				let collisionsHad = [];
+				for (let i = 0; i < result.length; i++) {
+					if (result[i].type != "move") continue;
+					let towerCollision = getTowerCollision(result[i], obj, towers);
+					if (towerCollision === undefined || collisionsHad.indexOf(towerCollision) != -1) continue;
+					collisionsHad.push(towerCollision);
+					result.splice(i, 0, { tow : towerCollision, type : "attack" });
+				}
+			}
+            return result;
 		}
         
 		let index = open.indexOf(current)
@@ -427,7 +452,7 @@ let findPath = function(start, end, obj, grid) {
         closed[current.x][current.y] = true;
         
         for (let i = 0; i < possible.length; i++) {
-			if (!canMove(current, possible[i], grid, obj)) continue;
+			if (!canMove(current, possible[i], grid, obj, checkTowers)) continue;
             if (closed[current.x + possible[i].x][current.y + possible[i].y])
 				continue;
             let node = { x : current.x + possible[i].x, y : current.y + possible[i].y };
@@ -442,6 +467,8 @@ let findPath = function(start, end, obj, grid) {
             grid[node.x][node.y].f = gScore + odist(node, obj, end, { r : 1 }) * avgSpeed(obj);
         }
 	}
+	
+	if (checkTowers) return findPath(start, end, obj, grid, false);
 };
 
 let i = 0;
@@ -469,7 +496,7 @@ updatePaths();
 
 let spawnAt = function(e, pos, com) {
 	let et = enemyTypes[e];
-	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath,
+	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath, dmg : et.damage, atkspd : UPS / et.attackSpeed,
 		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth, effects : [], fract : 0 }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
 	enemies.push(enemy);
@@ -486,6 +513,7 @@ let canSpawnTower = function(t, pos) {
 			first = grid[x][y].name;
 		}
 	}
+	
 	return true;
 };
 
@@ -495,7 +523,7 @@ let spawnTower = function(t, pos) {
 	for (let x = pos.x; x < pos.x + tt.width; x++)
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
-	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0],
+	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], hp : tt.hp,
 		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage };
 	towers.push(tow);
 	updatePaths();
@@ -513,6 +541,13 @@ let buildTower = function(t, pos) {
 		coins -= tt.cost;
 		return spawnTower(t, pos);
 	} else return false;
+};
+
+let removeTower = function(t) {
+	let tow = towers.splice(t, 1)[0];
+	for (let x = tow.x; x < tow.x + tow.w; x++)
+		for (let y = tow.y; y < tow.y + tow.h; y++)
+			towMap[x][y] = "n";
 };
 
 let spawnBullet = function(b, t, a) {
@@ -795,18 +830,34 @@ let tick = function() {
 			}
 		}
 		
-		enemies[i].fract += 1 / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+		if (enemies[i].path[enemies[i].pi + 1].type == "attack") enemies[i].fract += 1 / (UPS / enemies[i].atkspd);
+		else enemies[i].fract += 1 / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
 		while (enemies[i].fract >= 1 && enemies[i].pi < enemies[i].path.length - 1) {
-			let emc = moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
-			enemies[i].x = enemies[i].path[++enemies[i].pi].x;
-			enemies[i].y = enemies[i].path[enemies[i].pi].y;
-			if (enemies[i].pi < enemies[i].path.length - 1) {
+			if (enemies[i].path[enemies[i].pi + 1].type == "move") {
+				let emc = moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+				enemies[i].x = enemies[i].path[++enemies[i].pi].x;
+				enemies[i].y = enemies[i].path[enemies[i].pi].y;
+				if (enemies[i].pi < enemies[i].path.length - 1) {
+					enemies[i].fract--;
+					if (enemies[i].path[enemies[i].pi + 1].type == "attack") enemies[i].fract *= emc / (UPS / enemies[i].atkspd);
+					else enemies[i].fract *= emc / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+				}
+			} else if (enemies[i].path[enemies[i].pi + 1].type == "attack") {
+				enemies[i].path[enemies[i].pi + 1].tow.hp -= enemies[i].dmg;
+				let killedTower = enemies[i].path[enemies[i].pi + 1].tow.hp <= 0;
 				enemies[i].fract--;
-				enemies[i].fract *= emc / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+				if (killedTower) {
+					removeTower(towers.indexOf(enemies[i].path[++enemies[i].pi].tow));
+					let emc = UPS / enemies[i].atkspd;
+					if (enemies[i].pi < enemies[i].path.length - 1) {
+						if (enemies[i].path[enemies[i].pi + 1].type == "attack") enemies[i].fract *= emc / (UPS / enemies[i].atkspd);
+						else enemies[i].fract *= emc / moveCost(enemies[i], enemies[i], enemies[i].path[enemies[i].pi + 1], grid, false);
+					}
+				}
 			}
 		}
 		
-		if (enemies[i].pi < enemies[i].path.length - 1) {
+		if (enemies[i].pi < enemies[i].path.length - 1 && enemies[i].path[enemies[i].pi + 1].type == "move") {
 			let nextMove = { x : enemies[i].path[enemies[i].pi + 1].x - enemies[i].x, y : enemies[i].path[enemies[i].pi + 1].y - enemies[i].y };
 			enemies[i].tx = enemies[i].x + nextMove.x * enemies[i].fract, enemies[i].ty = enemies[i].y + nextMove.y * enemies[i].fract;
 		} else enemies[i].tx = enemies[i].x, enemies[i].ty = enemies[i].y;
@@ -814,7 +865,7 @@ let tick = function() {
 		if (enemies[i].hp <= 0) killEnemy(i);
 	}
 	
-	for (let i = towers.length - 1; i>= 0; i--) {
+	for (let i = towers.length - 1; i >= 0; i--) {
 		if (--towers[i].dlay <= 0) {
 			let enemy, ldist = Infinity;
 			for (let ii = 0; ii < enemies.length; ii++) {
