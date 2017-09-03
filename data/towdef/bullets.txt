@@ -15,8 +15,18 @@
 		"damage": 0.8,
 		"penetration": 0,
 		"range": 1,
-		"speed": 1,
+		"speed": 1.5,
 		"pierce": true,
 		"effects":[{"name": "burning","duration": 2.5}]
+	},
+	"A0.0.2.0" : {
+		"name": "Rocket",
+		"texture": "data/gfx/bullets/rocketLauncherAmmo.png",
+		"damage": 1,
+		"penetration": 0,
+		"range": 1,
+		"speed": 8,
+		"pierce": false,
+		"effects":[]
 	}
 }
