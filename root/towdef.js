@@ -689,7 +689,7 @@ let draw = function() {
 	if (W && OY + mm < ldata.height * 4) OY += mm / ZOOM;
 	if (S && OY - mm > -ldata.height * 4) OY -= mm / ZOOM;
 	
-	if (STARTED) omx = mx / ZOOM - OX + (ldata.width * 4 - ldata.width * 4 / ZOOM), omy = my / ZOOM - OY + (ldata.height * 4 - ldata.height * 4 / ZOOM);
+	omx = mx / ZOOM - OX + (ldata.width * 4 - ldata.width * 4 / ZOOM), omy = my / ZOOM - OY + (ldata.height * 4 - ldata.height * 4 / ZOOM);
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
 	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height;
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
@@ -946,12 +946,12 @@ let run = function() {
 
 	canvas.addEventListener("mousemove", function(e) {
 		mouseMove(e);
-		if (dragging) {
-			if (EDITOR) {
-				if (mouseIsTile) {
-					setGridTile({ x : mtx, y : mty }, current);
-				} 
-			}
+		
+		if (dragging && EDITOR && STARTED) {
+			let omx = mx / ZOOM - OX + (ldata.width * 4 - ldata.width * 4 / ZOOM), omy = my / ZOOM - OY + (ldata.height * 4 - ldata.height * 4 / ZOOM);
+			let mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
+			let mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height;
+			if (mouseIsTile) setGridTile({ x : mtx, y : mty }, current);
 		}
 	}, false);
 	
