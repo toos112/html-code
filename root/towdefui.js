@@ -28,7 +28,7 @@ var initUI = function() {
 	for (let tow in towerTypes) {
 		towerButtons.push(new CanvasButton(32, 32, 372 + (i % 4) * 32, 400 + Math.floor(i / 4) * 32, canvas, function() {
 			if (STARTED) currentTower = tow;
-		}, { type : "img", img : towerTypes[tow].baseimage }));
+		}, { type : "img", img : towerTypes[tow].baseimage, hovercol : function() { return coins >= towerTypes[tow].cost ? "#3f7f3f" : "#7f3f3f" } }));
 		i++;
 	}
 };
@@ -43,6 +43,14 @@ var renderUI = function(ctx) {
 		towerButtons[i].draw(ctx);
 	
 	ctx.font = "12px Arial";
+	
+	ctx.fillStyle = "#ffbf00";
+	let ti = 0;
+	for (let tow in towerTypes) {
+		ctx.fillText(towerTypes[tow].cost, 373 + (ti % 4) * 32, 431 + Math.floor(ti / 4) * 32);
+		ti++;
+	}
+	
 	ctx.fillStyle = "#00ffff";
 	ctx.fillText("fps:" + fps + " ups:" + ups,10,399);
 	ctx.font = "15px Arial";

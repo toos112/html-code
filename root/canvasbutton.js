@@ -1,3 +1,9 @@
+let eVal = function(v) {
+	if (typeof v === "function")
+		return v();
+	return v;
+};
+
 function CanvasButton(w, h, x, y, c, o, style) {
 	var thisRef = this;
 	this.w = w, this.h = h;
@@ -15,16 +21,16 @@ function CanvasButton(w, h, x, y, c, o, style) {
 		if (ctx === undefined)
 			ctx = this.c.getContext("2d");
 		
-		if (this.style.type == "text") {
-			ctx.fillStyle = this.isHovered() ? this.style.hovercol : this.style.col;
+		if (eVal(this.style.type) == "text") {
+			ctx.fillStyle = this.isHovered() ? eVal(this.style.hovercol) : eVal(this.style.col);
 			ctx.fillRect(this.x, this.y, this.w, this.h);
-			ctx.fillStyle = this.style.txtcol;
-			ctx.fillText(this.style.txt, this.x, this.y + this.h);
-		} else if (this.style.type == "img") {
-			ctx.drawImage(this.style.img, this.x, this.y, this.w, this.h);
+			ctx.fillStyle = eVal(this.style.txtcol);
+			ctx.fillText(eVal(this.style.txt), this.x, this.y + this.h);
+		} else if (eVal(this.style.type) == "img") {
+			ctx.drawImage(eVal(this.style.img), this.x, this.y, this.w, this.h);
 			if (this.isHovered()) {
 				ctx.globalAlpha = 0.5;
-				ctx.fillStyle = "#3f7f3f";
+				ctx.fillStyle = eVal(this.style.hovercol);
 				ctx.fillRect(this.x, this.y, this.w, this.h);
 				ctx.globalAlpha = 1;
 			}
