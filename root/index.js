@@ -139,6 +139,8 @@ function service() {
 		<span class = 'big'>Terms of service</span><br/>\
 		<div style = 'height: calc(100% - 66px); width: calc(100% - 14px); margin-top: 20px;'>\
 			<span style = 'white-space: normal; overflow-y: scroll; height: 100%; width: 100%; text-align: left;'>\
+				Don't take these too seriously, this whole page (including this sentence) is an inside joke you probably don't understand.\
+				\
 				By creating a account you agree to all of the below.<br/>\
 				<br/>\
 				You agree not abuse any bugs you may find. You agree to report any bugs you may find. You can do so using the chat function.<br/>\
