@@ -423,7 +423,7 @@ let findPath = function(start, end, obj, grid, checkTowers) {
 	}
 	grid[start.x][start.y].open = true;
 	grid[start.x][start.y].g = 0;
-	grid[start.x][start.y].f = odist(start, obj, end, { r : 1 }) * avgSpeed(obj);
+	grid[start.x][start.y].f = 0;
 	
 	while (open.length > 0) {
         let current, fScore = Infinity;
@@ -472,7 +472,7 @@ let findPath = function(start, end, obj, grid, checkTowers) {
 				}
 				grid[node.x][node.y].p = current;
 				grid[node.x][node.y].g = gScore;
-				grid[node.x][node.y].f = gScore + odist(node, obj, end, { r : 1 }) * avgSpeed(obj);
+				grid[node.x][node.y].f = gScore;
 			}
         }
 	}
