@@ -682,7 +682,7 @@ let renderMap = function() {
 };
 
 let addOffset = function(val, axis) {
-	let o = (axis == "x") ? (OX * ZOOM - (ldata.width * 4 - ldata.width * 4 / ZOOM) * ZOOM) : (OY * ZOOM - (ldata.height * 4 - ldata.height * 4 / ZOOM) * ZOOM);
+	let o = (axis == "x") ? (OX * ZOOM - (256 - 256 / ZOOM) * ZOOM) : (OY * ZOOM - (192 - 192 / ZOOM) * ZOOM);
 	return val * ZOOM + o;
 };
 
@@ -702,14 +702,14 @@ let refreshMap = function() {
 
 let draw = function() {
 	let mm = shift ? 8 : 4;
-	if (A && OX + mm < ldata.width * 4) OX += mm / ZOOM;
-	if (D && OX - mm > -ldata.width * 4) OX -= mm / ZOOM;
-	if (W && OY + mm < ldata.height * 4) OY += mm / ZOOM;
-	if (S && OY - mm > -ldata.height * 4) OY -= mm / ZOOM;
+	if (A && OX + mm < 256) OX += mm / ZOOM;
+	if (D && OX - mm > -ldata.width * 8 + 256) OX -= mm / ZOOM;
+	if (W && OY + mm < 192) OY += mm / ZOOM;
+	if (S && OY - mm > -ldata.height * 8 + 192) OY -= mm / ZOOM;
 	
-	omx = mx / ZOOM - OX + (ldata.width * 4 - ldata.width * 4 / ZOOM), omy = my / ZOOM - OY + (ldata.height * 4 - ldata.height * 4 / ZOOM);
+	omx = mx / ZOOM - OX + (256 - 256 / ZOOM), omy = my / ZOOM - OY + (192 - 192 / ZOOM);
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
-	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height && my < 512 / 4 * 3;
+	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height && my < 384;
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
 	
@@ -993,7 +993,7 @@ let run = function() {
 		mouseMove(e);
 		
 		if (dragging && EDITOR && STARTED) {
-			let omx = mx / ZOOM - OX + (ldata.width * 4 - ldata.width * 4 / ZOOM), omy = my / ZOOM - OY + (ldata.height * 4 - ldata.height * 4 / ZOOM);
+			let omx = mx / ZOOM - OX + (256 - 256 / ZOOM), omy = my / ZOOM - OY + (192 - 192 / ZOOM);
 			let mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
 			let mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height;
 			if (mouseIsTile) setGridTile({ x : mtx, y : mty }, current);
