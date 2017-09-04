@@ -121,7 +121,7 @@
 		"attackSwimming": true,
 		"landSpeed": 1,
 		"flyingSpeed": -1,
-		"swimmingSpeed": 0.000005,
+		"swimmingSpeed": 0.025,
 		"onDeath": [{"name":"E0.0.0", "count":1},{"name":"E0.0.1", "count":2},{"name":"E0.0.2", "count":1}]
 	},
 	"E0.2.0" : {

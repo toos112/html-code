@@ -324,12 +324,12 @@ let spawnEnemy = function(e, start, sloc) {
 	return e;
 };
 
-let getBestSpeed = function(p, o, grid) {
+let getBestSpeed = function(p, o) {
 	let t = grid[p.x][p.y];
 	let result = 0;
-	if (o.ls > result && t.land) result = o.ls;
-	if (o.ss > result && t.water) result = o.ss;
-	if (o.fs > result && t.flight) result = o.fs;
+	if (t.land && o.ls > result) result = o.ls;
+	if (t.water && o.ss > result) result = o.ss;
+	if (t.flight && o.fs > result) result = o.fs;
 	return result;
 };
 
@@ -347,10 +347,10 @@ let getTowerCollisions = function(pos, obj, tows) {
 
 let isColliding = function(p, o, grid, checkTowers) {
 	if (checkTowers === undefined) checkTowers = true;
+	if (p.x < 0 || p.x + o.r > grid.length || p.y < 0 || p.y + o.r > grid[p.x + o.r - 1].length) return true;
 	for (let x = 0; x < o.r; x++) {
 		for (let y = 0; y < o.r; y++) {
-			if (p.x + x < 0 || p.x + x >= grid.length || p.y + y < 0 || p.y + y >= grid[p.x + x].length) return true;
-			if (getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid) == 0) return true;
+			if (!((grid[p.x + x][p.y + y].land && o.ls != -1) || (grid[p.x + x][p.y + y].water && o.ss != -1) || (grid[p.x + x][p.y + y].flight && o.fs != -1))) return true;
 			if (towMap[p.x + x][p.y + y] == "t" && o.fs == -1 && checkTowers) return true;
 		}
 	}
@@ -358,10 +358,10 @@ let isColliding = function(p, o, grid, checkTowers) {
 };
 	
 let canMove = function(pos, move, grid, obj, checkTowers) {
-	if (move.x != 0 && move.y != 0)
-		if (!canMove(pos, { x : move.x, y : 0 }, grid, obj) || !canMove(pos, { x : 0, y : move.y }, grid, obj)) return false;
 	let nobj = { x : pos.x + move.x, y : pos.y + move.y };
-	return !isColliding(nobj, obj, grid, checkTowers);
+	if (move.x != 0 && move.y != 0) return !isColliding({ x : Math.min(nobj.x, pos.x), y : Math.min(nobj.y, pos.y) },
+		{ r : obj.r + 1, ls : obj.ls, ss : obj.ss, fs : obj.fs }, grid, checkTowers);
+	else return !isColliding(nobj, obj, grid, checkTowers);
 };
 
 let mdist = function(a, b) {
@@ -392,7 +392,7 @@ let getSpeed = function(p, o, grid) {
 	let result = 0;
 	for (let x = 0; x < o.r; x++)
 		for (let y = 0; y < o.r; y++)
-			result += UPS / getBestSpeed({ x : p.x + x, y : p.y + y }, o, grid)
+			result += UPS / getBestSpeed({ x : p.x + x, y : p.y + y }, o)
 	return result / (o.r * o.r);
 };
 
@@ -414,19 +414,14 @@ let findPath = function(start, end, obj, grid, checkTowers) {
 	if (checkTowers === undefined) checkTowers = true;
 	
 	let open = [{ x : start.x, y : start.y }];
-	let openMap = new Array(grid.length);
-	let closed = new Array(grid.length);
-	for (let i = 0; i < closed.length; i++) {
-		closed[i] = new Array(grid[i].length);
-		openMap[i] = new Array(grid[i].length);
-		for (let ii = 0; ii < closed[i].length; ii++) {
-			closed[i][ii] = false;
-			openMap[i][ii] = false;
+	for (let i = 0; i < grid.length; i++) {
+		for (let ii = 0; ii < grid[i].length; ii++) {
+			grid[i][ii].open = false;
 			grid[i][ii].g = Infinity;
 			grid[i][ii].p = undefined;
 		}
 	}
-	openMap[start.x][start.y] = true;
+	grid[start.x][start.y].open = true;
 	grid[start.x][start.y].g = 0;
 	grid[start.x][start.y].f = odist(start, obj, end, { r : 1 }) * avgSpeed(obj);
 	
@@ -464,23 +459,21 @@ let findPath = function(start, end, obj, grid, checkTowers) {
         
 		let index = open.indexOf(current)
         open.splice(index, 1);
-		openMap[current.x][current.y] = false;
-        closed[current.x][current.y] = true;
+		grid[current.x][current.y].open = false;
         
         for (let i = 0; i < possible.length; i++) {
 			if (!canMove(current, possible[i], grid, obj, checkTowers)) continue;
-            if (closed[current.x + possible[i].x][current.y + possible[i].y])
-				continue;
             let node = { x : current.x + possible[i].x, y : current.y + possible[i].y };
-            if (!openMap[node.x][node.y]) {
-				open.push(node);
-				openMap[node.x][node.y] = true;
-			}
             let gScore = grid[current.x][current.y].g + moveCost(current, obj, node, grid, false);
-            if (gScore >= grid[node.x][node.y].g) continue;
-            grid[node.x][node.y].p = current;
-            grid[node.x][node.y].g = gScore;
-            grid[node.x][node.y].f = gScore + odist(node, obj, end, { r : 1 }) * avgSpeed(obj);
+            if (gScore < grid[node.x][node.y].g) {
+				if (!grid[node.x][node.y].open) {
+					open.push(node);
+					grid[node.x][node.y].open = true;
+				}
+				grid[node.x][node.y].p = current;
+				grid[node.x][node.y].g = gScore;
+				grid[node.x][node.y].f = gScore + odist(node, obj, end, { r : 1 }) * avgSpeed(obj);
+			}
         }
 	}
 	
