@@ -14,7 +14,7 @@
 	"A0.0.1.0" : {
 		"name": "Flame Thrower Canisters",
 		"texture": "data/gfx/bullets/flameThrowerAmmo.png",
-		"damage": 0.8,
+		"damage": 1,
 		"penetration": 0,
 		"range": 1,
 		"speed": 1.5,
