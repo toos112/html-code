@@ -95,6 +95,7 @@ let A = false, S = false, D = false, W = false;
 let INTERPOLATE = true;
 let SHOWALLPATHS = false;
 let RENDERGRID = true;
+let WIDTH, HEIGHT;
 
 let mx, my, mtx, mty, omx, omy;
 let mouseTile, mouseIsTile;
@@ -675,7 +676,7 @@ let renderMap = function() {
 };
 
 let addOffset = function(val, axis) {
-	let o = (axis == "x") ? (OX * ZOOM - (256 - 256 / ZOOM) * ZOOM) : (OY * ZOOM - (192 - 192 / ZOOM) * ZOOM);
+	let o = (axis == "x") ? (OX * ZOOM - ((WIDTH / 2) - (WIDTH / 2) / ZOOM) * ZOOM) : (OY * ZOOM - ((HEIGHT / 2) - (HEIGHT / 2) / ZOOM) * ZOOM);
 	return val * ZOOM + o;
 };
 
@@ -694,15 +695,15 @@ let refreshMap = function() {
 };
 
 let draw = function() {
-	let mm = shift ? 8 : 4;
-	if (A && OX + mm < 256) OX += mm / ZOOM;
-	if (D && OX - mm > -ldata.width * 8 + 256) OX -= mm / ZOOM;
-	if (W && OY + mm < 192) OY += mm / ZOOM;
-	if (S && OY - mm > -ldata.height * 8 + 192) OY -= mm / ZOOM;
+	let mm = shift ? (WIDTH / 64) : (WIDTH / 128);
+	if (A && OX + mm < (WIDTH / 2)) OX += mm / ZOOM;
+	if (D && OX - mm > -ldata.width * 8 + (WIDTH / 2)) OX -= mm / ZOOM;
+	if (W && OY + mm < (HEIGHT / 2)) OY += mm / ZOOM;
+	if (S && OY - mm > -ldata.height * 8 + (HEIGHT / 2)) OY -= mm / ZOOM;
 	
-	omx = mx / ZOOM - OX + (256 - 256 / ZOOM), omy = my / ZOOM - OY + (192 - 192 / ZOOM);
+	omx = mx / ZOOM - OX + ((WIDTH / 2) - (WIDTH / 2) / ZOOM), omy = my / ZOOM - OY + ((HEIGHT / 2) - (HEIGHT / 2) / ZOOM);
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
-	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height && my < 384;
+	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height /*&& my < 384*/;
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
 	
@@ -958,13 +959,15 @@ let mouseMove = function(e) {
 let scrollMove = function(e) {
 	let delta = (-e.detail * 40 | e.wheelDelta) / 120;
 	ZOOMPOW += delta;
-	ZOOM = Math.round(Math.pow(Math.pow(2, 1 / 7), ZOOMPOW) * 256) / 256;
+	ZOOM = Math.round(Math.pow(Math.pow(2, 1 / 7), ZOOMPOW) * (HEIGHT / 2)) / (HEIGHT / 2);
 	if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom, ZOOMPOW -= delta;
 	if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom, ZOOMPOW -= delta;
 };
 
 let run = function() {
 	canvas = document.getElementById("game");
+	WIDTH = canvas.width = canvas.clientWidth;
+	HEIGHT = canvas.height = canvas.clientHeight;
 	context = canvas.getContext("2d");
 	
 	initUI();
@@ -973,6 +976,8 @@ let run = function() {
 		canvas.width = canvas.width;
 		if (STARTED) draw();
 		else renderStart(context);
+		if (WIDTH != canvas.clientWidth) WIDTH = canvas.width = canvas.clientWidth;
+		if (HEIGHT != canvas.clientHeight) HEIGHT = canvas.height = canvas.clientHeight;
 	}, 1000 / 20);
 	updateInterval = setInterval(function() {
 		if (STARTED) tick();
@@ -986,7 +991,7 @@ let run = function() {
 		mouseMove(e);
 		
 		if (dragging && EDITOR && STARTED) {
-			let omx = mx / ZOOM - OX + (256 - 256 / ZOOM), omy = my / ZOOM - OY + (192 - 192 / ZOOM);
+			let omx = mx / ZOOM - OX + ((WIDTH / 2) - (WIDTH / 2) / ZOOM), omy = my / ZOOM - OY + ((HEIGHT / 2) - (HEIGHT / 2) / ZOOM);
 			let mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
 			let mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height;
 			if (mouseIsTile) setGridTile({ x : mtx, y : mty }, current);
