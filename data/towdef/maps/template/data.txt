@@ -2,5 +2,9 @@
 	name : "Template",
 	spawn: "LB or LT or RB or RT",
 	"minZoom":0.8,
-	"maxZoom":10
+	"maxZoom":10,
+	"width":(width level),
+	"height":(height level),
+	"coins":(start coins),
+	"lives":(lives)
 }

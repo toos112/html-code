@@ -33,6 +33,6 @@
 		"pierce": false,
 		"effects":[],
 		"homing": true,
-		"aoe":1.5
+		"aoe": 1.5
 	}
 }
