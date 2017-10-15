@@ -534,7 +534,7 @@ let spawnTower = function(t, pos) {
 	for (let x = pos.x; x < pos.x + tt.width; x++)
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
-	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], hp : tt.hp,
+	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], hp : tt.hp, shp : tt.hp,
 		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage };
 	towers.push(tow);
 	updatePaths();
@@ -727,6 +727,22 @@ let draw = function() {
 		context.restore();
 	}
 	
+	
+	context.fillStyle = "#0000ff";
+	for (let i = 0; i < towers.length; i++) {
+		if (towers[i].hp != towers[i].shp) {
+			let len = towers[i].hp / towers[i].shp * towers[i].w * 8;
+			context.fillRect(addOffset(towers[i].x * 8, "x"), addOffset((towers[i].y + towers[i].h) * 8, "y"), len * ZOOM, 2 * ZOOM);
+		}
+	}
+	context.fillStyle = "#00001f";
+	for (let i = 0; i < towers.length; i++) {
+		if (towers[i].hp != towers[i].shp) {
+			let len = towers[i].hp / towers[i].shp * towers[i].w * 8;
+			context.fillRect(addOffset(towers[i].x * 8 + len, "x"), addOffset((towers[i].y + towers[i].h) * 8, "y"), (towers[i].h * 8 - len) * ZOOM, 2 * ZOOM);
+		}
+	}
+	
 	for (let i = 0; i < enemies.length; i++)
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
 			context.drawImage(enemies[i].image, addOffset(enemies[i].tx * 8, "x"), addOffset(enemies[i].ty * 8, "y"), 8 * enemies[i].r * ZOOM, 8 * enemies[i].r * ZOOM);
@@ -915,6 +931,7 @@ let tick = function() {
 	}
 	
 	for (let i = towers.length - 1; i >= 0; i--) {
+		towers[i].hp = Math.min(towers[i].shp, towers[i].hp + 0.25)
 		if (--towers[i].dlay <= 0) {
 			let enemy, ldist = Infinity;
 			for (let ii = 0; ii < enemies.length; ii++) {
