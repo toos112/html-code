@@ -8,7 +8,8 @@
 		"speed": 10,
 		"pierce": false,
 		"effects":[],
-		"homing": false
+		"homing": false,
+		"aoe":0
 	},
 	"A0.0.1.0" : {
 		"name": "Flame Thrower Canisters",
@@ -19,7 +20,8 @@
 		"speed": 1.5,
 		"pierce": true,
 		"effects":[{"name": "burning","duration": 2.5}],
-		"homing": false
+		"homing": false,
+		"aoe":0
 	},
 	"A0.0.2.0" : {
 		"name": "Rocket",
@@ -30,6 +32,7 @@
 		"speed": 8,
 		"pierce": false,
 		"effects":[],
-		"homing": true
+		"homing": true,
+		"aoe":1.5
 	}
 }
