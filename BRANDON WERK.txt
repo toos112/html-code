@@ -7,3 +7,7 @@ maak shit zodat verwijderen towers
 maak shit mooier
 maak settings menu
 maak zodat snelheids knoppen
+Maak strart menu
+enemie dood spawn coins na tijd naar coins plek op ui die je nog moet maken
+als enemie bij eind laat hartje breken bij eind vlieg van ui die je nog moet maken naar eind en breek het
+Hierna pas verder gaan met waves en eventueel andere levels
