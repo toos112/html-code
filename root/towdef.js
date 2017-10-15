@@ -829,15 +829,17 @@ let tick = function() {
 		for (let ii = 0; ii < enemies.length; ii++) {
 			if (dist({ x : enemies[ii].tx * 8 + enemies[ii].r * 4, y : enemies[ii].ty * 8 + enemies[ii].r * 4 }, bullets[i]) < enemies[ii].r * 4) {
 				if (!bullets[i].pierce || bullets[i].hitEnemies.indexOf(enemies[ii]) == -1) {
-					let foes = [enemies[ii]];
-					for (let ei = 0; ei < enemies.length; ei++)
-						if (dist({ x : enemies[ii].tx * 8 + enemies[ii].r * 4, y : enemies[ii].ty * 8 + enemies[ii].r * 4 }, bullets[i]) < enemies[ii].r * 4 + bullets[i].aoe * 4 && ei != ii)
-							foes.push(enemies[ei]);
+					let foes = [{ e : enemies[ii], mul : 1}];
+					for (let ei = 0; ei < enemies.length; ei++) {
+						let ebdist = dist({ x : enemies[ei].tx * 8 + enemies[ei].r * 4, y : enemies[ei].ty * 8 + enemies[ei].r * 4 }, bullets[i]);
+						if (ebdist < enemies[ii].r * 4 + bullets[i].aoe * 4 && ei != ii)
+							foes.push({ e : enemies[ei], mul : Math.min(1, ebdist / (bullets[i].aoe * 4)) });
+					}
 					for (let fi = 0; fi < foes.length; fi++) {
-						foes[fi].hp -= bullets[i].dmg;
+						foes[fi].e.hp -= bullets[i].dmg * foes[fi].mul;
 						for (let iii = 0; iii < bullets[i].effects.length; iii++)
-							giveEffect(ii, bullets[i].effects[iii].name, bullets[i].effects[iii].duration);
-						if (bullets[i].pierce) bullets[i].hitEnemies.push(foes[fi]);
+							giveEffect(ii, bullets[i].effects[iii].name, bullets[i].effects[iii].duration * foes[fi].mul);
+						if (bullets[i].pierce) bullets[i].hitEnemies.push(foes[fi].e);
 					}
 				}
 				
