@@ -4,5 +4,7 @@
 	"minZoom":0.8,
 	"maxZoom":10,
 	"width":64,
-	"height":48
+	"height":48,
+	"coins":25,
+	"lives":200
 }
