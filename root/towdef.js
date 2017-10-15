@@ -564,7 +564,7 @@ let removeTower = function(t) {
 let spawnBullet = function(b, t, a, e) {
 	let bt = bulletTypes[b];
 	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8, pierce : bt.pierce,
-		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage * t.dmg, image : bt.image, effects : bt.effects, homing : bt.homing };
+		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage * t.dmg, image : bt.image, effects : bt.effects, homing : bt.homing, aoe : bt.aoe };
 	if (bt.pierce) bul.hitEnemies = [];
 	if (bt.homing) bul.target = e;
 	bullets.push(bul);
@@ -829,10 +829,16 @@ let tick = function() {
 		for (let ii = 0; ii < enemies.length; ii++) {
 			if (dist({ x : enemies[ii].tx * 8 + enemies[ii].r * 4, y : enemies[ii].ty * 8 + enemies[ii].r * 4 }, bullets[i]) < enemies[ii].r * 4) {
 				if (!bullets[i].pierce || bullets[i].hitEnemies.indexOf(enemies[ii]) == -1) {
-					enemies[ii].hp -= bullets[i].dmg;
-					for (let iii = 0; iii < bullets[i].effects.length; iii++)
-						giveEffect(ii, bullets[i].effects[iii].name, bullets[i].effects[iii].duration);
-					if (bullets[i].pierce) bullets[i].hitEnemies.push(enemies[ii]);
+					let foes = [enemies[ii]];
+					for (let ei = 0; ei < enemies.length; ei++)
+						if (dist({ x : enemies[ii].tx * 8 + enemies[ii].r * 4, y : enemies[ii].ty * 8 + enemies[ii].r * 4 }, bullets[i]) < enemies[ii].r * 4 + bullets[i].aoe * 4 && ei != ii)
+							foes.push(enemies[ei]);
+					for (let fi = 0; fi < foes.length; fi++) {
+						foes[fi].hp -= bullets[i].dmg;
+						for (let iii = 0; iii < bullets[i].effects.length; iii++)
+							giveEffect(ii, bullets[i].effects[iii].name, bullets[i].effects[iii].duration);
+						if (bullets[i].pierce) bullets[i].hitEnemies.push(foes[fi]);
+					}
 				}
 				
 				if (!bullets[i].pierce) {
