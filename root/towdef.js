@@ -81,7 +81,7 @@ for (let i in tileMap) {
 let start, end;
 let cups = 0, cfps = 0;
 let ups = 0, fps = 0;
-let coins = 25, lives = 200;
+let coins = 0, lives = 0;
 let ldata, waves;
 let tilecount = { water : 0, land : 0, flight : 0, total : 0 };
 let currentTower = "";
@@ -183,6 +183,8 @@ let setGridTile = function(pos, tile) {
 let loadLevel = function(level) {
 	ldata = level.data;
 	waves = level.waves;
+	coins = ldata.coins;
+	lives = ldata.lives;
 	
 	grid = new Array(ldata.width), gridChars = new Array(ldata.width), towMap = new Array(ldata.width);
 	for (let i = 0; i < grid.length; i++) {
