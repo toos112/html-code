@@ -728,14 +728,14 @@ let draw = function() {
 	}
 	
 	
-	context.fillStyle = "#0000ff";
+	context.fillStyle = "#00ffff";
 	for (let i = 0; i < towers.length; i++) {
 		if (towers[i].hp != towers[i].shp) {
 			let len = towers[i].hp / towers[i].shp * towers[i].w * 8;
 			context.fillRect(addOffset(towers[i].x * 8, "x"), addOffset((towers[i].y + towers[i].h) * 8, "y"), len * ZOOM, 2 * ZOOM);
 		}
 	}
-	context.fillStyle = "#00001f";
+	context.fillStyle = "#003f3f";
 	for (let i = 0; i < towers.length; i++) {
 		if (towers[i].hp != towers[i].shp) {
 			let len = towers[i].hp / towers[i].shp * towers[i].w * 8;
@@ -753,7 +753,7 @@ let draw = function() {
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
 			context.fillRect(addOffset(enemies[i].tx * 8, "x"), addOffset((enemies[i].ty + enemies[i].r) * 8, "y"), len * ZOOM, 2 * ZOOM);
 	}
-	context.fillStyle = "#7f0000";
+	context.fillStyle = "#3f0000";
 	for (let i = 0; i < enemies.length; i++) {
 		let len = enemies[i].hp / enemies[i].shp * enemies[i].r * 8;
 		if (enemies[i].tx !== undefined && enemies[i].ty !== undefined)
@@ -931,7 +931,7 @@ let tick = function() {
 	}
 	
 	for (let i = towers.length - 1; i >= 0; i--) {
-		towers[i].hp = Math.min(towers[i].shp, towers[i].hp + 0.25)
+		towers[i].hp = Math.min(towers[i].shp, towers[i].hp + 0.05)
 		if (--towers[i].dlay <= 0) {
 			let enemy, ldist = Infinity;
 			for (let ii = 0; ii < enemies.length; ii++) {
