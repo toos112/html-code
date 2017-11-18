@@ -1,7 +1,4 @@
 SHIT VOOR BRANDON OM TE DOEN
-Fix ui
-MAAK TEXTURES VOOR ENEMIES BULITS AND EFFECTS
-Fix ui voor "very groot scherm"
 maak shit zodat upgrades
 maak shit zodat draaien towers
 maak shit zodat verwijderen towers
