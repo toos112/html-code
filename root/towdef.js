@@ -563,7 +563,7 @@ let removeTower = function(t) {
 };
 
 let sellTower = function(t) {
-	let tow = towers.splice(t, 1)[0];
+	let tow = towers[t];
 	coins += tow.val * 0.5;
 	removeTower(t);
 };
@@ -796,6 +796,13 @@ let draw = function() {
 			context.fillRect(addOffset(mtx * 8, "x"), addOffset(mty * 8, "y"), towerTypes[currentTower].width * 8 * ZOOM, towerTypes[currentTower].height * 8 * ZOOM);
 		}
 		context.drawImage(towerTypes[currentTower].baseimage, addOffset(mtx * 8, "x"), addOffset(mty * 8, "y"), towerTypes[currentTower].width * 8 * ZOOM, towerTypes[currentTower].height * 8 * ZOOM);
+		context.globalAlpha = 1;
+	}
+	
+	if (selectedTower !== undefined) {
+		context.globalAlpha = 0.25;
+		context.fillStyle = "#ffffff";
+		context.fillRect(addOffset(selectedTower.x * 8, "x"), addOffset(selectedTower.y * 8, "y"), selectedTower.w * 8 * ZOOM, selectedTower.h * 8 * ZOOM);
 		context.globalAlpha = 1;
 	}
 	
