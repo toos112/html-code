@@ -33,6 +33,13 @@ var initUI = function() {
 	}
 };
 
+var updateUI = function() {
+	mapButtons = [];
+	nextWaveButton = undefined;
+	towerButtons = [];
+	initUI();
+}
+
 var renderUI = function(ctx) {
 	
 	ctx.fillStyle = "#000000";

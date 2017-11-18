@@ -1011,8 +1011,11 @@ let run = function() {
 		canvas.width = canvas.width;
 		if (STARTED) draw();
 		else renderStart(context);
-		if (WIDTH != canvas.clientWidth) WIDTH = canvas.width = canvas.clientWidth;
-		if (HEIGHT != canvas.clientHeight) HEIGHT = canvas.height = canvas.clientHeight;
+		if (WIDTH != canvas.clientWidth || HEIGHT != canvas.clientHeight) {
+			WIDTH = canvas.width = canvas.clientWidth;
+			HEIGHT = canvas.height = canvas.clientHeight;
+			updateUI();
+		}
 	}, 1000 / 20);
 	updateInterval = setInterval(function() {
 		if (STARTED) tick();
