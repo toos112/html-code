@@ -99,6 +99,7 @@ let WIDTH, HEIGHT;
 
 let mx, my, mtx, mty, omx, omy;
 let mouseTile, mouseIsTile;
+let selectedTower, selectedTowerIndex = -1;
 let mouseEnemies = [];
 let spawnDelay = 0;
 let alt = 0;
@@ -502,7 +503,7 @@ updatePaths();
 let spawnAt = function(e, pos, com) {
 	let et = enemyTypes[e];
 	let enemy = spawnEnemy({ r : et.width, ls : et.landSpeed, ss : et.swimmingSpeed, fs : et.flyingSpeed, od : et.onDeath, dmg : et.damage, atkspd : UPS / et.attackSpeed,
-		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth, effects : [], fract : 0 }, pos, com === undefined ? "LT" : com);
+		name : et.name, image : et.image, shp : et.hp, hp : et.hp, worth : et.worth, effects : [], fract : 0, arm : et.armor }, pos, com === undefined ? "LT" : com);
 	enemy = updatePath(enemy);
 	enemies.push(enemy);
 };
@@ -535,7 +536,7 @@ let spawnTower = function(t, pos) {
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
 	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], hp : tt.hp, shp : tt.hp,
-		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage };
+		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage, val : tt.cost };
 	towers.push(tow);
 	updatePaths();
 	return true;
@@ -559,6 +560,12 @@ let removeTower = function(t) {
 	for (let x = tow.x; x < tow.x + tow.w; x++)
 		for (let y = tow.y; y < tow.y + tow.h; y++)
 			towMap[x][y] = "n";
+};
+
+let sellTower = function(t) {
+	let tow = towers.splice(t, 1)[0];
+	coins += tow.val * 0.5;
+	removeTower(t);
 };
 
 let spawnBullet = function(b, t, a, e) {
@@ -705,7 +712,7 @@ let draw = function() {
 	
 	omx = mx / ZOOM - OX + ((WIDTH / 2) - (WIDTH / 2) / ZOOM), omy = my / ZOOM - OY + ((HEIGHT / 2) - (HEIGHT / 2) / ZOOM);
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
-	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height /*&& my < 384*/;
+	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height && my < HEIGHT * 0.75;
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
 	
@@ -852,7 +859,7 @@ let tick = function() {
 							foes.push({ e : enemies[ei], mul : Math.min(1, ebdist / (bullets[i].aoe * 4)) });
 					}
 					for (let fi = 0; fi < foes.length; fi++) {
-						foes[fi].e.hp -= bullets[i].dmg * foes[fi].mul;
+						foes[fi].e.hp -= Math.max(bullets[i].dmg - foes[fi].e.arm, 0) * foes[fi].mul;
 						for (let iii = 0; iii < bullets[i].effects.length; iii++)
 							giveEffect(ii, bullets[i].effects[iii].name, bullets[i].effects[iii].duration * foes[fi].mul);
 						if (bullets[i].pierce) bullets[i].hitEnemies.push(foes[fi].e);
@@ -958,6 +965,7 @@ let tick = function() {
 	}
 	
 	cups++;
+	selectedTowerIndex = towers.indexOf(selectedTower);
 };
 
 let getNext = function(object, current) {
@@ -1035,6 +1043,20 @@ let run = function() {
 		
 		if (STARTED && mouseIsTile && currentTower != "")
 			buildTower(currentTower, { x : mtx, y : mty });
+		if (STARTED && mouseIsTile && currentTower == "" && towMap[mtx][mty] == "t") {
+			for (let i = 0; i < towers.length; i++) {
+				let tow = towers[i];
+				if (mtx >= tow.x && mtx < tow.x + tow.w && mty >= tow.y && mty < tow.y + tow.h) {
+					selectedTower = tow;
+					selectedTowerIndex = towers.indexOf(tow);
+					break;
+				}
+			}
+		}
+		if (STARTED && mouseIsTile && currentTower == "" && towMap[mtx][mty] != "t") {
+			selectedTower = undefined;
+			selectedTowerIndex = towers.indexOf(tow);
+		}
 	}, false);
 	
 	canvas.addEventListener("mouseup", function(e) {
