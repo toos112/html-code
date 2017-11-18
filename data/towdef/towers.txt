@@ -44,7 +44,7 @@
 		"swimmingSpeed": -1
 	},
 	"T0.0.2" : {
-		"name": "rocket Launcher",
+		"name": "Rocket Launcher",
 		"texture": {
 			"base": "data/gfx/towers/base_rocketLauncher.png",
 			"gun": "data/gfx/towers/gun_rocketLauncher.png"
