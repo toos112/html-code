@@ -7,6 +7,7 @@ enemies_img.src = "(js: _.img('data/gfx/icons/enemy.png') :js)";
 
 let nextWaveButton;
 let towerButtons = [];
+let sellTowerButton;
 
 let mapButtons = [];
 var initUI = function() {
@@ -24,10 +25,19 @@ var initUI = function() {
 			currentWave = currentWave + 1;
 		}
 	}, { type : "text", txt : "next wave", txtcol : "#ffffff", col : "#7f7f7f", hovercol : "#bfbfbf" });
+	sellTowerButton = new CanvasButton(48, 16, WIDTH/2-24, HEIGHT*0.75+24, canvas, function() {
+		if (selectedTower != undefined) {
+			sellTower(selectedTowerIndex);
+			selectedTower = undefined;
+			selectedTowerIndex = towers.indexOf(selectedTower);
+		}
+	}, { type : "text", txt : "sell tow", txtcol : "#ffffff", col : "#7f7f7f", hovercol : "#bfbfbf" });
 	let i = 0;
 	for (let tow in towerTypes) {
 		towerButtons.push(new CanvasButton(32, 32, WIDTH/2+24 + (i % 4) * 32, HEIGHT*0.75 + Math.floor(i / 4) * 32, canvas, function() {
 			if (STARTED) currentTower = tow;
+			selectedTower = undefined;
+			selectedTowerIndex = towers.indexOf(selectedTower);
 		}, { type : "img", img : towerTypes[tow].baseimage, hovercol : function() { return coins >= towerTypes[tow].cost ? "#3f7f3f" : "#7f3f3f" } }));
 		i++;
 	}
@@ -36,6 +46,7 @@ var initUI = function() {
 var updateUI = function() {
 	mapButtons = [];
 	nextWaveButton = undefined;
+	sellTowerButton = undefined;
 	towerButtons = [];
 	initUI();
 }
@@ -46,6 +57,8 @@ var renderUI = function(ctx) {
 	ctx.fillRect(0, HEIGHT*0.75, WIDTH, HEIGHT*0.25);
 	
 	nextWaveButton.draw(ctx);
+	if (selectedTower != undefined)
+		sellTowerButton.draw(ctx);
 	for (let i = 0; i < towerButtons.length; i++)
 		towerButtons[i].draw(ctx);
 	
