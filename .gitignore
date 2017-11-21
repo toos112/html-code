@@ -1,2 +1,2 @@
-data/sessions.t*
-data/chat/log/*.txt
+/data/chat/log/*.txt
+/data/sessions.txt
