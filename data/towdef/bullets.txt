@@ -34,5 +34,17 @@
 		"effects":[],
 		"homing": true,
 		"aoe": 1.5
+	},
+	"A0.0.3.0" : {
+		"name": "Snowball",
+		"texture": "data/gfx/bullets/freezingTowerAmmo.png",
+		"damage": 1,
+		"penetration": 0,
+		"range": 1,
+		"speed": 2,
+		"pierce": false,
+		"effects":[],
+		"homing": false,
+		"aoe": 0
 	}
 }
