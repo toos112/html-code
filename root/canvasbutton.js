@@ -12,6 +12,11 @@ function CanvasButton(w, h, x, y, c, o, style) {
 	this.mx = 0, this.my = 0;
 	this.style = style;
 	
+	this.destruct = function() {
+		this.c.removeEventListener("mousemove", this.mme);
+		this.c.removeEventListener("click", this.ce);
+	};
+	
 	this.isHovered = function() {
 		return this.mx >= this.x && this.mx < this.x + this.w
 			&& this.my >= this.y && this.my < this.y + this.h;
@@ -37,12 +42,14 @@ function CanvasButton(w, h, x, y, c, o, style) {
 		}
 	};
 	
-	this.c.addEventListener("mousemove", function(e) {
+	this.mme = function(e) {
 		let rect = thisRef.c.getBoundingClientRect();
 		thisRef.mx = e.clientX - rect.left, thisRef.my = e.clientY - rect.top;
-	}, false);
+	};
+	this.c.addEventListener("mousemove", this.mme, false);
 	
-	this.c.addEventListener("click", function(e) {
+	this.ce = function(e) {
 		if (thisRef.o !== undefined && thisRef.isHovered()) thisRef.o();
-	}, false);
+	};
+	this.c.addEventListener("click", this.ce, false);
 };
