@@ -5,6 +5,7 @@
 			"base": "data/gfx/towers/base_machineGun.png",
 			"gun": "data/gfx/towers/gun_machineGun.png"
 		},
+		"upgrades": ["U0.0.0.0"],
 		"ammo": ["A0.0.0.0"],
 		"cost": 25,
 		"width": 2,
@@ -27,6 +28,7 @@
 			"base": "data/gfx/towers/base_flameThrower.png",
 			"gun": "data/gfx/towers/gun_flameThrower.png"
 		},
+		"upgrades": ["U0.0.1.0"],
 		"ammo": ["A0.0.1.0"],
 		"cost": 40,
 		"width": 3,
@@ -49,6 +51,7 @@
 			"base": "data/gfx/towers/base_rocketLauncher.png",
 			"gun": "data/gfx/towers/gun_rocketLauncher.png"
 		},
+		"upgrades": ["U0.0.2.0"],
 		"ammo": ["A0.0.2.0"],
 		"cost": 100,
 		"width": 2,
@@ -71,6 +74,7 @@
 			"base": "data/gfx/towers/base_freezingTower.png",
 			"gun": "data/gfx/towers/gun_freezingTower.png"
 		},
+		"upgrades": ["U0.0.3.0"],
 		"ammo": ["A0.0.3.0"],
 		"cost": 75,
 		"width": 3,
