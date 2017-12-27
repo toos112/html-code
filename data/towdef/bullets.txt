@@ -43,7 +43,7 @@
 		"range": 1,
 		"speed": 2,
 		"pierce": false,
-		"effects":[],
+		"effects":[{"name": "freezing","duration": 3}],
 		"homing": false,
 		"aoe": 0
 	}
