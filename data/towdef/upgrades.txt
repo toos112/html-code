@@ -3,14 +3,14 @@
         "name" : "Test upgrade",
         "texture" : "data/gfx/towers/test_upgrade.png",
         "description" : "_DESCRIPTION",
-        "cost" : _COST,
+        "cost" : 1,
         "upgrades" : {
-            "+shp" : _ADDED_HITPOINTS,
-            "%dmg" : _DMG_MULTIPLIER,
-            "=ra" : _NEW_RANGE,
-            "=ammo" : ["_AMMO_ID"],
-            "+upgr" : ["_OTHER_UPGRADE_ID"],
-            "+lock" : ["_LOCKED_UPGRADE_ID"],
+            "+shp" : 10,
+            "%dmg" : 2,
+            "=ra" : 8,
+            "=ammo" : ["A0.0.1.0"],
+            "+upgr" : ["U0.0.0.0"],
+            "+lock" : ["_"]
         }
     }
 }
