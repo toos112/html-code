@@ -186,6 +186,9 @@ let loadLevel = function(level) {
 	waves = level.waves;
 	coins = ldata.coins;
 	lives = ldata.lives;
+	OX = WIDTH / 2 - ldata.width * 4;
+	OY = HEIGHT / 2 - ldata.height * 4;
+	console.log(ldata.width);
 	
 	grid = new Array(ldata.width), gridChars = new Array(ldata.width), towMap = new Array(ldata.width);
 	for (let i = 0; i < grid.length; i++) {
@@ -285,6 +288,12 @@ let effectTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
 	$.replaceAll($file.read("data/towdef/effects.txt").join(""), "\"", "\\\"");
+:js)");
+
+let upgradeTypes = JSON.parse("(js:
+	_.I("_scripts/std.js");
+	_.I("_scripts/file.js");
+	$.replaceAll($file.read("data/towdef/upgrades.txt").join(""), "\"", "\\\"");
 :js)");
 
 let enemies = [];
@@ -535,7 +544,7 @@ let spawnTower = function(t, pos) {
 	for (let x = pos.x; x < pos.x + tt.width; x++)
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
-	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], hp : tt.hp, shp : tt.hp,
+	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], hp : tt.hp, shp : tt.hp, upgr : tt.upgrades.slice(0), lock : []
 		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage, val : tt.cost };
 	towers.push(tow);
 	updatePaths();
@@ -566,6 +575,28 @@ let sellTower = function(t) {
 	let tow = towers[t];
 	coins += tow.val * 0.5;
 	removeTower(t);
+};
+
+let applyEffect2 = function(obj, name, val) {
+	if (obj[name] == -1) return obj;
+	let mod = name.substring(0, 1);
+	let vn = name.substring(1, name.length);
+	if (mod == "=") {
+		if (obj[vn] instanceof Array) obj[vn] = val.splice(0);
+		else obv[vn] = val;
+	} else if (mod == "%") {
+		obv[vn] *= val;
+	} else if (mod == "+") {
+		if (obj[vn] instanceof Array) obj[vn] = obj[vn].push(val);
+		else obv[vn] += val;
+	}
+	return obj;
+};
+
+let upgradeTower = function(t, u) {
+	let newUpgr = clone(upgradeTypes[u]);
+	for (let upgr in newUpgr.upgrades)
+		enemies[enemy] = applyEffect2(towers[t], upgr, newUpgr.upgrades[upgr]);
 };
 
 let spawnBullet = function(b, t, a, e) {
