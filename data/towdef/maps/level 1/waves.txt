@@ -1,18 +1,6 @@
 [
 	[
-		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":5}],"delay":2,"order":"seq"}
-	],
-	[
-		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":3},{"name":"E0.0.1", "count":2}],"delay":2,"order":"alt"}
-	],
-	[
-		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":3},{"name":"E0.1.0", "count":2}],"delay":2,"order":"alt"}
-	],
-	[
-		{"type":"spawn","enemies":[{"name":"E0.0.0", "count":5},{"name":"E0.0.1", "count":4}],"delay":2,"order":"alt"}
-	],
-	[
-		{"type":"spawn","enemies":[{"name":"E0.0.2", "count":7}],"delay":1,"order":"seq"}
+		{"type":"spawn","enemies":[{"name":"E0.0.2", "count":10}],"delay":2.5,"order":"seq"}
 	],
 	[
 		{"type":"spawn","enemies":[{"name":"E0.1.0", "count":2},{"name":"E0.1.1", "count":1}],"delay":3,"order":"alt"}
@@ -33,4 +21,3 @@
 		{"type":"spawn","enemies":[{"name":"E0.1.2", "count":20}],"delay":0.5,"order":"seq"}
 	]
 ]
-	

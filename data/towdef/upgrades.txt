@@ -1,0 +1,16 @@
+{
+    "U0.0.0.0" : {
+        "name" : "Test upgrade",
+        "texture" : "data/gfx/towers/test_upgrade.png",
+        "description" : "_DESCRIPTION",
+        "cost" : _COST,
+        "upgrades" : {
+            "+shp" : _ADDED_HITPOINTS,
+            "%dmg" : _DMG_MULTIPLIER,
+            "=ra" : _NEW_RANGE,
+            "=ammo" : ["_AMMO_ID"],
+            "+upgr" : ["_OTHER_UPGRADE_ID"],
+            "+lock" : ["_LOCKED_UPGRADE_ID"],
+        }
+    }
+}

@@ -5,6 +5,6 @@
 	"maxZoom":10,
 	"width":64,
 	"height":48,
-	"coins":25,
+	"coins":100,
 	"lives":200
 }
