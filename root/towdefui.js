@@ -44,9 +44,15 @@ var initUI = function() {
 };
 
 var updateUI = function() {
+	for (let i = 0; i < mapButtons.length; i++)
+		mapButtons[i].destruct();
 	mapButtons = [];
+	nextWaveButton.destruct();
 	nextWaveButton = undefined;
+	sellTowerButton.destruct();
 	sellTowerButton = undefined;
+	for (let i = 0; i < towerButtons.length; i++)
+		towerButtons[i].destruct();
 	towerButtons = [];
 	initUI();
 }
