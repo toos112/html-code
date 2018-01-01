@@ -1074,6 +1074,8 @@ let run = function() {
 		if (STARTED) draw();
 		else renderStart(context);
 		if (WIDTH != canvas.clientWidth || HEIGHT != canvas.clientHeight) {
+			OX -= (WIDTH - canvas.clientWidth) / 2;
+			OY -= (HEIGHT - canvas.clientHeight) / 2;
 			WIDTH = canvas.width = canvas.clientWidth;
 			HEIGHT = canvas.height = canvas.clientHeight;
 			updateUI();
