@@ -599,6 +599,7 @@ let applyEffect2 = function(obj, name, val) {
 	if (obj[name] == -1) return obj;
 	let mod = name.substring(0, 1);
 	let vn = name.substring(1, name.length);
+	if (vn != "texture") val = clone(val);
 	if (mod == "=") {
 		if (vn == "texture") {
 			obj.baseimage = val.baseimage;
@@ -1119,7 +1120,7 @@ let run = function() {
 		}
 		if (STARTED && mouseIsTile && currentTower == "" && towMap[mtx][mty] != "t") {
 			selectedTower = undefined;
-			selectedTowerIndex = towers.indexOf(tow);
+			selectedTowerIndex = -1;
 		}
 	}, false);
 	
