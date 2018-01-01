@@ -8,6 +8,25 @@ enemies_img.src = "(js: _.img('data/gfx/icons/enemy.png') :js)";
 let nextWaveButton;
 let towerButtons = [];
 let sellTowerButton;
+let upgradeButtons = [];
+let lastSelectedTower = -1;
+
+var refreshUpgrades = function() {
+	for (let i = 0; i < upgradeButtons.length; i++)
+		upgradeButtons[i].destruct();
+	upgradeButtons = [];
+	let i = 0 ;
+	lastSelectedTower = selectedTowerIndex ;
+	if (selectedTowerIndex == -1) return ;
+	for (let upgradeIndex in towers[selectedTowerIndex].upgr) {
+		let upgrade = towers[selectedTowerIndex].upgr[upgradeIndex];
+		upgradeButtons.push(new CanvasButton(32, 32, WIDTH/3*2 + (i % 4) * 32, HEIGHT*0.75 + Math.floor(i / 4) * 32, canvas, function() {
+			upgradeTower(selectedTowerIndex, upgrade);	
+			refreshUpgrades();
+		}, { type : "img", img : upgradeTypes[upgrade].image, hovercol : function() { return coins >= upgradeTypes[upgrade].cost ? "#3f7f3f" : "#7f3f3f" } }));
+		i++;
+	}
+};
 
 let mapButtons = [];
 var initUI = function() {
@@ -19,13 +38,13 @@ var initUI = function() {
 			}
 		}, { type : "text", txt : maps[i].name, txtcol : "#ffffff", col : "#7f7f7f", hovercol : "#bfbfbf" }));
 	}
-	nextWaveButton = new CanvasButton(48, 16, WIDTH/2-24, HEIGHT*0.75, canvas, function() {
+	nextWaveButton = new CanvasButton(48, 16, WIDTH/3-24, HEIGHT*0.75, canvas, function() {
 		if (STARTED) {
 			spawnWave(currentWave);
 			currentWave = currentWave + 1;
 		}
 	}, { type : "text", txt : "next wave", txtcol : "#ffffff", col : "#7f7f7f", hovercol : "#bfbfbf" });
-	sellTowerButton = new CanvasButton(48, 16, WIDTH/2-24, HEIGHT*0.75+24, canvas, function() {
+	sellTowerButton = new CanvasButton(48, 16, WIDTH/3-24, HEIGHT*0.75+24, canvas, function() {
 		if (selectedTower != undefined) {
 			sellTower(selectedTowerIndex);
 			selectedTower = undefined;
@@ -34,7 +53,7 @@ var initUI = function() {
 	}, { type : "text", txt : "sell tow", txtcol : "#ffffff", col : "#7f7f7f", hovercol : "#bfbfbf" });
 	let i = 0;
 	for (let tow in towerTypes) {
-		towerButtons.push(new CanvasButton(32, 32, WIDTH/2+24 + (i % 4) * 32, HEIGHT*0.75 + Math.floor(i / 4) * 32, canvas, function() {
+		towerButtons.push(new CanvasButton(32, 32, WIDTH/3+24 + (i % 4) * 32, HEIGHT*0.75 + Math.floor(i / 4) * 32, canvas, function() {
 			if (STARTED) currentTower = tow;
 			selectedTower = undefined;
 			selectedTowerIndex = towers.indexOf(selectedTower);
@@ -51,6 +70,7 @@ var updateUI = function() {
 	nextWaveButton = undefined;
 	sellTowerButton.destruct();
 	sellTowerButton = undefined;
+	refreshUpgrades() ;
 	for (let i = 0; i < towerButtons.length; i++)
 		towerButtons[i].destruct();
 	towerButtons = [];
@@ -73,7 +93,7 @@ var renderUI = function(ctx) {
 	ctx.fillStyle = "#ffbf00";
 	let ti = 0;
 	for (let tow in towerTypes) {
-		ctx.fillText(towerTypes[tow].cost, WIDTH/2+24 + (ti % 4) * 32, HEIGHT*0.75+42 + Math.floor(ti / 4) * 42);
+		ctx.fillText(towerTypes[tow].cost, WIDTH/3+24 + (ti % 4) * 32, HEIGHT*0.75+42 + Math.floor(ti / 4) * 42);
 		ti++;
 	}
 	
@@ -90,20 +110,20 @@ var renderUI = function(ctx) {
 	ctx.lineWidth = 2;
 	context.strokeStyle = "#ff0000";
 	ctx.beginPath();
-	ctx.rect(WIDTH/2+24,HEIGHT*0.75,32,32);
-	ctx.rect(WIDTH/2+56,HEIGHT*0.75,32,32);
-	ctx.rect(WIDTH/2+88,HEIGHT*0.75,32,32);
-	ctx.rect(WIDTH/2+120,HEIGHT*0.75,32,32);
-	
-	ctx.rect(WIDTH/2+24,HEIGHT*0.75+42,32,32);
-	ctx.rect(WIDTH/2+56,HEIGHT*0.75+42,32,32);
-	ctx.rect(WIDTH/2+88,HEIGHT*0.75+42,32,32);
-	ctx.rect(WIDTH/2+120,HEIGHT*0.75+42,32,32);
-	
-	ctx.rect(WIDTH/2+24,HEIGHT*0.75+84,32,32);
-	ctx.rect(WIDTH/2+56,HEIGHT*0.75+84,32,32);
-	ctx.rect(WIDTH/2+88,HEIGHT*0.75+84,32,32);
-	ctx.rect(WIDTH/2+120,HEIGHT*0.75+84,32,32);
+	ctx.rect(WIDTH/3+24,HEIGHT*0.75,32,32);
+	ctx.rect(WIDTH/3+56,HEIGHT*0.75,32,32);
+	ctx.rect(WIDTH/3+88,HEIGHT*0.75,32,32);
+	ctx.rect(WIDTH/3+120,HEIGHT*0.75,32,32);
+	               
+	ctx.rect(WIDTH/3+24,HEIGHT*0.75+42,32,32);
+	ctx.rect(WIDTH/3+56,HEIGHT*0.75+42,32,32);
+	ctx.rect(WIDTH/3+88,HEIGHT*0.75+42,32,32);
+	ctx.rect(WIDTH/3+120,HEIGHT*0.75+42,32,32);
+	               
+	ctx.rect(WIDTH/3+24,HEIGHT*0.75+84,32,32);
+	ctx.rect(WIDTH/3+56,HEIGHT*0.75+84,32,32);
+	ctx.rect(WIDTH/3+88,HEIGHT*0.75+84,32,32);
+	ctx.rect(WIDTH/3+120,HEIGHT*0.75+84,32,32);
 	
 	ctx.stroke();
 	
@@ -127,6 +147,16 @@ var renderUI = function(ctx) {
 	for (let ii = 0; ii < mouseEnemies.length; ii++){
 		ctx.fillText("enemy:" + mouseEnemies[ii].name, 10,25+i++*15);
 	}
+	
+	ctx.beginPath();
+	ctx.rect(WIDTH/3*2,HEIGHT*0.75,128,96);
+	ctx.stroke();
+	
+	if (lastSelectedTower != selectedTowerIndex) {
+		refreshUpgrades() ;
+	}
+	for (let i = 0; i < upgradeButtons.length; i++)
+		upgradeButtons[i].draw(ctx);
 };
 
 var renderStart = function(ctx) {
