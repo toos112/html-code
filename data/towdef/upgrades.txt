@@ -1,7 +1,7 @@
 {
     "U0.0.0.0" : {
         "name" : "Test upgrade",
-        "texture" : "data/gfx/towers/test_upgrade.png",
+        "texture" : "data/gfx/upgrades/U0.0.0.0.png",
         "description" : "_DESCRIPTION",
         "cost" : 1,
         "upgrades" : {
@@ -10,7 +10,11 @@
             "=ra" : 8,
             "=ammo" : ["A0.0.1.0"],
             "+upgr" : ["U0.0.0.0"],
-            "+lock" : ["_"]
+            "+lock" : ["_"],
+			"=texture" : {
+				"base": "data/gfx/towers/base_machineGun_U0.0.0.0.png",
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.0.png"
+			}
         }
     }
 }
