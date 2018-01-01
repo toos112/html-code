@@ -292,8 +292,27 @@ let effectTypes = JSON.parse("(js:
 let upgradeTypes = JSON.parse("(js:
 	_.I("_scripts/std.js");
 	_.I("_scripts/file.js");
-	$.replaceAll($file.read("data/towdef/upgrades.txt").join(""), "\"", "\\\"");
+	_.I("_scripts/json.js");
+	var result = $json.parse($file.read("data/towdef/upgrades.txt").join(""));
+	for (var i in result) {
+		result[i].imgdata = "" + _.img(result[i].texture);
+		if (result[i].upgrades["=texture"]) {
+			result[i].upgrades["=texture"].baseimgdata = "" + _.img(result[i].upgrades["=texture"].base);
+			result[i].upgrades["=texture"].gunimgdata = "" + _.img(result[i].upgrades["=texture"].gun);
+		}
+	}
+	$.replaceAll($json.stringify(result), "\"", "\\\"");
 :js)");
+for (let i in upgradeTypes) {
+	upgradeTypes[i].image = new Image();
+	upgradeTypes[i].image.src = upgradeTypes[i].imgdata;
+	if (upgradeTypes[i].upgrades["=texture"]) {
+		upgradeTypes[i].upgrades["=texture"].baseimage = new Image();
+		upgradeTypes[i].upgrades["=texture"].baseimage.src = upgradeTypes[i].upgrades["=texture"].baseimgdata;
+		upgradeTypes[i].upgrades["=texture"].gunimage = new Image();
+		upgradeTypes[i].upgrades["=texture"].gunimage.src = upgradeTypes[i].upgrades["=texture"].gunimgdata;
+	}
+}
 
 let enemies = [];
 let pendingSpawns = [];
@@ -581,7 +600,10 @@ let applyEffect2 = function(obj, name, val) {
 	let mod = name.substring(0, 1);
 	let vn = name.substring(1, name.length);
 	if (mod == "=") {
-		if (obj[vn] instanceof Array) obj[vn] = val.splice(0);
+		if (vn == "texture") {
+			obj.baseimage = val.baseimage;
+			obj.gunimage = val.gunimage;
+		} else if (obj[vn] instanceof Array) obj[vn] = val.splice(0);
 		else obj[vn] = val;
 	} else if (mod == "%") {
 		obj[vn] *= val;
@@ -593,7 +615,7 @@ let applyEffect2 = function(obj, name, val) {
 };
 
 let upgradeTower = function(t, u) {
-	let newUpgr = clone(upgradeTypes[u]);
+	let newUpgr = upgradeTypes[u];
 	if (coins < newUpgr.cost) return;
 	coins -= newUpgr.cost;
 	for (let upgr in newUpgr.upgrades)
