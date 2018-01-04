@@ -2,8 +2,8 @@
 	"T0.0.0" : {
 		"name": "Machine Gun Tower",
 		"texture": {
-			"base": "data/gfx/towers/base_machineGun.png",
-			"gun": "data/gfx/towers/gun_machineGun.png"
+			"base": "data/gfx/towers/TB0.0.0.0.png",
+			"gun": "data/gfx/towers/TG0.0.0.0.png"
 		},
 		"upgrades": ["U0.0.0.0"],
 		"ammo": ["A0.0.0.0"],
