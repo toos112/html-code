@@ -623,7 +623,8 @@ let upgradeTower = function(t, u) {
 		towers[t] = applyEffect2(towers[t], upgr, newUpgr.upgrades[upgr]);
 	for (let locked in towers[t].lock)
 		for (let i = 0; i < towers[t].upgr.length; i++)
-			if (towers[t].upgr == locked) towers[t].upgr.splice(i, 1);
+			if (towers[t].upgr == towers[t].lock[locked])
+				towers[t].upgr.splice(i, 1);
 };
 
 let spawnBullet = function(b, t, a, e) {
