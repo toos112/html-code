@@ -5,9 +5,9 @@
 		"description" : "More power = far shots.",
 		"cost": 25,
 		"upgrades": {
-			"+shp": 10,
-			"%dmg": 1.5,
-			"=ra": 8,
+			"+shp": 12.5,
+			"%dmg": 1.2,
+			"=ra": 6.5,
 			"+upgr": ["U0.0.0.1","U0.0.0.2"],
 			"+lock": ["U0.0.0.0"],
 			"=texture" : {
@@ -18,36 +18,33 @@
 	},
 	"U0.0.0.1" : {
 		"name" : "Double barrel",
-		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
+		"texture" : "data/gfx/upgrades/U0.0.0.1.png",
 		"description" : "Shoots with 2 barrels instead of 1.",
-		"cost" : 1,
+		"cost" : 60,
 		"upgrades" : {
-			"+shp" : 10,
+			"+shp" : 12.5,
 			"%dmg" : 2,
 			"=ra" : 8,
 			"+upgr" : ["U0.0.0.3","U0.0.0.4"],
 			"+lock" : ["U0.0.0.1","U0.0.0.2"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.0.0.png",
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.0.png"
+				"base": "data/gfx/towers/base_machineGun_U0.0.0.1.png",
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.1.png"
 			}
 		}
 	},
 	"U0.0.0.2" : {
 		"name" : "Test upgrade",
-		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
+		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
 		"description" : "_DESCRIPTION",
-		"cost" : 1,
+		"cost" : 45,
 		"upgrades" : {
-			"+shp" : 10,
-			"%dmg" : 2,
-			"=ra" : 8,
 			"=ammo" : ["A0.0.0.1"],
 			"+upgr" : ["U0.0.0.5"],
 			"+lock" : ["U0.0.0.1","U0.0.0.2"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.0.0.png",
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.0.png"
+				"base": "data/gfx/towers/base_machineGun_U0.0.0.2.png",
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.2.png"
 			}
 		}
 	},
