@@ -97,6 +97,7 @@ let SHOWALLPATHS = false;
 let RENDERGRID = true;
 let WIDTH, HEIGHT;
 
+let xp = 0;
 let mx, my, mtx, mty, omx, omy;
 let mouseTile, mouseIsTile;
 let selectedTower, selectedTowerIndex = -1;
@@ -563,7 +564,7 @@ let spawnTower = function(t, pos) {
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
 	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo[0], hp : tt.hp, shp : tt.hp, upgr : tt.upgrades.slice(0), lock : [],
-		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage, val : tt.cost };
+		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage, val : tt.cost, mode : tt.mode };
 	towers.push(tow);
 	updatePaths();
 	return true;
@@ -623,14 +624,14 @@ let upgradeTower = function(t, u) {
 		towers[t] = applyEffect2(towers[t], upgr, newUpgr.upgrades[upgr]);
 	for (let locked in towers[t].lock)
 		for (let i = 0; i < towers[t].upgr.length; i++)
-			if (towers[t].upgr == towers[t].lock[locked])
+			if (towers[t].upgr[i] == towers[t].lock[locked])
 				towers[t].upgr.splice(i, 1);
 };
 
-let spawnBullet = function(b, t, a, e) {
+let spawnBullet = function(b, p, t, a, e) {
 	let bt = bulletTypes[b];
-	let bul = { x : (t.x + t.w / 2) * 8, y : (t.y + t.h / 2) * 8, sx : (t.x + t.w / 2) * 8, sy : (t.y + t.h / 2) * 8, pierce : bt.pierce,
-		ra : t.ra * bt.range, sp : bt.speed * 8 / UPS, a : a, dmg : bt.damage * t.dmg, image : bt.image, effects : bt.effects, homing : bt.homing, aoe : bt.aoe };
+	let bul = { x : p.x, y : p.y, sx : p.x, sy : p.y, pierce : bt.pierce, ra : t.ra * bt.range, sp : bt.speed * 8 / UPS,
+		a : a, dmg : bt.damage * t.dmg, image : bt.image, effects : bt.effects, homing : bt.homing, aoe : bt.aoe };
 	if (bt.pierce) bul.hitEnemies = [];
 	if (bt.homing) bul.target = e;
 	bullets.push(bul);
@@ -1006,19 +1007,35 @@ let tick = function() {
 	for (let i = towers.length - 1; i >= 0; i--) {
 		towers[i].hp = Math.min(towers[i].shp, towers[i].hp + 0.05)
 		if (--towers[i].dlay <= 0) {
-			let enemy, ldist = Infinity;
-			for (let ii = 0; ii < enemies.length; ii++) {
-				let d = dist({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
-					{ x : enemies[ii].tx + enemies[ii].r / 2, y : enemies[ii].ty + enemies[ii].r / 2 });
-				if (d < ldist) enemy = enemies[ii], ldist = d;
+			if (towers[i].mode == "aim" || towers[i].mode == "double-aim" || towers[i].mode == "triple-aim") {
+				let enemy, ldist = Infinity;
+				for (let ii = 0; ii < enemies.length; ii++) {
+					let d = dist({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
+						{ x : enemies[ii].tx + enemies[ii].r / 2, y : enemies[ii].ty + enemies[ii].r / 2 });
+					if (d < ldist) enemy = enemies[ii], ldist = d;
+				}
+				if (enemy !== undefined && ldist < bulletTypes[towers[i].ammo].range * towers[i].ra) {
+					let a = getAngle({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
+						{ x : enemy.tx + enemy.r / 2, y : enemy.ty + enemy.r / 2 });
+					let p = { x : (towers[i].x + towers[i].w / 2) * 8, y : (towers[i].y + towers[i].h / 2) * 8 };
+					if (towers[i].mode == "aim") {
+						spawnBullet(towers[i].ammo, p, towers[i], a, enemy);
+					} else if (towers[i].mode == "double-aim") {
+						let la = a - 0.5 * Math.PI, lo = angleToPos(la, 1.5);
+						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, 1.5);
+						spawnBullet(towers[i].ammo, { x : p.x + lo.x, y : p.y + lo.y }, towers[i], a, enemy);
+						spawnBullet(towers[i].ammo, { x : p.x + ro.x, y : p.y + ro.y }, towers[i], a, enemy);
+					} else if (towers[i].mode == "triple-aim") {
+						let la = a - 0.5 * Math.PI, lo = angleToPos(la, 2.5);
+						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, 2.5);
+						spawnBullet(towers[i].ammo, p, towers[i], a, enemy);
+						spawnBullet(towers[i].ammo, { x : p.x + lo.x, y : p.y + lo.y }, towers[i], a, enemy);
+						spawnBullet(towers[i].ammo, { x : p.x + ro.x, y : p.y + ro.y }, towers[i], a, enemy);
+					}
+					towers[i].rot = a;
+					towers[i].dlay += UPS / towers[i].as;
+				} else ++towers[i].dlay;
 			}
-			if (enemy !== undefined && ldist < bulletTypes[towers[i].ammo].range * towers[i].ra) {
-				let a = getAngle({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
-					{ x : enemy.tx + enemy.r / 2, y : enemy.ty + enemy.r / 2 });
-				spawnBullet(towers[i].ammo, towers[i], a, enemy);
-				towers[i].rot = a;
-				towers[i].dlay += UPS / towers[i].as;
-			} else ++towers[i].dlay;
 		}
 	}
 	
@@ -1065,12 +1082,25 @@ let scrollMove = function(e) {
 	if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom, ZOOMPOW -= delta;
 };
 
+let loadCookies = function() {
+	let xpc = $cookie.get("xp");
+	let levelc = $cookie.get("level");
+	if (xpc) xp = parseInt(xpc);
+	if (levelc) level = parseInt(levelc);
+};
+
+let saveCookies = function() {
+	$cookie.set("xp", xp);
+	$cookie.set("level", level);
+};
+
 let run = function() {
 	canvas = document.getElementById("game");
 	WIDTH = canvas.width = canvas.clientWidth;
 	HEIGHT = canvas.height = canvas.clientHeight;
 	context = canvas.getContext("2d");
 	
+	loadCookies();
 	initUI();
 	
 	setInterval(function() {
