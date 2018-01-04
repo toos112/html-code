@@ -26,8 +26,8 @@
 	"T0.0.1" : {
 		"name": "Flame Thrower",
 		"texture": {
-			"base": "data/gfx/towers/base_flameThrower.png",
-			"gun": "data/gfx/towers/gun_flameThrower.png"
+			"base": "data/gfx/towers/TB0.0.1.0.png",
+			"gun": "data/gfx/towers/TG0.0.1.0.png"
 		},
 		"upgrades": ["U0.0.1.0"],
 		"ammo": ["A0.0.1.0"],
@@ -50,8 +50,8 @@
 	"T0.0.2" : {
 		"name": "Rocket Launcher",
 		"texture": {
-			"base": "data/gfx/towers/base_rocketLauncher.png",
-			"gun": "data/gfx/towers/gun_rocketLauncher.png"
+			"base": "data/gfx/towers/TB0.0.2.0.png",
+			"gun": "data/gfx/towers/TG0.0.2.0.png"
 		},
 		"upgrades": ["U0.0.2.0"],
 		"ammo": ["A0.0.2.0"],
@@ -74,8 +74,8 @@
 	"T0.0.3" : {
 		"name": "Freezing Tower",
 		"texture": {
-			"base": "data/gfx/towers/base_freezingTower.png",
-			"gun": "data/gfx/towers/gun_freezingTower.png"
+			"base": "data/gfx/towers/TB0.0.3.0.png",
+			"gun": "data/gfx/towers/TG0.0.3.0.png"
 		},
 		"upgrades": ["U0.0.3.0"],
 		"ammo": ["A0.0.3.0"],
