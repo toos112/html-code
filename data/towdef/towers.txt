@@ -20,7 +20,8 @@
 		"attackSwimming": true,
 		"landSpeed": -1,
 		"flyingSpeed": -1,
-		"swimmingSpeed": -1
+		"swimmingSpeed": -1,
+		"mode": "aim"
 	},
 	"T0.0.1" : {
 		"name": "Flame Thrower",
@@ -43,7 +44,8 @@
 		"attackSwimming": true,
 		"landSpeed": -1,
 		"flyingSpeed": -1,
-		"swimmingSpeed": -1
+		"swimmingSpeed": -1,
+		"mode": "aim"
 	},
 	"T0.0.2" : {
 		"name": "Rocket Launcher",
@@ -66,7 +68,8 @@
 		"attackSwimming": true,
 		"landSpeed": -1,
 		"flyingSpeed": -1,
-		"swimmingSpeed": -1
+		"swimmingSpeed": -1,
+		"mode": "aim"
 	},
 	"T0.0.3" : {
 		"name": "Freezing Tower",
@@ -89,6 +92,7 @@
 		"attackSwimming": true,
 		"landSpeed": -1,
 		"flyingSpeed": -1,
-		"swimmingSpeed": -1
+		"swimmingSpeed": -1,
+		"mode": "aim"
 	}
 }
