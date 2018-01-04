@@ -1,7 +1,7 @@
 {
 	"A0.0.0.0" : {
 		"name": "Machine Gun Ammo",
-		"texture": "data/gfx/bullets/machineGunAmmo.png",
+		"texture": "data/gfx/bullets/A0.0.0.0.png",
 		"damage": 1,
 		"penetration": 0,
 		"range": 1,
@@ -10,10 +10,21 @@
 		"effects":[],
 		"homing": false,
 		"aoe":0
+	},"A0.0.0.1" : {
+		"name": "Machine Gun Ammo Big",
+		"texture": "data/gfx/bullets/A0.0.0.1.png",
+		"damage": 1.75,
+		"penetration": 0,
+		"range": 0.95,
+		"speed": 9,
+		"pierce": false,
+		"effects":[],
+		"homing": false,
+		"aoe":0
 	},
 	"A0.0.1.0" : {
 		"name": "Flame Thrower Canisters",
-		"texture": "data/gfx/bullets/flameThrowerAmmo.png",
+		"texture": "data/gfx/bullets/A0.0.1.0.png",
 		"damage": 1,
 		"penetration": 0,
 		"range": 1,
@@ -25,7 +36,7 @@
 	},
 	"A0.0.2.0" : {
 		"name": "Rocket",
-		"texture": "data/gfx/bullets/rocketLauncherAmmo.png",
+		"texture": "data/gfx/bullets/A0.0.2.0.png",
 		"damage": 1,
 		"penetration": 0,
 		"range": 1,
@@ -37,7 +48,7 @@
 	},
 	"A0.0.3.0" : {
 		"name": "Snowball",
-		"texture": "data/gfx/bullets/freezingTowerAmmo.png",
+		"texture": "data/gfx/bullets/A0.0.3.0.png",
 		"damage": 1,
 		"penetration": 0,
 		"range": 1,
