@@ -1,20 +1,54 @@
 {
-    "U0.0.0.0" : {
-        "name" : "Test upgrade",
-        "texture" : "data/gfx/upgrades/U0.0.0.0.png",
-        "description" : "_DESCRIPTION",
-        "cost" : 1,
-        "upgrades" : {
-            "+shp" : 10,
-            "%dmg" : 2,
-            "=ra" : 8,
-            "=ammo" : ["A0.0.1.0"],
-            "+upgr" : ["U0.0.0.0"],
-            "+lock" : ["_"],
+	"U0.0.0.0" : {
+		"name" : "More powder",
+		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
+		"description" : "More power = far shots.",
+		"cost" : 25,
+		"upgrades" : {
+			"+shp" : 10,
+			"%dmg" : 2,
+			"=ra" : 8,
+			"=ammo" : ["A0.0.1.0"],
+			"+upgr" : ["U0.0.0.1","U0.0.0.2"],
+			"+lock" : ["_"],
 			"=texture" : {
 				"base": "data/gfx/towers/base_machineGun_U0.0.0.0.png",
 				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.0.png"
 			}
-        }
-    }
+		}
+	},"U0.0.0.1" : {
+		"name" : "Double barrel",
+		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
+		"description" : "Shoots with 2 barrels instead of 1.",
+		"cost" : 1,
+		"upgrades" : {
+			"+shp" : 10,
+			"%dmg" : 2,
+			"=ra" : 8,
+			"=ammo" : ["A0.0.1.0"],
+			"+upgr" : ["U0.0.0.3","U0.0.0.4"],
+			"+lock" : ["U0.0.0.2"],
+			"=texture" : {
+				"base": "data/gfx/towers/base_machineGun_U0.0.0.0.png",
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.0.png"
+			}
+		}
+	},"U0.0.0.2" : {
+		"name" : "Test upgrade",
+		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
+		"description" : "_DESCRIPTION",
+		"cost" : 1,
+		"upgrades" : {
+			"+shp" : 10,
+			"%dmg" : 2,
+			"=ra" : 8,
+			"=ammo" : ["A0.0.1.0"],
+			"+upgr" : ["U0.0.0.5"],
+			"+lock" : ["U0.0.0.1"],
+			"=texture" : {
+				"base": "data/gfx/towers/base_machineGun_U0.0.0.0.png",
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.0.png"
+			}
+		}
+	}
 }
