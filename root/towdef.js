@@ -457,20 +457,20 @@ let findPath = function(start, end, obj, grid, checkTowers) {
 	grid[start.x][start.y].f = 0;
 	
 	while (open.length > 0) {
-        let current, fScore = Infinity;
-        for (let i = 0; i < open.length; i++) {
-            if (grid[open[i].x][open[i].y].f < fScore) {
-                fScore = grid[open[i].x][open[i].y].f;
-                current = open[i];
-            }
-        }
+		let current, fScore = Infinity;
+		for (let i = 0; i < open.length; i++) {
+			if (grid[open[i].x][open[i].y].f < fScore) {
+				fScore = grid[open[i].x][open[i].y].f;
+				current = open[i];
+			}
+		}
 		
 		if (isFinished(current, obj)) {
-            let result = [];
-            while (current !== undefined) {
-                result.push({ x : current.x, y : current.y, type : "move" });
-                current = grid[current.x][current.y].p;
-            }
+			let result = [];
+			while (current !== undefined) {
+				result.push({ x : current.x, y : current.y, type : "move" });
+				current = grid[current.x][current.y].p;
+			}
 			result = result.reverse();
 			if (!checkTowers) {
 				let collisionsHad = [];
@@ -485,18 +485,18 @@ let findPath = function(start, end, obj, grid, checkTowers) {
 					}
 				}
 			}
-            return result;
+			return result;
 		}
-        
+		
 		let index = open.indexOf(current)
-        open.splice(index, 1);
+		open.splice(index, 1);
 		grid[current.x][current.y].open = false;
-        
-        for (let i = 0; i < possible.length; i++) {
+		
+		for (let i = 0; i < possible.length; i++) {
 			if (!canMove(current, possible[i], grid, obj, checkTowers)) continue;
-            let node = { x : current.x + possible[i].x, y : current.y + possible[i].y };
-            let gScore = grid[current.x][current.y].g + moveCost(current, obj, node, grid, false);
-            if (gScore < grid[node.x][node.y].g) {
+			let node = { x : current.x + possible[i].x, y : current.y + possible[i].y };
+			let gScore = grid[current.x][current.y].g + moveCost(current, obj, node, grid, false);
+			if (gScore < grid[node.x][node.y].g) {
 				if (!grid[node.x][node.y].open) {
 					open.push(node);
 					grid[node.x][node.y].open = true;
@@ -505,7 +505,7 @@ let findPath = function(start, end, obj, grid, checkTowers) {
 				grid[node.x][node.y].g = gScore;
 				grid[node.x][node.y].f = gScore;
 			}
-        }
+		}
 	}
 	
 	if (checkTowers) return findPath(start, end, obj, grid, false);
@@ -621,6 +621,9 @@ let upgradeTower = function(t, u) {
 	coins -= newUpgr.cost;
 	for (let upgr in newUpgr.upgrades)
 		towers[t] = applyEffect2(towers[t], upgr, newUpgr.upgrades[upgr]);
+	for (let locked in towers[t].lock)
+		for (let i = 0; i < towers[i].upgr.length; i++)
+			if (towers[i].upgr == locked) towers[i].upgr.splice(i, 1);
 };
 
 let spawnBullet = function(b, t, a, e) {

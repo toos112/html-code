@@ -20,15 +20,15 @@ Commands
 *10	/ban [user] [reason] [time] [sort] ([user] account will be disabled for [time] can be "perm" as time [sort] can be account is default or ip)
 *11	/unban [user] (unbans [user] also lifts ipban if high enough level)
 *12	/clear (clears your chat log)
-13	/group [user] [group] (gives [user] [group] aan permissions)
+*13	/group [user] [group] (gives [user] [group] aan permissions)
 14	/ignore [user] (makes it so you can't recieve any more messages from [user])
 15	/unignore [user] (unignors priviously ignored [user])
 16	/execute [user] [new command] (executes a command as if [user] does it)
 17	/report [user] [reason] (reports [user] for [reason])
 18	/issues (see all issues)
 19	/solved [issue id] (solve a issue by giving the [issue id])
-20	/ipban [ip] [time] (bans [ip] for [time])
-21	/ipunban [ip] (unbans [ip])
+*20	/ipban [ip] [time] (bans [ip] for [time])
+*21	/ipunban [ip] (unbans [ip])
 
 add offences to users when a reason is given do add the possible punisment that was given aswell in order
 Typing in color with (/color [hexcode])?
