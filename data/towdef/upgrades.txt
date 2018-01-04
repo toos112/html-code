@@ -23,8 +23,7 @@
 		"cost" : 60,
 		"upgrades" : {
 			"+shp" : 12.5,
-			"%dmg" : 2,
-			"=ra" : 8,
+			"=mode" : "double-aim",
 			"+upgr" : ["U0.0.0.3","U0.0.0.4"],
 			"+lock" : ["U0.0.0.1","U0.0.0.2"],
 			"=texture" : {
@@ -39,6 +38,7 @@
 		"description" : "_DESCRIPTION",
 		"cost" : 45,
 		"upgrades" : {
+			"+shp" : "12.5",
 			"=ammo" : ["A0.0.0.1"],
 			"+upgr" : ["U0.0.0.5"],
 			"+lock" : ["U0.0.0.1","U0.0.0.2"],
