@@ -1007,17 +1007,17 @@ let tick = function() {
 	for (let i = towers.length - 1; i >= 0; i--) {
 		towers[i].hp = Math.min(towers[i].shp, towers[i].hp + 0.05)
 		if (--towers[i].dlay <= 0) {
+			let p = { x : (towers[i].x + towers[i].w / 2) * 8, y : (towers[i].y + towers[i].h / 2) * 8 };
+			let enemy, ldist = Infinity;
+			for (let ii = 0; ii < enemies.length; ii++) {
+				let d = dist({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
+					{ x : enemies[ii].tx + enemies[ii].r / 2, y : enemies[ii].ty + enemies[ii].r / 2 });
+				if (d < ldist) enemy = enemies[ii], ldist = d;
+			}
 			if (towers[i].mode == "aim" || towers[i].mode == "double-aim" || towers[i].mode == "triple-aim") {
-				let enemy, ldist = Infinity;
-				for (let ii = 0; ii < enemies.length; ii++) {
-					let d = dist({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
-						{ x : enemies[ii].tx + enemies[ii].r / 2, y : enemies[ii].ty + enemies[ii].r / 2 });
-					if (d < ldist) enemy = enemies[ii], ldist = d;
-				}
 				if (enemy !== undefined && ldist < bulletTypes[towers[i].ammo].range * towers[i].ra) {
 					let a = getAngle({ x : towers[i].x + towers[i].w / 2, y : towers[i].y + towers[i].h / 2 },
 						{ x : enemy.tx + enemy.r / 2, y : enemy.ty + enemy.r / 2 });
-					let p = { x : (towers[i].x + towers[i].w / 2) * 8, y : (towers[i].y + towers[i].h / 2) * 8 };
 					if (towers[i].mode == "aim") {
 						spawnBullet(towers[i].ammo, p, towers[i], a, enemy);
 					} else if (towers[i].mode == "double-aim") {
@@ -1033,6 +1033,15 @@ let tick = function() {
 						spawnBullet(towers[i].ammo, { x : p.x + ro.x, y : p.y + ro.y }, towers[i], a, enemy);
 					}
 					towers[i].rot = a;
+					towers[i].dlay += UPS / towers[i].as;
+				} else ++towers[i].dlay;
+				if (enemy !== undefined && ldist < bulletTypes[towers[i].ammo].range * towers[i].ra) {
+					let soffset = (towers[i].mode == "8shot" ? 0.25 : 0.125) * Math.PI, offset = 0;
+					let count = towers[i].mode == "8shot" ? 8 : 16;
+					for (let ii = 0; ii < count; ii++) {
+						spawnBullet(towers[i].ammo, p, towers[i], offset, enemy);
+						offset += soffset;
+					}
 					towers[i].dlay += UPS / towers[i].as;
 				} else ++towers[i].dlay;
 			}
