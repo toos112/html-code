@@ -612,6 +612,9 @@ let applyEffect2 = function(obj, name, val) {
 	} else if (mod == "+") {
 		if (obj[vn] instanceof Array) obj[vn] = obj[vn].concat(val);
 		else obj[vn] += val;
+	} else if (mod == "-") {
+		if (obj[vn] instanceof Array) obj[vn] = obj[vn].filter(function(e) { return val.indxeOf(e) < 0; });
+		else obj[vn] -= val;
 	}
 	return obj;
 };
