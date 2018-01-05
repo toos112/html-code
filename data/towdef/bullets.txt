@@ -10,7 +10,8 @@
 		"effects":[],
 		"homing": false,
 		"aoe":0
-	},"A0.0.0.1" : {
+	},
+	"A0.0.0.1" : {
 		"name": "Machine Gun Ammo Big",
 		"texture": "data/gfx/bullets/A0.0.0.1.png",
 		"damage": 1.75,
@@ -21,6 +22,18 @@
 		"effects":[],
 		"homing": false,
 		"aoe":0
+	},
+	"A0.0.0.1" : {
+		"name": "Machine Gun Ammo Biggest",
+		"texture": "data/gfx/bullets/A0.0.0.2.png",
+		"damage": 1.75,
+		"penetration": 0,
+		"range": 0.80,
+		"speed": 9,
+		"pierce": false,
+		"effects":[],
+		"homing": true,
+		"aoe":0.5
 	},
 	"A0.0.1.0" : {
 		"name": "Flame Thrower Canisters",
