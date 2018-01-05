@@ -23,7 +23,7 @@
 		"homing": false,
 		"aoe":0
 	},
-	"A0.0.0.1" : {
+	"A0.0.0.2" : {
 		"name": "Machine Gun Ammo Biggest",
 		"texture": "data/gfx/bullets/A0.0.0.2.png",
 		"damage": 1.75,
