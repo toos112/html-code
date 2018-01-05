@@ -630,7 +630,7 @@ let upgradeTower = function(t, u) {
 
 let spawnNextBullet = function(p, t, a, e) {
 	if (t.ammoI > t.ammo.length) t.ammoI = 0;
-	spawnBullet = function(t.ammo[t.ammoI++], t, a, e);
+	spawnBullet(t.ammo[t.ammoI++], t, a, e);
 	if (t.ammoI > t.ammo.length) t.ammoI = 0;
 };
 
