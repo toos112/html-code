@@ -33,9 +33,9 @@
 		}
 	},
 	"U0.0.0.2" : {
-		"name" : "Test upgrade",
+		"name" : "Bigger bullets",
 		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
-		"description" : "_DESCRIPTION",
+		"description" : "The bigger the bullet the more damage.",
 		"cost" : 45,
 		"upgrades" : {
 			"+shp" : "12.5",
@@ -45,6 +45,52 @@
 			"=texture" : {
 				"base": "data/gfx/towers/TB0.0.0.3.png",
 				"gun": "data/gfx/towers/TG0.0.0.3.png"
+			}
+		}
+	},
+	"U0.0.0.3" : {
+		"name" : "Triple barrel",
+		"texture" : "data/gfx/upgrades/U0.0.0.3.png",
+		"description" : "Shoots with 3 barrels instead of 2.",
+		"cost" : 120,
+		"upgrades" : {
+			"+shp" : 12.5,
+			"=mode" : "triple-aim",
+			"+upgr" : [],
+			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
+			"=texture" : {
+				"base": "data/gfx/towers/TB0.0.0.4.png",
+				"gun": "data/gfx/towers/TG0.0.0.4.png"
+			}
+		}
+	},
+	"U0.0.0.4" : {
+		"name" : "Bigger bullets",
+		"texture" : "data/gfx/upgrades/U0.0.0.4.png",
+		"description" : "The bigger the bullet the more damage.",
+		"cost" : 90,
+		"upgrades" : {
+			"+shp" : "12.5",
+			"=ammo" : ["A0.0.0.1"],
+			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
+			"=texture" : {
+				"base": "data/gfx/towers/TB0.0.0.5.png",
+				"gun": "data/gfx/towers/TG0.0.0.5.png"
+			}
+		}
+	},
+	"U0.0.0.5" : {
+		"name" : "The biggest bullets",
+		"texture" : "data/gfx/upgrades/U0.0.0.4.png",
+		"description" : "The biggest bullets even have splash damage.",
+		"cost" : 90,
+		"upgrades" : {
+			"+shp" : "12.5",
+			"=ammo" : ["A0.0.0.1"],
+			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
+			"=texture" : {
+				"base": "data/gfx/towers/TB0.0.0.6.png",
+				"gun": "data/gfx/towers/TG0.0.0.6.png"
 			}
 		}
 	},
