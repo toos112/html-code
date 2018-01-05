@@ -629,9 +629,9 @@ let upgradeTower = function(t, u) {
 };
 
 let spawnNextBullet = function(p, t, a, e) {
-	if (t.ammoI > t.ammo.length) t.ammoI = 0;
-	spawnBullet(t.ammo[t.ammoI++], t, a, e);
-	if (t.ammoI > t.ammo.length) t.ammoI = 0;
+	if (t.ammoI >= t.ammo.length) t.ammoI = 0;
+	spawnBullet(t.ammo[t.ammoI++], p, t, a, e);
+	if (t.ammoI >= t.ammo.length) t.ammoI = 0;
 };
 
 let spawnBullet = function(b, p, t, a, e) {
