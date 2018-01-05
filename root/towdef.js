@@ -1035,6 +1035,7 @@ let tick = function() {
 					towers[i].rot = a;
 					towers[i].dlay += UPS / towers[i].as;
 				} else ++towers[i].dlay;
+			} else if (towers[i].mode == "8shot" || towers[i].mode == "16shot") {
 				if (enemy !== undefined && ldist < bulletTypes[towers[i].ammo].range * towers[i].ra) {
 					let soffset = (towers[i].mode == "8shot" ? 0.25 : 0.125) * Math.PI, offset = 0;
 					let count = towers[i].mode == "8shot" ? 8 : 16;
