@@ -86,9 +86,9 @@
 		"texture" : "data/gfx/upgrades/U0.0.0.4.png",
 		"description" : "The biggest bullets even have splash damage.",
 		"cost" : 90,
-			"%as" : "0.75",
 		"upgrades" : {
 			"+shp" : "12.5",
+			"%as" : "0.75",
 			"=ammo" : ["A0.0.0.1"],
 			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
 			"=texture" : {
