@@ -39,6 +39,7 @@
 		"cost" : 45,
 		"upgrades" : {
 			"+shp" : "12.5",
+			"%as" : "0.95",
 			"=ammo" : ["A0.0.0.1"],
 			"+upgr" : ["U0.0.0.5"],
 			"+lock" : ["U0.0.0.1","U0.0.0.2"],
@@ -71,6 +72,7 @@
 		"cost" : 90,
 		"upgrades" : {
 			"+shp" : "12.5",
+			"%as" : "0.95",
 			"=ammo" : ["A0.0.0.1"],
 			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
 			"=texture" : {
@@ -84,6 +86,7 @@
 		"texture" : "data/gfx/upgrades/U0.0.0.4.png",
 		"description" : "The biggest bullets even have splash damage.",
 		"cost" : 90,
+			"%as" : "0.75",
 		"upgrades" : {
 			"+shp" : "12.5",
 			"=ammo" : ["A0.0.0.1"],
@@ -95,9 +98,9 @@
 		}
 	},
 	"U0.0.1.0" : {
-		"name" : "Test upgrade",
-		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
-		"description" : "_DESCRIPTION",
+		"name" : "place holder",
+		"texture" : "data/gfx/upgrades/U0.0.1.0.png",
+		"description" : "place holder",
 		"cost" : 1,
 		"upgrades" : {
 			"+shp" : 10,
@@ -107,15 +110,15 @@
 			"+upgr" : ["U0.0.0.5"],
 			"+lock" : ["U0.0.0.1"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.0.0.png",
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.0.png"
+				"base": "data/gfx/towers/base_machineGun_U0.0.1.0.png",
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.1.0.png"
 			}
 		}
 	},
 	"U0.0.2.0" : {
-		"name" : "Test upgrade",
-		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
-		"description" : "_DESCRIPTION",
+		"name" : "place holder",
+		"texture" : "data/gfx/upgrades/U0.0.2.0.png",
+		"description" : "place holder",
 		"cost" : 1,
 		"upgrades" : {
 			"+shp" : 10,
@@ -125,15 +128,15 @@
 			"+upgr" : ["U0.0.0.5"],
 			"+lock" : ["U0.0.0.1"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.0.0.png",
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.0.png"
+				"base": "data/gfx/towers/base_machineGun_U0.0.2.0.png",
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.2.0.png"
 			}
 		}
 	},
 	"U0.0.3.0" : {
-		"name" : "Test upgrade",
-		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
-		"description" : "_DESCRIPTION",
+		"name" : "place holder",
+		"texture" : "data/gfx/upgrades/U0.0.3.0.png",
+		"description" : "place holder",
 		"cost" : 1,
 		"upgrades" : {
 			"+shp" : 10,
@@ -143,8 +146,8 @@
 			"+upgr" : ["U0.0.0.5"],
 			"+lock" : ["U0.0.0.1"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.0.0.png",
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.0.0.png"
+				"base": "data/gfx/towers/base_machineGun_U0.0.3.0.png",
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.3.0.png"
 			}
 		}
 	}
