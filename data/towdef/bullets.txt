@@ -33,7 +33,7 @@
 		"pierce": false,
 		"effects":[],
 		"homing": true,
-		"aoe":0.5
+		"aoe":0.4
 	},
 	"A0.0.1.0" : {
 		"name": "Flame Thrower Canisters",
