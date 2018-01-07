@@ -155,6 +155,7 @@
 		"description" : "Does more damage because its hotter.",
 		"cost" : 100,
 		"upgrades" : {
+			"+shp" : 2,
 			"=ammo" : ["A0.0.1.1"],
 			"+upgr" : ["U0.0.1.9","U0.0.1.6"],
 			"+lock" : ["U0.0.1.2","U0.0.1.3"],
@@ -169,7 +170,8 @@
 		"description" : "Sticks to enemy's longer.",
 		"cost" : 100,
 		"upgrades" : {
-			"=ammo" : ["A0.0.1.2"]
+			"+shp" : 2,
+			"=ammo" : ["A0.0.1.2"],
 			"+upgr" : ["U0.0.1.8","U0.0.1.6"],
 			"+lock" : ["U0.0.1.2","U0.0.1.3"],
 			"=texture" : {
@@ -185,8 +187,77 @@
 		"upgrades" : {
 			"+ra" : 0.5,
 			"+as" : 5,
-			"+upgr" : ["U0.0.1."],
+			"+upgr" : ["U0.0.1.11"],
 			"+lock" : ["U0.0.1.6"]
+		}
+	},
+	"U0.0.1.7" : {
+		"name" : "Smallest spout",
+		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
+		"description" : "Makes fuel go even further.",
+		"cost" : 210,
+		"upgrades" : {
+			"+shp" : 2,
+			"+ra" : 1,
+			"-as" : 5,
+			"+lock" : ["U0.0.1.7"],
+			"=texture" : {
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.1.8.png"
+			}
+		}
+	},
+	"U0.0.1.8" : {
+		"name" : "Larger spout",
+		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
+		"description" : "Makes even more fuel leave the machine at once.",
+		"cost" : 210,
+		"upgrades" : {
+			"+shp" : 2,
+			"-ra" : 0.5,
+			"+as" : 10,
+			"+lock" : ["U0.0.1.8"],
+			"=texture" : {
+				"gun": "data/gfx/towers/gun_machineGun_U0.0.1.9.png"
+			}
+		}
+	},
+	"U0.0.1.9" : {
+		"name" : "Hottest fuel",
+		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
+		"description" : "Does more damage because its the hottest.",
+		"cost" : 300,
+		"upgrades" : {
+			"+shp" : 2,
+			"=ammo" : ["A0.0.1.3"],
+			"+lock" : ["U0.0.1.9"],
+			"=texture" : {
+				"base": "data/gfx/towers/base_machineGun_U0.0.1.10.png"
+			}
+		}
+	},
+	"U0.0.1.10" : {
+		"name" : "Stickiest fuel",
+		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
+		"description" : "Sticks to enemy's as long as possible.",
+		"cost" : 300,
+		"upgrades" : {
+			"+shp" : 2,
+			"=ammo" : ["A0.0.1.2"],
+			"+lock" : ["U0.0.1.10"],
+			"=texture" : {
+				"base": "data/gfx/towers/base_machineGun_U0.0.1.11.png"
+			}
+		}
+	},
+	"U0.0.1.11" : {
+		"name" : "Extra pump",
+		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
+		"description" : "With more pumps more fuel comes out further.",
+		"cost" : 450,
+		"upgrades" : {
+			"+ra" : 1.5,
+			"+as" : 10,
+			"+lock" : ["U0.0.1.11"]
 		}
 	},
 	"U0.0.2.0" : {
