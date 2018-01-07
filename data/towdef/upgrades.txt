@@ -34,7 +34,7 @@
 	},
 	"U0.0.0.2" : {
 		"name" : "Bigger bullets",
-		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
+		"texture" : "data/gfx/upgrades/U0.0.0.1.png",
 		"description" : "The bigger the bullet the more damage.",
 		"cost" : 45,
 		"upgrades" : {
@@ -51,7 +51,7 @@
 	},
 	"U0.0.0.3" : {
 		"name" : "Triple barrel",
-		"texture" : "data/gfx/upgrades/U0.0.0.3.png",
+		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
 		"description" : "Shoots with 3 barrels instead of 2.",
 		"cost" : 120,
 		"upgrades" : {
@@ -67,7 +67,7 @@
 	},
 	"U0.0.0.4" : {
 		"name" : "Bigger bullets",
-		"texture" : "data/gfx/upgrades/U0.0.0.4.png",
+		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
 		"description" : "The bigger the bullet the more damage.",
 		"cost" : 90,
 		"upgrades" : {
@@ -83,7 +83,7 @@
 	},
 	"U0.0.0.5" : {
 		"name" : "The biggest bullets",
-		"texture" : "data/gfx/upgrades/U0.0.0.5.png",
+		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
 		"description" : "The biggest bullets even have splash damage.",
 		"cost" : 90,
 		"upgrades" : {
