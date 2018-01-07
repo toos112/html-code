@@ -38,8 +38,8 @@
 		"description" : "The bigger the bullet the more damage.",
 		"cost" : 45,
 		"upgrades" : {
-			"+shp" : "2",
-			"%as" : "0.95",
+			"+shp" : 2,
+			"%as" : 0.95,
 			"=ammo" : ["A0.0.0.1"],
 			"+upgr" : ["U0.0.0.5"],
 			"+lock" : ["U0.0.0.1","U0.0.0.2"],
@@ -71,8 +71,8 @@
 		"description" : "The bigger the bullet the more damage.",
 		"cost" : 90,
 		"upgrades" : {
-			"+shp" : "12.5",
-			"%as" : "0.95",
+			"+shp" : 2,
+			"%as" : 0.95,
 			"=ammo" : ["A0.0.0.1"],
 			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
 			"=texture" : {
@@ -87,8 +87,8 @@
 		"description" : "The biggest bullets even have splash damage.",
 		"cost" : 90,
 		"upgrades" : {
-			"+shp" : "2",
-			"%as" : "0.75",
+			"+shp" : 2,
+			"%as" : 0.75,
 			"=ammo" : ["A0.0.0.2"],
 			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
 			"=texture" : {
@@ -131,7 +131,7 @@
 		"name" : "Smaller spout",
 		"texture" : "data/gfx/upgrades/U0.0.0.1.png",
 		"description" : "Makes fuel go faster and further.",
-		"cost" : 10,
+		"cost" : 70,
 		"upgrades" : {
 			"+shp" : 2,
 			"+ra" : 1.25,
