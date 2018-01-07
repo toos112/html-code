@@ -36,14 +36,14 @@
 		"aoe":0.4
 	},
 	"A0.0.1.0" : {
-		"name": "Flame Thrower Canisters",
+		"name": "Flame Canisters",
 		"texture": "data/gfx/bullets/A0.0.1.0.png",
 		"damage": 1,
 		"penetration": 0,
 		"range": 1,
 		"speed": 1.5,
 		"pierce": true,
-		"effects":[{"name": "burning","duration": 2.5}],
+		"effects":[{"name": "burning","duration": 1.25}],
 		"homing": false,
 		"aoe":0
 	},
