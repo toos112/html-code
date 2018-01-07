@@ -70,3 +70,10 @@ textarea:active, input:active, button:active { background-color: #555; }
 ::-moz-selection { background-color: transparent; }
 
 canvas { image-rendering: pixelated; }
+p {
+	background-color: transparent;
+	color: #888;
+	height: 16px;
+	line-height:20px;
+	font-size: 16px;
+}
