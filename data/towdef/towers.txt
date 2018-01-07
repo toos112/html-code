@@ -39,7 +39,7 @@
 		"hp": 20,
 		"armor": 0,
 		"damage": 4,
-		"attackSpeed": 30,
+		"attackSpeed": 20,
 		"range": 3.75,
 		"attackGround": true,
 		"attackFlying": false,
