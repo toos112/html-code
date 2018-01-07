@@ -31,7 +31,7 @@
 			"base": "data/gfx/towers/TB0.0.1.0.png",
 			"gun": "data/gfx/towers/TG0.0.1.0.png"
 		},
-		"upgrades": ["U0.0.1.0"],
+		"upgrades": ["U0.0.1.0","U0.0.1.1"],
 		"ammo": ["A0.0.1.0"],
 		"cost": 40,
 		"width": 3,
