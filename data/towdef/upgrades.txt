@@ -158,7 +158,7 @@
 			"+shp" : 2,
 			"=ammo" : ["A0.0.1.1"],
 			"+upgr" : ["U0.0.1.9","U0.0.1.6"],
-			"+lock" : ["U0.0.1.2","U0.0.1.3"],
+			"+lock" : ["U0.0.1.4","U0.0.1.5"],
 			"=texture" : {
 				"base": "data/gfx/towers/base_machineGun_U0.0.1.5.png"
 			}
@@ -173,7 +173,7 @@
 			"+shp" : 2,
 			"=ammo" : ["A0.0.1.2"],
 			"+upgr" : ["U0.0.1.8","U0.0.1.6"],
-			"+lock" : ["U0.0.1.2","U0.0.1.3"],
+			"+lock" : ["U0.0.1.4","U0.0.1.5"],
 			"=texture" : {
 				"base": "data/gfx/towers/base_machineGun_U0.0.1.6.png"
 			}
