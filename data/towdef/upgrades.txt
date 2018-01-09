@@ -64,13 +64,8 @@
 		}
 	},
 	"U0.0.0.4" : {
-<<<<<<< HEAD
 		"name" : "Even bigger bullets",
-		"texture" : "data/gfx/upgrades/U0.0.0.4.png",
-=======
-		"name" : "Bigger bullets",
 		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
->>>>>>> 15898bffbb81ea7e17224ae020a88912b76cd3d0
 		"description" : "The bigger the bullet the more damage.",
 		"cost" : 90,
 		"upgrades" : {
