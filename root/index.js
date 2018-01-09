@@ -139,9 +139,13 @@ function service() {
 		<span class = 'big'>Terms of service</span><br/>\
 		<div style = 'height: calc(100% - 66px); width: calc(100% - 14px); margin-top: 20px;'>\
 			<span style = 'white-space: normal; overflow-y: scroll; height: 100%; width: 100%; text-align: left;'>\
+<<<<<<< HEAD
 				Don't take these too seriously, this whole page (including this sentence) is an inside joke you probably don't understand.\
 				\
 				By creating a account you agree to all of the points below.<br/>\
+=======
+				By creating a account you agree to all of the below.<br/>\
+>>>>>>> 5cbebe6dfde74e32f639d08b843d281a0d2ae403
 				<br/>\
 				You agree not abuse any bugs you may find. You agree to report any bugs you may find. You can do so using the chat function.<br/>\
 				<br/>\
@@ -169,13 +173,21 @@ function service() {
 				<br/>\
 				Our server may contain links to third-party web sites or services that are not owned or controlled by this website. This website has no control over, and assumes no responsibility for, the content,privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that this website shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such web sites or services.<br/>\
 				<br/>\
+<<<<<<< HEAD
 				We do safe all the private information that you give us. This information is saved on our server. This information will never be used for any third-company and not for advertising either.<br/>\
+=======
+				We do safe all the private information that you give us. This information is saved on our server. This information will never be shared to any third-company and will not be shared to adverisers either.<br/>\
+>>>>>>> 5cbebe6dfde74e32f639d08b843d281a0d2ae403
 				<br/>\
 				We are in our right to change the Terms of Service at any time. We will try to notify you if we do but we are not required to do so.<br/>\
 				<br/>\
 				If you violate the Terms of Service at any time in any way we are in our right to ban your ip and/or terminate your account and/or press charges against you.<br/>\
 				<br/>\
+<<<<<<< HEAD
 				This website is owned by its creators. Chen, Brandon and Gidion .\
+=======
+				This website is owned by its creators Chen and Gidion.\
+>>>>>>> 5cbebe6dfde74e32f639d08b843d281a0d2ae403
 			</span>\
 		</div>\
 	</div>\

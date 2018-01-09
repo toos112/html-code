@@ -1,5 +1,8 @@
 "use strict";
 
+let thumb = new Image();
+thumb.src = "(js: _.img('data/gfx/background.png') :js)";
+
 let canvas, context;
 let grid, gridChars, towMap;
 let mapCanvas, mapContext, gridRenderCache, updateMap;
@@ -95,7 +98,7 @@ let A = false, S = false, D = false, W = false;
 let INTERPOLATE = true;
 let SHOWALLPATHS = false;
 let RENDERGRID = true;
-let WIDTH, HEIGHT;
+let WIDTH, HEIGHT, VHEIGHT;
 
 let xp = 0;
 let mx, my, mtx, mty, omx, omy;
@@ -188,7 +191,7 @@ let loadLevel = function(level) {
 	coins = ldata.coins;
 	lives = ldata.lives;
 	OX = WIDTH / 2 - ldata.width * 4;
-	OY = HEIGHT / 2 - ldata.height * 4;
+	OY = VHEIGHT / 2 - ldata.height * 4;
 	
 	grid = new Array(ldata.width), gridChars = new Array(ldata.width), towMap = new Array(ldata.width);
 	for (let i = 0; i < grid.length; i++) {
@@ -298,8 +301,8 @@ let upgradeTypes = JSON.parse("(js:
 	for (var i in result) {
 		result[i].imgdata = "" + _.img(result[i].texture);
 		if (result[i].upgrades["=texture"]) {
-			result[i].upgrades["=texture"].baseimgdata = "" + _.img(result[i].upgrades["=texture"].base);
-			result[i].upgrades["=texture"].gunimgdata = "" + _.img(result[i].upgrades["=texture"].gun);
+			if (result[i].upgrades["=texture"].base) result[i].upgrades["=texture"].baseimgdata = "" + _.img(result[i].upgrades["=texture"].base);
+			if (result[i].upgrades["=texture"].gun) result[i].upgrades["=texture"].gunimgdata = "" + _.img(result[i].upgrades["=texture"].gun);
 		}
 	}
 	$.replaceAll($json.stringify(result), "\"", "\\\"");
@@ -308,10 +311,14 @@ for (let i in upgradeTypes) {
 	upgradeTypes[i].image = new Image();
 	upgradeTypes[i].image.src = upgradeTypes[i].imgdata;
 	if (upgradeTypes[i].upgrades["=texture"]) {
-		upgradeTypes[i].upgrades["=texture"].baseimage = new Image();
-		upgradeTypes[i].upgrades["=texture"].baseimage.src = upgradeTypes[i].upgrades["=texture"].baseimgdata;
-		upgradeTypes[i].upgrades["=texture"].gunimage = new Image();
-		upgradeTypes[i].upgrades["=texture"].gunimage.src = upgradeTypes[i].upgrades["=texture"].gunimgdata;
+		if (upgradeTypes[i].upgrades["=texture"].baseimgdata != undefined) {
+			upgradeTypes[i].upgrades["=texture"].baseimage = new Image();
+			upgradeTypes[i].upgrades["=texture"].baseimage.src = upgradeTypes[i].upgrades["=texture"].baseimgdata;
+		}
+		if (upgradeTypes[i].upgrades["=texture"].gunimgdata != undefined) {
+			upgradeTypes[i].upgrades["=texture"].gunimage = new Image();
+			upgradeTypes[i].upgrades["=texture"].gunimage.src = upgradeTypes[i].upgrades["=texture"].gunimgdata;
+		}
 	}
 }
 
@@ -564,7 +571,7 @@ let spawnTower = function(t, pos) {
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
 	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo, hp : tt.hp, shp : tt.hp, upgr : tt.upgrades.slice(0), lock : [], ammoI : 0,
-		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage, val : tt.cost, mode : tt.mode };
+		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage, val : tt.cost, mode : tt.mode, spacing : tt.spacing };
 	towers.push(tow);
 	updatePaths();
 	return true;
@@ -754,7 +761,7 @@ let renderMap = function() {
 };
 
 let addOffset = function(val, axis) {
-	let o = (axis == "x") ? (OX * ZOOM - ((WIDTH / 2) - (WIDTH / 2) / ZOOM) * ZOOM) : (OY * ZOOM - ((HEIGHT / 2) - (HEIGHT / 2) / ZOOM) * ZOOM);
+	let o = (axis == "x") ? (OX * ZOOM - ((WIDTH / 2) - (WIDTH / 2) / ZOOM) * ZOOM) : (OY * ZOOM - ((VHEIGHT / 2) - (VHEIGHT / 2) / ZOOM) * ZOOM);
 	return val * ZOOM + o;
 };
 
@@ -774,14 +781,14 @@ let refreshMap = function() {
 
 let draw = function() {
 	let mm = shift ? (WIDTH / 64) : (WIDTH / 128);
-	if (A && OX + mm < (WIDTH / 2)) OX += mm / ZOOM;
-	if (D && OX - mm > -ldata.width * 8 + (WIDTH / 2)) OX -= mm / ZOOM;
-	if (W && OY + mm < (HEIGHT / 2)) OY += mm / ZOOM;
-	if (S && OY - mm > -ldata.height * 8 + (HEIGHT / 2)) OY -= mm / ZOOM;
+	if (A && OX + mm / ZOOM < (WIDTH / 2)) OX += mm / ZOOM;
+	if (D && OX - mm / ZOOM > -ldata.width * 8 + (WIDTH / 2)) OX -= mm / ZOOM;
+	if (W && OY + mm / ZOOM < (VHEIGHT / 2)) OY += mm / ZOOM;
+	if (S && OY - mm / ZOOM > -ldata.height * 8 + (VHEIGHT / 2)) OY -= mm / ZOOM;
 	
-	omx = mx / ZOOM - OX + ((WIDTH / 2) - (WIDTH / 2) / ZOOM), omy = my / ZOOM - OY + ((HEIGHT / 2) - (HEIGHT / 2) / ZOOM);
+	omx = mx / ZOOM - OX + ((WIDTH / 2) - (WIDTH / 2) / ZOOM), omy = my / ZOOM - OY + ((VHEIGHT / 2) - (VHEIGHT / 2) / ZOOM);
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
-	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height && my < HEIGHT * 0.75;
+	mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height && my < VHEIGHT;
 	if (mouseIsTile) mouseTile = grid[mtx][mty];
 	else mouseTile = undefined;
 	
@@ -1030,13 +1037,17 @@ let tick = function() {
 					if (towers[i].mode == "aim") {
 						spawnNextBullet(p, towers[i], a, enemy);
 					} else if (towers[i].mode == "double-aim") {
-						let la = a - 0.5 * Math.PI, lo = angleToPos(la, 1.5);
-						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, 1.5);
+						let spacing = towers[i].spacing;
+						if (spacing == undefined) spacing = 1.5;
+						let la = a - 0.5 * Math.PI, lo = angleToPos(la, spacing);
+						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, spacing);
 						spawnNextBullet({ x : p.x + lo.x, y : p.y + lo.y }, towers[i], a, enemy);
 						spawnNextBullet({ x : p.x + ro.x, y : p.y + ro.y }, towers[i], a, enemy);
 					} else if (towers[i].mode == "triple-aim") {
-						let la = a - 0.5 * Math.PI, lo = angleToPos(la, 2.5);
-						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, 2.5);
+						let spacing = towers[i].spacing;
+						if (spacing == undefined) spacing = 2.5;
+						let la = a - 0.5 * Math.PI, lo = angleToPos(la, spacing);
+						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, spacing);
 						spawnNextBullet(p, towers[i], a, enemy);
 						spawnNextBullet({ x : p.x + lo.x, y : p.y + lo.y }, towers[i], a, enemy);
 						spawnNextBullet({ x : p.x + ro.x, y : p.y + ro.y }, towers[i], a, enemy);
@@ -1096,7 +1107,7 @@ let mouseMove = function(e) {
 let scrollMove = function(e) {
 	let delta = (-e.detail * 40 | e.wheelDelta) / 120;
 	ZOOMPOW += delta;
-	ZOOM = Math.round(Math.pow(Math.pow(2, 1 / 7), ZOOMPOW) * (HEIGHT / 2)) / (HEIGHT / 2);
+	ZOOM = Math.round(Math.pow(Math.pow(2, 1 / 7), ZOOMPOW) * (VHEIGHT / 2)) / (VHEIGHT / 2);
 	if (ZOOM < ldata.minZoom) ZOOM = ldata.minZoom, ZOOMPOW -= delta;
 	if (ZOOM > ldata.maxZoom) ZOOM = ldata.maxZoom, ZOOMPOW -= delta;
 };
@@ -1117,6 +1128,7 @@ let run = function() {
 	canvas = document.getElementById("game");
 	WIDTH = canvas.width = canvas.clientWidth;
 	HEIGHT = canvas.height = canvas.clientHeight;
+	VHEIGHT = HEIGHT * 0.75;
 	context = canvas.getContext("2d");
 	
 	loadCookies();
@@ -1125,12 +1137,20 @@ let run = function() {
 	setInterval(function() {
 		canvas.width = canvas.width;
 		if (STARTED) draw();
-		else renderStart(context);
+		else {
+			context.imageSmoothingEnabled = false;
+			let s = Math.max(Math.ceil(WIDTH / thumb.width), Math.ceil(HEIGHT / thumb.height));
+			let w = thumb.width * s, x = -w / 2 + WIDTH / 2;
+			let h = thumb.height * s, y = -h / 2 + HEIGHT / 2;
+			context.drawImage(thumb, x, y, w, h);
+			renderStart(context);
+		}
 		if (WIDTH != canvas.clientWidth || HEIGHT != canvas.clientHeight) {
 			OX -= (WIDTH - canvas.clientWidth) / 2;
 			OY -= (HEIGHT - canvas.clientHeight) / 2;
 			WIDTH = canvas.width = canvas.clientWidth;
 			HEIGHT = canvas.height = canvas.clientHeight;
+			VHEIGHT = HEIGHT * 0.75;
 			updateUI();
 		}
 	}, 1000 / 20);
@@ -1146,9 +1166,9 @@ let run = function() {
 		mouseMove(e);
 		
 		if (dragging && EDITOR && STARTED) {
-			let omx = mx / ZOOM - OX + ((WIDTH / 2) - (WIDTH / 2) / ZOOM), omy = my / ZOOM - OY + ((HEIGHT / 2) - (HEIGHT / 2) / ZOOM);
+			let omx = mx / ZOOM - OX + ((WIDTH / 2) - (WIDTH / 2) / ZOOM), omy = my / ZOOM - OY + ((VHEIGHT / 2) - (VHEIGHT / 2) / ZOOM);
 			let mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
-			let mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height;
+			let mouseIsTile = mtx >= 0 && mtx < ldata.width && mty >= 0 && mty < ldata.height && my < VHEIGHT;
 			if (mouseIsTile) setGridTile({ x : mtx, y : mty }, current);
 		}
 	}, false);

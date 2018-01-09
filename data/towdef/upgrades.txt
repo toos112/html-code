@@ -43,7 +43,7 @@
 			"+lock" : ["U0.0.0.1","U0.0.0.2"],
 			"=texture" : {
 				"base": "data/gfx/towers/TB0.0.0.3.png",
-				"gun": "data/gfx/towers/TG0.0.0.3.png"
+				"gun": "data/gfx/towers/TG0.0.0.3"
 			}
 		}
 	},
@@ -64,13 +64,8 @@
 		}
 	},
 	"U0.0.0.4" : {
-<<<<<<< HEAD
-		"name" : "Even bigger bullets",
-		"texture" : "data/gfx/upgrades/U0.0.0.4.png",
-=======
 		"name" : "Bigger bullets",
 		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
->>>>>>> 15898bffbb81ea7e17224ae020a88912b76cd3d0
 		"description" : "The bigger the bullet the more damage.",
 		"cost" : 90,
 		"upgrades" : {
@@ -79,7 +74,7 @@
 			"=ammo" : ["A0.0.0.1"],
 			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
 			"=texture" : {
-				"base": "data/gfx/towers/TB0.0.0.5.png",
+				"base": "data/gfx/towers/TB0.0.0.3.png",
 				"gun": "data/gfx/towers/TG0.0.0.5.png"
 			}
 		}
@@ -95,7 +90,7 @@
 			"=ammo" : ["A0.0.0.2"],
 			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
 			"=texture" : {
-				"base": "data/gfx/towers/TB0.0.0.6.png",
+				"base": "data/gfx/towers/TB0.0.0.4.png",
 				"gun": "data/gfx/towers/TG0.0.0.6.png"
 			}
 		}
@@ -177,7 +172,7 @@
 		"upgrades" : {
 			"+shp" : 2,
 			"=ammo" : ["A0.0.1.2"],
-			"+upgr" : ["U0.0.1.8","U0.0.1.6"],
+			"+upgr" : ["U0.0.1.10","U0.0.1.6"],
 			"+lock" : ["U0.0.1.4","U0.0.1.5"],
 			"=texture" : {
 				"base": "data/gfx/towers/base_machineGun_U0.0.1.6.png"
