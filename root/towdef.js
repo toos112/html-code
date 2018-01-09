@@ -298,8 +298,8 @@ let upgradeTypes = JSON.parse("(js:
 	for (var i in result) {
 		result[i].imgdata = "" + _.img(result[i].texture);
 		if (result[i].upgrades["=texture"]) {
-			result[i].upgrades["=texture"].baseimgdata = "" + _.img(result[i].upgrades["=texture"].base);
-			result[i].upgrades["=texture"].gunimgdata = "" + _.img(result[i].upgrades["=texture"].gun);
+			if (result[i].upgrades["=texture"].base) result[i].upgrades["=texture"].baseimgdata = "" + _.img(result[i].upgrades["=texture"].base);
+			if (result[i].upgrades["=texture"].gun) result[i].upgrades["=texture"].gunimgdata = "" + _.img(result[i].upgrades["=texture"].gun);
 		}
 	}
 	$.replaceAll($json.stringify(result), "\"", "\\\"");
@@ -308,10 +308,14 @@ for (let i in upgradeTypes) {
 	upgradeTypes[i].image = new Image();
 	upgradeTypes[i].image.src = upgradeTypes[i].imgdata;
 	if (upgradeTypes[i].upgrades["=texture"]) {
-		upgradeTypes[i].upgrades["=texture"].baseimage = new Image();
-		upgradeTypes[i].upgrades["=texture"].baseimage.src = upgradeTypes[i].upgrades["=texture"].baseimgdata;
-		upgradeTypes[i].upgrades["=texture"].gunimage = new Image();
-		upgradeTypes[i].upgrades["=texture"].gunimage.src = upgradeTypes[i].upgrades["=texture"].gunimgdata;
+		if (upgradeTypes[i].upgrades["=texture"].baseimgdata) {
+			upgradeTypes[i].upgrades["=texture"].baseimage = new Image();
+			upgradeTypes[i].upgrades["=texture"].baseimage.src = upgradeTypes[i].upgrades["=texture"].baseimgdata;
+		}
+		if (upgradeTypes[i].upgrades["=texture"].gunimgdata) {
+			upgradeTypes[i].upgrades["=texture"].gunimage = new Image();
+			upgradeTypes[i].upgrades["=texture"].gunimage.src = upgradeTypes[i].upgrades["=texture"].gunimgdata;
+		}
 	}
 }
 
