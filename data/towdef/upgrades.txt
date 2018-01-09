@@ -63,7 +63,7 @@
 		}
 	},
 	"U0.0.0.4" : {
-		"name" : "Even bigger bullets",
+		"name" : "Bigger bullets",
 		"texture" : "data/gfx/upgrades/U0.0.0.2.png",
 		"description" : "The bigger the bullet the more damage.",
 		"cost" : 90,
@@ -171,7 +171,7 @@
 		"upgrades" : {
 			"+shp" : 2,
 			"=ammo" : ["A0.0.1.2"],
-			"+upgr" : ["U0.0.1.8","U0.0.1.6"],
+			"+upgr" : ["U0.0.1.10","U0.0.1.6"],
 			"+lock" : ["U0.0.1.4","U0.0.1.5"],
 			"=texture" : {
 				"base": "data/gfx/towers/base_machineGun_U0.0.1.6.png"
