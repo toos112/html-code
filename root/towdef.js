@@ -1,5 +1,8 @@
 "use strict";
 
+let thumb = new Image();
+thumb.src = "(js: _.img('data/gfx/background.png') :js)";
+
 let canvas, context;
 let grid, gridChars, towMap;
 let mapCanvas, mapContext, gridRenderCache, updateMap;
@@ -1134,7 +1137,14 @@ let run = function() {
 	setInterval(function() {
 		canvas.width = canvas.width;
 		if (STARTED) draw();
-		else renderStart(context);
+		else {
+			context.imageSmoothingEnabled = false;
+			let s = Math.max(Math.ceil(WIDTH / thumb.width), Math.ceil(HEIGHT / thumb.height));
+			let w = thumb.width * s, x = -w / 2 + WIDTH / 2;
+			let h = thumb.height * s, y = -h / 2 + HEIGHT / 2;
+			context.drawImage(thumb, x, y, w, h);
+			renderStart(context);
+		}
 		if (WIDTH != canvas.clientWidth || HEIGHT != canvas.clientHeight) {
 			OX -= (WIDTH - canvas.clientWidth) / 2;
 			OY -= (HEIGHT - canvas.clientHeight) / 2;
