@@ -38,8 +38,8 @@
 		"height": 3,
 		"hp": 20,
 		"armor": 0,
-		"damage": 4,
-		"attackSpeed": 30,
+		"damage": 2,
+		"attackSpeed": 20,
 		"range": 3.75,
 		"attackGround": true,
 		"attackFlying": false,
@@ -63,8 +63,8 @@
 		"height": 3,
 		"hp": 20,
 		"armor": 0,
-		"damage": 2,
-		"attackSpeed":0.5,
+		"damage": 20,
+		"attackSpeed":0.2,
 		"range": 8,
 		"attackGround": true,
 		"attackFlying": true,
@@ -72,7 +72,7 @@
 		"landSpeed": -1,
 		"flyingSpeed": -1,
 		"swimmingSpeed": -1,
-		"mode": "aim"
+		"mode": "double-aim"
 	},
 	"T0.0.3" : {
 		"name": "Freezing Tower",
