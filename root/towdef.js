@@ -564,7 +564,7 @@ let spawnTower = function(t, pos) {
 		for (let y = pos.y; y < pos.y + tt.height; y++)
 			towMap[x][y] = "t";
 	let tow = { x : pos.x, y : pos.y, w : tt.width, h : tt.height, ra : tt.range, ammo : tt.ammo, hp : tt.hp, shp : tt.hp, upgr : tt.upgrades.slice(0), lock : [], ammoI : 0,
-		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage, val : tt.cost, mode : tt.mode };
+		as : tt.attackSpeed, dlay : UPS / tt.attackSpeed, rot : 0, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage, val : tt.cost, mode : tt.mode, spacing : tt.spacing };
 	towers.push(tow);
 	updatePaths();
 	return true;
@@ -1030,13 +1030,17 @@ let tick = function() {
 					if (towers[i].mode == "aim") {
 						spawnNextBullet(p, towers[i], a, enemy);
 					} else if (towers[i].mode == "double-aim") {
-						let la = a - 0.5 * Math.PI, lo = angleToPos(la, 1.5);
-						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, 1.5);
+						let spacing = towers[i].spacing;
+						if (spacing == undefined) spacing = 1.5;
+						let la = a - 0.5 * Math.PI, lo = angleToPos(la, spacing);
+						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, spacing);
 						spawnNextBullet({ x : p.x + lo.x, y : p.y + lo.y }, towers[i], a, enemy);
 						spawnNextBullet({ x : p.x + ro.x, y : p.y + ro.y }, towers[i], a, enemy);
 					} else if (towers[i].mode == "triple-aim") {
-						let la = a - 0.5 * Math.PI, lo = angleToPos(la, 2.5);
-						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, 2.5);
+						let spacing = towers[i].spacing;
+						if (spacing == undefined) spacing = 2.5;
+						let la = a - 0.5 * Math.PI, lo = angleToPos(la, spacing);
+						let ra = a + 0.5 * Math.PI, ro = angleToPos(ra, spacing);
 						spawnNextBullet(p, towers[i], a, enemy);
 						spawnNextBullet({ x : p.x + lo.x, y : p.y + lo.y }, towers[i], a, enemy);
 						spawnNextBullet({ x : p.x + ro.x, y : p.y + ro.y }, towers[i], a, enemy);
