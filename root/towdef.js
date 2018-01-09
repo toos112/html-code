@@ -95,7 +95,7 @@ let A = false, S = false, D = false, W = false;
 let INTERPOLATE = true;
 let SHOWALLPATHS = false;
 let RENDERGRID = true;
-let WIDTH, HEIGHT;
+let WIDTH, HEIGHT, VHEIGHT;
 
 let xp = 0;
 let mx, my, mtx, mty, omx, omy;
@@ -188,7 +188,7 @@ let loadLevel = function(level) {
 	coins = ldata.coins;
 	lives = ldata.lives;
 	OX = WIDTH / 2 - ldata.width * 4;
-	OY = HEIGHT / 2 - ldata.height * 4;
+	OY = VHEIGHT / 2 - ldata.height * 4;
 	
 	grid = new Array(ldata.width), gridChars = new Array(ldata.width), towMap = new Array(ldata.width);
 	for (let i = 0; i < grid.length; i++) {
@@ -780,8 +780,8 @@ let draw = function() {
 	let mm = shift ? (WIDTH / 64) : (WIDTH / 128);
 	if (A && OX + mm < (WIDTH / 2)) OX += mm / ZOOM;
 	if (D && OX - mm > -ldata.width * 8 + (WIDTH / 2)) OX -= mm / ZOOM;
-	if (W && OY + mm < (HEIGHT / 2)) OY += mm / ZOOM;
-	if (S && OY - mm > -ldata.height * 8 + (HEIGHT / 2)) OY -= mm / ZOOM;
+	if (W && OY + mm < (VHEIGHT / 2)) OY += mm / ZOOM;
+	if (S && OY - mm > -ldata.height * 8 + (VHEIGHT / 2)) OY -= mm / ZOOM;
 	
 	omx = mx / ZOOM - OX + ((WIDTH / 2) - (WIDTH / 2) / ZOOM), omy = my / ZOOM - OY + ((HEIGHT / 2) - (HEIGHT / 2) / ZOOM);
 	mtx = Math.floor(omx / 8), mty = Math.floor(omy / 8);
@@ -1125,6 +1125,7 @@ let run = function() {
 	canvas = document.getElementById("game");
 	WIDTH = canvas.width = canvas.clientWidth;
 	HEIGHT = canvas.height = canvas.clientHeight;
+	VHEIGHT = HEIGHT * 0.75;
 	context = canvas.getContext("2d");
 	
 	loadCookies();
@@ -1139,6 +1140,7 @@ let run = function() {
 			OY -= (HEIGHT - canvas.clientHeight) / 2;
 			WIDTH = canvas.width = canvas.clientWidth;
 			HEIGHT = canvas.height = canvas.clientHeight;
+			VHEIGHT = HEIGHT * 0.75;
 			updateUI();
 		}
 	}, 1000 / 20);
