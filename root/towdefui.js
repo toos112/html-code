@@ -130,7 +130,7 @@ var renderUI = function(ctx) {
 	ctx.drawImage(life_img, 5, HEIGHT*0.75);
 	ctx.drawImage(coins_img, 84, HEIGHT*0.75);
 	ctx.drawImage(enemies_img, 7, HEIGHT*0.75+32);
-
+	let i = 0;
 	if (mouseIsTile) {
 		ctx.fillStyle = "#ffffff";
 		ctx.fillText("tilename:" + mouseTile.name,10,25+i++*15);
@@ -162,14 +162,14 @@ var renderUI = function(ctx) {
 			ctx.fillText("Description : " + upgradeTypes[towers[selectedTowerIndex].upgr[i]].description,mx,my - 5)
 		}
 	}
-	let i = 0;
+	let j = 0;
 	ctx.fillStyle = "#00FF00";
 	for (let id in towerTypes) {
-		if (towerButtons[i].isHovered()) {
+		if (towerButtons[j].isHovered()) {
 			ctx.fillText("Tower : " + towerTypes[id].name,mx,my - 20);
 			ctx.fillText("Description : " + towerTypes[id].description,mx,my - 5)
 		}
-	i++;
+	j++;
 	}
 };
 
