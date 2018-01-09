@@ -311,11 +311,11 @@ for (let i in upgradeTypes) {
 	upgradeTypes[i].image = new Image();
 	upgradeTypes[i].image.src = upgradeTypes[i].imgdata;
 	if (upgradeTypes[i].upgrades["=texture"]) {
-		if (upgradeTypes[i].upgrades["=texture"].baseimgdata) {
+		if (upgradeTypes[i].upgrades["=texture"].baseimgdata != undefined) {
 			upgradeTypes[i].upgrades["=texture"].baseimage = new Image();
 			upgradeTypes[i].upgrades["=texture"].baseimage.src = upgradeTypes[i].upgrades["=texture"].baseimgdata;
 		}
-		if (upgradeTypes[i].upgrades["=texture"].gunimgdata) {
+		if (upgradeTypes[i].upgrades["=texture"].gunimgdata != undefined) {
 			upgradeTypes[i].upgrades["=texture"].gunimage = new Image();
 			upgradeTypes[i].upgrades["=texture"].gunimage.src = upgradeTypes[i].upgrades["=texture"].gunimgdata;
 		}
