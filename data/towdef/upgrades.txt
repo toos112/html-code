@@ -90,7 +90,7 @@
 			"=ammo" : ["A0.0.0.2"],
 			"+lock" : ["U0.0.0.3","U0.0.0.4","U0.0.0.5"],
 			"=texture" : {
-				"base": "data/gfx/towers/TB0.0.0.6.png",
+				"base": "data/gfx/towers/TB0.0.0.4.png",
 				"gun": "data/gfx/towers/TG0.0.0.6.png"
 			}
 		}
