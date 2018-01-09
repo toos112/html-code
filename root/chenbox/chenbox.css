@@ -1,0 +1,49 @@
+* {
+	background: fixed #000;
+	display: inline-block;
+	line-height: 0px;
+	white-space: pre;
+	font-family: Courier;
+	font-size: 0px;
+	border: none;
+	outline: none;
+	margin: 0px;
+	padding: 0px;
+	cursor: default;
+	position: relative;
+	text-align: center;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+body { background: linear-gradient(-45deg, #2F1F3F 0%, #2F1F3F 12.5%, #1F0F2F 12.5%, #1F0F2F 37.5%, #2F1F3F 37.5%, #2F1F3F 62.5%, #1F0F2F 62.5%, #1F0F2F 87.5%, #2F1F3F 87.5%, #2F1F3F 100%); }
+
+button, input[type=text] { outline: solid 2px #1F1F3F; }
+button { background-color: #2F2F4F; }
+input { background-color: #3F3F5F; }
+
+button:hover:before, button:active:after {
+	content: '\A';
+    position: absolute;
+    width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	opacity: 0.03125;
+	background-color: #FFFFFF;
+}
+
+*[f=f16] { font-size: 16px; line-height: 20px; }
+*[f=f32] { font-size: 32px; line-height: 40px; }
+*[f=f48] { font-size: 48px; line-height: 60px; }
+*[f=f64] { font-size: 64px; line-height: 80px; }
+
+.center {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
