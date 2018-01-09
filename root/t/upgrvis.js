@@ -33,11 +33,11 @@ for (let i in upgr) {
 	upgr[i].image = new Image();
 	upgr[i].image.src = upgr[i].imgdata;
 	if (upgr[i].upgrades["=texture"]) {
-		if (upgr[i].upgrades["=texture"].baseimgdata) {
+		if (upgr[i].upgrades["=texture"].baseimgdata != undefined) {
 			upgr[i].upgrades["=texture"].baseimage = new Image();
 			upgr[i].upgrades["=texture"].baseimage.src = upgr[i].upgrades["=texture"].baseimgdata;
 		}
-		if (upgr[i].upgrades["=texture"].gunimgdata) {
+		if (upgr[i].upgrades["=texture"].gunimgdata != undefined) {
 			upgr[i].upgrades["=texture"].gunimage = new Image();
 			upgr[i].upgrades["=texture"].gunimage.src = upgr[i].upgrades["=texture"].gunimgdata;
 		}
