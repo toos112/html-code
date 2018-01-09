@@ -603,8 +603,8 @@ let applyEffect2 = function(obj, name, val) {
 	if (vn != "texture") val = clone(val);
 	if (mod == "=") {
 		if (vn == "texture") {
-			obj.baseimage = val.baseimage;
-			obj.gunimage = val.gunimage;
+			if (val.baseimage) obj.baseimage = val.baseimage;
+			if (val.gunimage) obj.gunimage = val.gunimage;
 		} else if (obj[vn] instanceof Array) obj[vn] = val.splice(0);
 		else obj[vn] = val;
 	} else if (mod == "%") {

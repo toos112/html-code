@@ -175,7 +175,7 @@ function service() {
 				<br/>\
 				If you violate the Terms of Service at any time in any way we are in our right to ban your ip and/or termitate your account and/or press charges against you.<br/>\
 				<br/>\
-				This website is owned by its creators. Chen, Brandon and Gidion.\
+				This website is owned by its creator. Brandon.\
 			</span>\
 		</div>\
 	</div>\
