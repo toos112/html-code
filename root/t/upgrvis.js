@@ -23,8 +23,8 @@ let upgr = JSON.parse("(js:
 	for (var i in result) {
 		result[i].imgdata = "" + _.img(result[i].texture);
 		if (result[i].upgrades["=texture"]) {
-			result[i].upgrades["=texture"].baseimgdata = "" + _.img(result[i].upgrades["=texture"].base);
-			result[i].upgrades["=texture"].gunimgdata = "" + _.img(result[i].upgrades["=texture"].gun);
+			if (result[i].upgrades["=texture"].base) result[i].upgrades["=texture"].baseimgdata = "" + _.img(result[i].upgrades["=texture"].base);
+			if (result[i].upgrades["=texture"].gun) result[i].upgrades["=texture"].gunimgdata = "" + _.img(result[i].upgrades["=texture"].gun);
 		}
 	}
 	$.replaceAll($json.stringify(result), "\"", "\\\"");
@@ -33,10 +33,14 @@ for (let i in upgr) {
 	upgr[i].image = new Image();
 	upgr[i].image.src = upgr[i].imgdata;
 	if (upgr[i].upgrades["=texture"]) {
-		upgr[i].upgrades["=texture"].baseimage = new Image();
-		upgr[i].upgrades["=texture"].baseimage.src = upgr[i].upgrades["=texture"].baseimgdata;
-		upgr[i].upgrades["=texture"].gunimage = new Image();
-		upgr[i].upgrades["=texture"].gunimage.src = upgr[i].upgrades["=texture"].gunimgdata;
+		if (upgr[i].upgrades["=texture"].baseimgdata) {
+			upgr[i].upgrades["=texture"].baseimage = new Image();
+			upgr[i].upgrades["=texture"].baseimage.src = upgr[i].upgrades["=texture"].baseimgdata;
+		}
+		if (upgr[i].upgrades["=texture"].gunimgdata) {
+			upgr[i].upgrades["=texture"].gunimage = new Image();
+			upgr[i].upgrades["=texture"].gunimage.src = upgr[i].upgrades["=texture"].gunimgdata;
+		}
 	}
 }
 
@@ -64,7 +68,7 @@ if (!WIDTH_PADDING) WIDTH_PADDING = 16;
 if (!FONT_FAMILY) FONT_FAMILY = "Arial";
 if (!FONT_SIZE) FONT_SIZE = "12px";
 
-SHOW_VALUES = SHOW_VALUES ? SHOW_VALUES.split(",") : ["upgr", "ammo", "dmg", "as", "ra", "mode"];
+SHOW_VALUES = SHOW_VALUES ? SHOW_VALUES.split(",") : ["upgr", "ammo", "dmg", "as", "ra", "mode", "basepath", "gunpath"];
 SHOW_PATH = SHOW_PATH ? SHOW_PATH.split(",") : [];
 UPGR_PATH = UPGR_PATH ? UPGR_PATH.split(",") : [];
 
@@ -159,7 +163,7 @@ let Node = function(id, isTow, sp, spi) {
 
 let makeTower = function(t) {
 	let tt = tows[t];
-	let tow = { ra : tt.range, ammo : tt.ammo, shp : tt.hp, upgr : tt.upgrades.slice(0), lock : [],
+	let tow = { ra : tt.range, ammo : tt.ammo, shp : tt.hp, upgr : tt.upgrades.slice(0), lock : [], basepath : tt.texture.base, gunpath : tt.texture.gun,
 		as : tt.attackSpeed, baseimage : tt.baseimage, gunimage : tt.gunimage, dmg : tt.damage, mode : tt.mode };
 	return tow;
 };
@@ -171,8 +175,14 @@ let applyEffect = function(obj, name, val) {
 	if (vn != "texture") val = clone(val);
 	if (mod == "=") {
 		if (vn == "texture") {
-			if (val.baseimage) obj.baseimage = val.baseimage;
-			if (val.gunimage) obj.gunimage = val.gunimage;
+			if (val.baseimage) {
+				obj.basepath = val.base;
+				obj.baseimage = val.baseimage;
+			}
+			if (val.gunimage) {
+				obj.gunpath = val.gun;
+				obj.gunimage = val.gunimage;
+			}
 		} else if (obj[vn] instanceof Array) obj[vn] = val.splice(0);
 		else obj[vn] = val;
 	} else if (mod == "%") {
@@ -235,6 +245,10 @@ window.onload = function() {
 			context.fillRect(S[tow.upgr[i]].x, S[tow.upgr[i]].y, S[tow.upgr[i]].w, S[tow.upgr[i]].h);
 			context.globalAlpha = 1;
 		}
+
+		context.imageSmoothingEnabled = false;
+		context.drawImage(tow.baseimage, 8, 8, tows[t].width * 32, tows[t].height * 32);
+		context.drawImage(tow.gunimage, 8, 8, tows[t].width * 32, tows[t].height * 32);
 	};
 
 	canvas.addEventListener("mousemove", function(e) {
