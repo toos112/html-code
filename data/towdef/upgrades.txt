@@ -42,8 +42,7 @@
 			"+upgr" : ["U0.0.0.5"],
 			"+lock" : ["U0.0.0.1","U0.0.0.2"],
 			"=texture" : {
-				"base": "data/gfx/towers/TB0.0.0.3.png",
-				"gun": "data/gfx/towers/TG0.0.0.3.png"
+				"base": "data/gfx/towers/TB0.0.0.3.png"
 			}
 		}
 	},
