@@ -1,0 +1,7 @@
+#0	already specified username
+#1	already in room
+#2	user hasn't specified name
+#3	user doesn't own a room
+#4	room doesn't exist
+#5	user isn't in a room
+#6	user doesn't exist
