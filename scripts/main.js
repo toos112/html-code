@@ -7,6 +7,7 @@ _.I("_scripts/encode.js");
 _.I("scripts/login.js");
 _.I("scripts/command.js");
 _.I("scripts/svrcmd.js");
+_.I("scripts/chenbox/chenbox.js");
 
 var chatList = [];
 
@@ -36,10 +37,10 @@ function broadcast(str) {
 function ChatClient(ws) {
 	this.ws = ws;
 	this.username = "";
-	
-	this.ws.handler("message", new EventListener(function(e) {
+
+	this._listener = new EventListener(function(e) {
 		var payload = e.message.substr(1).trim();
-		
+
 		if (e.message.startsWith("/")) {
 			log(this.username + ": " + e.message);
 			command(this, payload.split(" "));
@@ -68,7 +69,9 @@ function ChatClient(ws) {
 				}
 			}
 		}
-	}, this));
+	}, this);
+
+	this.ws.handler("message", this._listener);
 }
 
 $ws.addProtocol("chat");
