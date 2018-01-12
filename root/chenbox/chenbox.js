@@ -104,7 +104,7 @@ let loadRooms = function() {
 				let name = document.getElementById("rn#" + msg["#"]);
 				let join = document.getElementById("rj#" + msg["#"]);
 				name.innerHTML = msg["@"];
-				join.innerHTML = "<button f='f32' style='width: 100%;' onclick='joinRoom(" + msg["#"] + ");'>Join</button>";
+				join.innerHTML = "<button f='f32' style='width: 100%;' onclick='CLIENT.joinRoom(" + msg["#"] + ");'>Join</button>";
 			});
 		}
 	});
