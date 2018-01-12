@@ -23,13 +23,27 @@ let s2u = function(str) {
 	return str.split(" ").join("_");
 };
 
+let setContent = function(url, func) {
+    HTTP_GET(url, function(content) {
+		BODY.innerHTML = content;
+		if (func) func();
+	});
+};
+
+let clientJoinRoom = function() {
+	setContent("room.html");
+};
+
 let Client = function() {
     if (location.protocol == "https:") this._ws = new WebSocket("wss://" + location.host, "chenbox");
     else if (location.protocol == "http:") this._ws = new WebSocket("ws://" + location.host, "chenbox");
 	let _this = this;
 	this._Q = [];
+	this.id = null;
+	this.name = null;
+	this.room = null;
 
-	this._send = function(msg, func) {
+	this.send = function(msg, func) {
 		this._Q.push(func);
 		this._ws.send(msg);
 	};
@@ -52,15 +66,24 @@ let Client = function() {
     };
 
 	this.setName = function(name) {
-		this._send("/name @" + name);
+		this.name = name;
+		this.send("/name @" + name);
 	};
-};
 
-let setContent = function(url, func) {
-    HTTP_GET(url, function(content) {
-		BODY.innerHTML = content;
-		if (func) func();
-	});
+	this.joinRoom = function(id) {
+		this.send("/>room #" + id, function(msg) {
+			if (msg["/"] == "ok") {
+				this.room = id;
+				clientJoinRoom();
+			}
+		});
+	};
+
+	this._ws.onopen = function(e) {
+		this.send("/me", function(msg) {
+			this.id = parseInt(msg["#"]);
+		});
+	};
 };
 
 let loadRooms = function() {
@@ -68,7 +91,7 @@ let loadRooms = function() {
 	let table = roomList.getElementsByTagName("table")[0];
 	let tbody = roomList.getElementsByTagName("tbody")[0];
 	tbody.innerHTML = "";
-	CLIENT._send("/rooms", function(msg) {
+	CLIENT.send("/rooms", function(msg) {
 		let ids = msg["*"].split(",");
 		if (ids[0] == "") ids = [];
 		for (let i = 0; i < ids.length; i++) {
@@ -77,7 +100,7 @@ let loadRooms = function() {
 				<td f='f32' id='rn#" + ids[i] + "'>loading...</td>\
 				<td id='rj#" + ids[i] + "'></td>\
 			</tr>";
-			CLIENT._send("/?room #" + ids[i], function(msg) {
+			CLIENT.send("/?room #" + ids[i], function(msg) {
 				let name = document.getElementById("rn#" + msg["#"]);
 				let join = document.getElementById("rj#" + msg["#"]);
 				name.innerHTML = msg["@"];
@@ -98,12 +121,11 @@ let makeRoom = function() {
 let actuallyMakeRoom = function() {
 	// ^^ best function name
 	let name = document.getElementById("mr#name").value;
-	CLIENT._send("/+room @" + s2u(name));
+	CLIENT.send("/+room @" + s2u(name), function(msg) {
+		CLIENT.room = parseInt(msg["#"]);
+		clientJoinRoom();
+	});
 	alert.close();
-};
-
-let joinRoom = function(id) {
-	CLIENT._send("/>room #" + id);
 };
 
 let login = function() {

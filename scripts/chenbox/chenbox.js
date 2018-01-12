@@ -98,7 +98,7 @@ var Client = function(ws) {
             else {
                 if (this.room == null) {
                     this.room = new Room($.escape(msg["@"]), this);
-	                this._ws.write("/ok");
+	                this._ws.write("/ok #" + this.room.id);
                 } else this._ws.write("/err #1");
             }
         } else if (msg["/"] == "-room") {
