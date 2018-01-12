@@ -2,7 +2,7 @@
 	background: fixed #000000;
 	display: inline-block;
 	line-height: 0px;
-	white-space: pre;
+	white-space: nowrap;
 	font-family: "Helvetica";
 	font-size: 0px;
 	border: none;
@@ -11,9 +11,11 @@
 	padding: 0px;
 	cursor: default;
 	position: relative;
+	vertical-align: top;
 	text-align: center;
 	color: #000000;
 	font-weight: normal;
+	overflow: show;
 }
 
 div {
@@ -25,19 +27,36 @@ html, body {
 	height: 100%;
 }
 
-body { background: linear-gradient(-45deg, #2F1F3F 0%, #2F1F3F 12.5%, #1F0F2F 12.5%, #1F0F2F 37.5%, #2F1F3F 37.5%, #2F1F3F 62.5%, #1F0F2F 62.5%, #1F0F2F 87.5%, #2F1F3F 87.5%, #2F1F3F 100%); }
+body {
+	background: repeating-linear-gradient(-45deg, #2F1F3F 0%, #2F1F3F 12.5%, #1F0F2F 12.5%, #1F0F2F 37.5%, #2F1F3F 37.5%, #2F1F3F 50%);
+}
 
-button, input[type=text] { outline: solid 2px #4F3F5F; }
-button { background-color: #3F3F5F; color: #1F1F3F }
-button:hover { color: #0F0F2F; outline-color: #3F2F4F;}
-button:active { outline-color: #2F1F5F;}
-input[type=text] { background-color: #3F3F5F; color: #0F0F2F }
-input[type=text]:hover { outline-color: #3F2F4F;}
+button, input[type=text] {
+	outline: solid 2px #4F3F5F;
+	background-color: #4F4F6F;
+}
 
-*[f=f16] { font-size: 16px; line-height: 20px; }
-*[f=f32] { font-size: 32px; line-height: 40px; }
-*[f=f48] { font-size: 48px; line-height: 60px; }
-*[f=f64] { font-size: 64px; line-height: 80px; }
+button {
+	color: #1F1F3F;
+}
+
+button:hover, input[type=text]:hover {
+	outline-color: #3F2F4F;
+}
+
+button:hover, input[type=text] {
+	color: #0F0F2F;
+}
+
+button:active {
+	outline-color: #2F1F5F;
+}
+
+*[f=f16] { font-size: 12px; line-height: 16px; }
+*[f=f24] { font-size: 18px; line-height: 24px; }
+*[f=f32] { font-size: 24px; line-height: 32px; }
+*[f=f48] { font-size: 36px; line-height: 48px; }
+*[f=f64] { font-size: 48px; line-height: 64px; }
 
 .center {
 	position: absolute;
@@ -46,7 +65,39 @@ input[type=text]:hover { outline-color: #3F2F4F;}
 	transform: translate(-50%, -50%);
 }
 
-table { display: table; }
-tbody { display: table-row-group; }
-tr { display: table-row; }
-th, td { display: table-cell; }
+table {
+	background-color: #9F9FBF;
+}
+
+tr:nth-child(odd) {
+	background-color: #9F9FDF;
+}
+
+thead th, tr:nth-child(even) {
+	background-color: #7F7FBF;
+}
+
+th {
+	color: #1F1F1F;
+	font-weight: bold;
+}
+
+th, td {
+	background-color: transparent;
+}
+
+table, ._table { display: table; table-layout: fixed; }
+tbody, thead { display: table-row-group; }
+tr, ._row { display: table-row; }
+th, td, ._cell { display: table-cell; }
+
+#roomList {
+	margin: 16px;
+	background-color: #6F6F9F;
+	overflow-y: auto;
+}
+
+#browseButtons {
+	margin: 16px;
+	margin-top: 0px;
+}
