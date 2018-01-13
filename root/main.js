@@ -14,7 +14,10 @@ function check(func) {
 };
 
 function goTo(page) {
+	var name = document.getElementById("title").value;
+	history.pushState(undefined, name, location.href);
 	location.replace(page);
+	
 }
 
 function logout() {
@@ -48,4 +51,14 @@ if (!String.prototype.startsWith) {
 		position = position || 0;
 		return this.indexOf(searchString, position) === position;
 	};
+}
+
+function wrongInput(text) {
+	var div = document.getElementById("errorPlace");
+	div.className += "center";
+	div.style.marginTop = "5px";
+	div.style.width = "calc(40% + 84px)";
+	div.style.padding = "2px";
+	div.style.border = "2px solid #444";
+	div.innerHTML = "<span style = \"height: auto;\">" + text + "</span>";
 }
