@@ -1,8 +1,11 @@
+_.I("scripts/chenbox/dating.js");
+
 var clients = [];
 var nextId = 0;
 
-var getUserById = function(id) {
-	return clients.filter(function(c) {
+var getUserById = function(id, arr) {
+	if (arr == undefined) arr = clients;
+	return arr.filter(function(c) {
 		return c.id == id;
 	})[0];
 };
@@ -30,6 +33,7 @@ var idList = function(arr) {
 };
 
 var Room = function(name, owner) {
+	this.mode = null;
     this.name = name;
     this.owner = owner;
 	this.players = [owner];
@@ -58,6 +62,11 @@ var Room = function(name, owner) {
 	};
 };
 
+var makeRoom = function(name, owner, mode) {
+	if (mode == "dating") return new DatingRoom(name, owner);
+	return null;
+};
+
 var Client = function(ws) {
     this._ws = ws;
     this.name = null;
@@ -71,6 +80,7 @@ var Client = function(ws) {
 
 	this.exitRoom = function(forced) {
 		this.room.removePlayer(this.id);
+		if (this.ownsRoom()) this.room.destroy();
 		this.room = null;
 	};
 
@@ -97,8 +107,9 @@ var Client = function(ws) {
             if (this.name == null) this._ws.write("/err #2");
             else {
                 if (this.room == null) {
-                    this.room = new Room($.escape(msg["@"]), this);
-	                this._ws.write("/ok #" + this.room.id);
+                    this.room = makeRoom($.escape(msg["@"]), this, msg["!"]);
+	                if (this.room != null) this._ws.write("/ok #" + this.room.id);
+					else this._ws.write("/err #7");
                 } else this._ws.write("/err #1");
             }
         } else if (msg["/"] == "-room") {
@@ -126,7 +137,8 @@ var Client = function(ws) {
 		} else if (msg["/"] == "?room") {
 			var room = getRoomById(parseInt(msg["#"]));
 			if (room != undefined) {
-				this._ws.write("/ok #" + room.id + " @" + room.name + " $" + room.owner.id + " *" + idList(room.players).join(","));
+				this._ws.write("/ok #" + room.id + " @" + room.name + " $" + room.owner.id + " *"
+					+ idList(room.players).join(",") + " !" + room.mode);
 			} else this._ws.write("/err #4");
 		} else if (msg["/"] == "?user") {
 			var user = getUserById(parseInt(msg["#"]));
@@ -138,6 +150,10 @@ var Client = function(ws) {
 			} else this._ws.write("/err #6");
 		} else if (msg["/"] == "me") {
 			this._ws.write("/ok #" + this.id);
+		} else if (msg["/"] == "game") {
+			if (this.room != null) {
+				this.room.parse(this, game);
+			} else this._ws.write("/err #5");
 		}
     }, this));
 

@@ -31,7 +31,7 @@ body {
 	background: repeating-linear-gradient(-45deg, #2F1F3F 0%, #2F1F3F 12.5%, #1F0F2F 12.5%, #1F0F2F 37.5%, #2F1F3F 37.5%, #2F1F3F 50%);
 }
 
-button, input[type=text] {
+button, input[type=text], option, select {
 	outline: solid 2px #4F3F5F;
 	background-color: #4F4F6F;
 }
@@ -40,11 +40,11 @@ button {
 	color: #1F1F3F;
 }
 
-button:hover, input[type=text]:hover {
+button:hover, input[type=text]:hover, option:hover, select:hover {
 	outline-color: #3F2F4F;
 }
 
-button:hover, input[type=text] {
+button:hover, input[type=text], option, select {
 	color: #0F0F2F;
 }
 
