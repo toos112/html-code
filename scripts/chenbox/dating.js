@@ -6,7 +6,7 @@ var ROUNDS = 5;
 var DatingRoom = function(name, owner) {
 	Room.call(this, name, owner);
 	var thisRef = this;
-	this.mode = "trivia";
+	this.mode = "dating";
 	this.ingame = [];
 	this.messages = [];
 	this.choices = [];
@@ -124,11 +124,11 @@ var DatingRoom = function(name, owner) {
 		} else if (msg[">"] == "start") {
 			if (user.ownsRoom()) {
 				this._start();
-				this._ws.write("/ok");
-			} else this._ws.write("/err #8");
+				user._ws.write("/ok");
+			} else user._ws.write("/err #8");
 		} else if (msg[">"] == "choose") {
 			if (this.isChoosing && getUserById(user.id, this.ingame) != undefined) {
-				if (this.choices[user.id] != undefined) this._ws.write("/err #9");
+				if (this.choices[user.id] != undefined) user._ws.write("/err #9");
 				else if (this.choose(user.id, parseInt(msg["#"]), msg["@"])) user._ws.write("/ok");
 				else user._ws.write("/err #6");
 			} else user._ws.write("/err #9");
