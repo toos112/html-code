@@ -1,53 +1,13 @@
 check(function(success) {
 	if (success) {
-		setLoggedIn();
+		goTo("/home.html");
 	}
 });
-
-function setLoggedIn() {
-	var titleT = document.getElementById("titleT");
-	var title = document.getElementById("title");
-	var div = document.getElementById("nameInput");
-	titleT.innerHTML = "Home";
-	title.innerHTML = "Home";
-	div.innerHTML = "\
-		<button onclick = \"logout();\" style \"width: 96px;\">\
-			<span>\
-				Logout\
-			</span>\
-		</button>\
-		<span class = \"center\" id = \"nameText\" style = \"width: 250px; color: #ccc;\">\
-			You have logged in.\
-		</span>\
-		<button onclick = \"settings();\" style \"width: 96px;\">\
-			<span>\
-				Settings\
-			</span>\
-		</button><br/>\
-		<button onclick = \"goToChat();\" style = \"margin-top: 6px; width: 96px;\">\
-			<span>\
-				Chat\
-			</span>\
-		</button>\
-		<button onclick = \"goToTowerDefense();\" style = \"margin-top: 6px; margin-left: 6px; width: 96px;\">\
-			<span>\
-				Tower Defense\
-			</span>\
-		</button>";
-}
 
 function enterPress(e) {
 	if (e.keyCode == 13) {
 		send();
 	}
-}
-
-function settings() {
-	var titleT = document.getElementById("titleT");
-	var title = document.getElementById("title");
-	var div = document.getElementById("nameInput");
-	title.innerHTML = "settings";
-	div.innerHTML = "";
 }
 
 function send() {
@@ -64,7 +24,7 @@ function send() {
 					setCookie("user", htmlName);
 					setCookie("UUID", this.responseText.trim());
 					loggedIn = true;
-					setLoggedIn();
+					goTo("/home.html");
 					errorPlace.parentElement.removeChild(errorPlace);
 				} else {
 					wrongInput("Your username or password was incorrect");
@@ -72,23 +32,6 @@ function send() {
 			}
 		}
 	}
-}
-
-function goToChat() {
-	location.replace("chat.html");
-}
-
-function goToTowerDefense() {
-	location.replace("towdef.html");
-}
-
-function logout() {
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("GET", "auth/logout.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), true);
-	xmlhttp.send();
-	setCookie("user", "null");
-	setCookie("UUID", "null");
-	location.replace("index.html");
 }
 
 function register() {
@@ -203,7 +146,6 @@ function commit() {
 	var password2 = document.getElementById("password2").value;
 	if (name.length >= 6  && name.length <= 16 && email.indexOf("@") != -1 && email.indexOf(".", email.indexOf("@")) != -1 && password1.length > 6 && password1.length <= 24 && password1 == password2) {
 		var xmlhttp = new XMLHttpRequest();
-		//password1 = encrypt(password1);
 		xmlhttp.open("GET", "auth/register.js?user=" + name + "&email=" + email + "&password=" + password1, true);
 		xmlhttp.send();
 		xmlhttp.onreadystatechange = function () {

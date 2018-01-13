@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title id = "titleT">
+			Home
+		</title>
+		<script src = "main.js"></script>
+		<script src = "home.js"></script>
+		<script src = "alert/alert.js"></script>
+		<link rel = "stylesheet" type = "text/css" href = "index.css">
+	</head>
+	<body class = "center" style = "padding: 10px; background: linear-gradient(to bottom, #222, #234 20%, #235 50%, #234 80%, #222);">
+		<span class = "big center" id = "title" style = "width: calc(100% - 20px); color: #48c; margin-bottom: 5px;">
+			Login
+		</span><br/>
+		<div id = "input" class = "center" style = "width : calc(100% - 20px);">
+			<div id = "errorPlace">
+			</div><br/>
+			<div id = "nameInput" class = "center" style = "margin-top: 5px; padding: 2px; border : 2px solid #444;">
+				<button onclick = "logout();" style "width: 96px;">
+					<span>
+						Logout
+					</span>
+				</button>
+				<span class = "center" id = "nameText" style = "width: 250px; color: #ccc;">
+					You have logged in.
+				</span>
+				<button onclick = "goTo('/settings.html');" style "width: 96px;">
+					<span>
+						Settings
+					</span>
+				</button><br/>
+				<button onclick = "goTo('/chat.html');" style = "margin-top: 6px; width: 96px;">
+					<span>
+						Chat
+					</span>
+				</button>
+				<button onclick = "goTo('/chenbox/chenbox.html');" style = "margin-top: 6px; margin-left: 6px; width: 96px;">
+					<span>
+						Chen Box
+					</span>
+				</button>
+				<button onclick = "goTo('/towdef.html');" style = "margin-top: 6px; margin-left: 6px; width: 96px;">
+					<span>
+						Tower Defense
+					</span>
+				</button>
+			</div>
+		</div>
+	</body>
+</html>

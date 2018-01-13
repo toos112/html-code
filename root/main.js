@@ -13,6 +13,19 @@ function check(func) {
 	}
 };
 
+function goTo(page) {
+	location.replace(page);
+}
+
+function logout() {
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("GET", "auth/logout.js?user=" + getCookie("user") + "&uuid=" + getCookie("UUID"), true);
+	xmlhttp.send();
+	setCookie("user", "null");
+	setCookie("UUID", "null");
+	location.replace("index.html");
+}
+
 function getCookie(name) {
 	var cookies = document.cookie.split("; ");
 	for (var i = 0; i < cookies.length; i++) {
@@ -27,7 +40,7 @@ function setCookie(name, worth) {
 }
 
 function home() {
-	location.replace("index.html");
+	location.replace("home.html");
 }
 
 if (!String.prototype.startsWith) {
