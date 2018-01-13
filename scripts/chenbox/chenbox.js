@@ -152,7 +152,7 @@ var Client = function(ws) {
 			this._ws.write("/ok #" + this.id);
 		} else if (msg["/"] == "game") {
 			if (this.room != null) {
-				this.room.parse(this, game);
+				this.room.parse(this, msg);
 			} else this._ws.write("/err #5");
 		}
     }, this));
