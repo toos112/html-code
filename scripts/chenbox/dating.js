@@ -22,7 +22,7 @@ var DatingRoom = function(name, owner) {
 	this._skipChoice = [];
 
 	this._start = function() {
-		this.ingame = this.players.splice(0);
+		this.ingame = this.players.slice(0);
 		this.broadcast("/game >start *" + idList(this.ingame).join(","));
 		this.isStarted = true;
 		this._begin();
@@ -73,7 +73,7 @@ var DatingRoom = function(name, owner) {
 			if (this.messages[i].to == this.choices[this._choiceIndex].from && this.messages[i].from == this.choices[this._choiceIndex].to) validMessage = true;
 			if (validMessage) {
 				this._messageIndex = i + 1;
-				thisRef.beginTime = $.time();
+				this.beginTime = $.time();
 				this.broadcast("/game >rmsg #" + this.messages[i].from + "," + this.messages[i].to + " @" + this.messages[i].msg);
 				break;
 			}
@@ -137,11 +137,11 @@ var DatingRoom = function(name, owner) {
 
 	_.loop(100, function() {
 		if ($.time() - ROUND_TIME >= thisRef.beginTime && thisRef.isChatting) {
-			this._pick();
+			thisRef._pick();
 		} else if ($.time() - CHOOSE_TIME >= thisRef.beginTime && thisRef.isChoosing) {
-			this._end();
+			thisRef._end();
 		} else if ($.time() - DISPLAY_TIME >= thisRef.beginTime && thisRef.isDisplaying) {
-			this._showNext();
+			thisRef._showNext();
 		}
 	});
 }
