@@ -112,7 +112,7 @@ let Client = function() {
 		this.send("/>room #" + id, function(msg) {
 			if (msg["/"] == "ok") {
 				clientJoinRoom(function() {
-					this.room = new Room(id);
+					_this.room = new Room(id);
 				});
 			}
 		});
