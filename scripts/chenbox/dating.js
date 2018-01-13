@@ -81,7 +81,7 @@ var DatingRoom = function(name, owner) {
 		if (!validMessage) {
 			do {
 				this._choiceIndex++;
-			} while (this._skipChoice.indexOf(this.choices[this._choiceIndex].from) != -1);
+			} while (this._choiceIndex < this.choices.length && this._skipChoice.indexOf(this.choices[this._choiceIndex].from) != -1);
 			this._messageIndex = 0;
 			this._showNext();
 		}
@@ -123,8 +123,10 @@ var DatingRoom = function(name, owner) {
 			} else user._ws.write("/err #9");
 		} else if (msg[">"] == "start") {
 			if (user.ownsRoom()) {
-				this._start();
-				user._ws.write("/ok");
+				if (!this.isStarted) {
+					this._start();
+					user._ws.write("/ok");
+				} else user._ws.write("/err #9");
 			} else user._ws.write("/err #8");
 		} else if (msg[">"] == "choose") {
 			if (this.isChoosing && getUserById(user.id, this.ingame) != undefined) {

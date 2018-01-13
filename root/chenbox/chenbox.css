@@ -29,6 +29,7 @@ html, body {
 
 body {
 	background: repeating-linear-gradient(-45deg, #2F1F3F 0%, #2F1F3F 12.5%, #1F0F2F 12.5%, #1F0F2F 37.5%, #2F1F3F 37.5%, #2F1F3F 50%);
+	text-align: left;
 }
 
 button, input[type=text], option, select {
@@ -65,20 +66,27 @@ button:active {
 	transform: translate(-50%, -50%);
 }
 
-table {
+ul {
+	list-style-type: none;
+}
+
+table, ul {
 	background-color: #9F9FBF;
 }
 
-tr:nth-child(odd) {
+tr:nth-child(odd), li:nth-child(odd) {
 	background-color: #9F9FDF;
 }
 
-thead th, tr:nth-child(even) {
+thead th, tr:nth-child(even), li:nth-child(even) {
 	background-color: #7F7FBF;
 }
 
-th {
+ul, th, td {
 	color: #1F1F1F;
+}
+
+th {
 	font-weight: bold;
 }
 
@@ -90,8 +98,9 @@ table, ._table { display: table; table-layout: fixed; }
 tbody, thead { display: table-row-group; }
 tr, ._row { display: table-row; }
 th, td, ._cell { display: table-cell; }
+li { display: list-item; }
 
-#roomList {
+#roomList, #userList {
 	margin: 16px;
 	background-color: #6F6F9F;
 	overflow-y: auto;
