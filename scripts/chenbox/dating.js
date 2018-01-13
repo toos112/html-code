@@ -5,12 +5,12 @@ var ROUNDS = 5;
 
 var DatingRoom = function(name, owner) {
 	Room.call(this, name, owner);
-	let thisRef = this;
+	var thisRef = this;
 	this.mode = "trivia";
 	this.ingame = [];
 	this.messages = [];
 	this.choices = [];
-	this.isStarted false;
+	this.isStarted = false;
 	this.isChatting = false;
 	this.isChoosing = false;
 	this.isDisplaying = false;
