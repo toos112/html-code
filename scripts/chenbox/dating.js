@@ -1,4 +1,4 @@
-var ROUND_TIME = 120000;
+var ROUND_TIME = 30000;
 var CHOOSE_TIME = 30000;
 var DISPLAY_TIME = 2000;
 var ROUNDS = 5;
@@ -68,7 +68,7 @@ var DatingRoom = function(name, owner) {
 			}
 		}
 		var validMessage = false;
-		for (var i = this._messageIndex; i < messages.length; i++) {
+		for (var i = this._messageIndex; i < this.messages.length; i++) {
 			if (this.messages[i].from == this.choices[this._choiceIndex].from && this.messages[i].to == this.choices[this._choiceIndex].to) validMessage = true;
 			if (this.messages[i].to == this.choices[this._choiceIndex].from && this.messages[i].from == this.choices[this._choiceIndex].to) validMessage = true;
 			if (validMessage) {
