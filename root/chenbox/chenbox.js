@@ -30,20 +30,46 @@ let setContent = function(url, func) {
 	});
 };
 
-let clientJoinRoom = function() {
-	setContent("room.html");
+let updateUserList = function() {
+	let userList = document.getElementById("userList");
+	if (userList != undefined) {
+		let list = userList.getElementsByTagName("ul")[0];
+		list.innerHTML = "";
+		for (let i = 0; i < CLIENT.room.users.length; i++) {
+			CLIENT.send("/?user #" + CLIENT.room.users[i], function(msg) {
+				list.innerHTML += "<li f='f24'>" + msg["@"] + "</li>";
+			});
+		}
+	}
+};
+
+let clientJoinRoom = function(func) {
+	setContent("room.html", func);
 };
 
 let d = function(msg) {
 	CLIENT.send(msg, function(msg) {
 		console.log(msg);
 	});
-}
+};
+
+let Room = function(id) {
+	let _this = this;
+	this.id = id;
+	this.users = [];
+
+	CLIENT.send("/?room #" + id, function(msg) {
+		let users = msg["*"].split(",");
+		for (let i = 0; i < users.length; i++)
+			_this.users.push(parseInt(users[i]));
+		updateUserList();
+	});
+};
 
 let Client = function() {
     if (location.protocol == "https:") this._ws = new WebSocket("wss://" + location.host, "chenbox");
     else if (location.protocol == "http:") this._ws = new WebSocket("ws://" + location.host, "chenbox");
-	var _this = this;
+	let _this = this;
 	this._Q = [];
 	this.id = null;
 	this.name = null;
@@ -55,7 +81,13 @@ let Client = function() {
 	};
 
 	this._parse = function(msg) {
-		console.log(msg);
+		if (msg["/"] == "join") {
+			this.room.users.push(parseInt(msg["#"]));
+			updateUserList();
+		} else if (msg["/"] == "exit") {
+			this.room.users.splice(this.room.users.indexOf(parseInt(msg["#"])), 1);
+			updateUserList();
+		}
 	};
 
     this._ws.onmessage = function(e) {
@@ -79,8 +111,9 @@ let Client = function() {
 	this.joinRoom = function(id) {
 		this.send("/>room #" + id, function(msg) {
 			if (msg["/"] == "ok") {
-				this.room = id;
-				clientJoinRoom();
+				clientJoinRoom(function() {
+					this.room = new Room(id);
+				});
 			}
 		});
 	};
@@ -133,8 +166,9 @@ let actuallyMakeRoom = function() {
 	let mode = document.getElementById("mr#mode").value;
 	CLIENT.send("/+room @" + s2u(name) + " !" + mode, function(msg) {
 		if (msg["/"] == "err") return;
-		CLIENT.room = parseInt(msg["#"]);
-		clientJoinRoom();
+		clientJoinRoom(function() {
+			CLIENT.room = new Room(parseInt(msg["#"]));
+		});
 	});
 	alert.close();
 };
