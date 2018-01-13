@@ -43,7 +43,7 @@ let d = function(msg) {
 let Client = function() {
     if (location.protocol == "https:") this._ws = new WebSocket("wss://" + location.host, "chenbox");
     else if (location.protocol == "http:") this._ws = new WebSocket("ws://" + location.host, "chenbox");
-	let _this = this;
+	var _this = this;
 	this._Q = [];
 	this.id = null;
 	this.name = null;
