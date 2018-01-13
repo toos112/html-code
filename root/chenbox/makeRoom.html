@@ -1,9 +1,13 @@
 <div style="width: 100%; height: 296px;">
 	<div style="height: 264px; width: 33%; color: #3F3F7F; text-align: left;" f="f24">
 		Name:<br>
+		Mode:<br>
 	</div>
 	<div style="height: 264px; width: 66%;">
-		<input f="f24" type="text" id="mr#name" placeholder="Room Name" style="width: 100%;"></input>
+		<input f="f24" type="text" id="mr#name" placeholder="Room Name" style="width: 100%;"></input><br>
+		<select style="width: 100%;" id="mr#mode" f="f24">
+			<option f="f24" value="dating">Dating Sim</option>
+		</select>
 	</div><br>
 	<button style="width: 100%;" f="f32" onclick="actuallyMakeRoom();">Make Room</button>
 </div>

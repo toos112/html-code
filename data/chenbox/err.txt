@@ -5,3 +5,6 @@
 #4	room doesn't exist
 #5	user isn't in a room
 #6	user doesn't exist
+#7	failed to create room
+#8	permission denied
+#9	invalid game action

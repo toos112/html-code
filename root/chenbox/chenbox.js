@@ -34,6 +34,12 @@ let clientJoinRoom = function() {
 	setContent("room.html");
 };
 
+let d = function(msg) {
+	CLIENT.send(msg, function(msg) {
+		console.log(msg);
+	});
+}
+
 let Client = function() {
     if (location.protocol == "https:") this._ws = new WebSocket("wss://" + location.host, "chenbox");
     else if (location.protocol == "http:") this._ws = new WebSocket("ws://" + location.host, "chenbox");
@@ -49,7 +55,7 @@ let Client = function() {
 	};
 
 	this._parse = function(msg) {
-
+		console.log(msg);
 	};
 
     this._ws.onmessage = function(e) {
@@ -98,12 +104,15 @@ let loadRooms = function() {
 			tbody.innerHTML += "\
 			<tr>\
 				<td f='f32' id='rn#" + ids[i] + "'>loading...</td>\
+				<td f='f32' id='rm#" + ids[i] + "'></td>\
 				<td id='rj#" + ids[i] + "'></td>\
 			</tr>";
 			CLIENT.send("/?room #" + ids[i], function(msg) {
 				let name = document.getElementById("rn#" + msg["#"]);
+				let mode = document.getElementById("rm#" + msg["#"]);
 				let join = document.getElementById("rj#" + msg["#"]);
 				name.innerHTML = msg["@"];
+				mode.innerHTML = msg["!"];
 				join.innerHTML = "<button f='f32' style='width: 100%;' onclick='CLIENT.joinRoom(" + msg["#"] + ");'>Join</button>";
 			});
 		}
@@ -121,7 +130,9 @@ let makeRoom = function() {
 let actuallyMakeRoom = function() {
 	// ^^ best function name
 	let name = document.getElementById("mr#name").value;
-	CLIENT.send("/+room @" + s2u(name), function(msg) {
+	let mode = document.getElementById("mr#mode").value;
+	CLIENT.send("/+room @" + s2u(name) + " !" + mode, function(msg) {
+		if (msg["/"] == "err") return;
 		CLIENT.room = parseInt(msg["#"]);
 		clientJoinRoom();
 	});
