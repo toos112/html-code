@@ -1,8 +1,10 @@
 var DatingRoom = function(id) {
 	Room.call(this, id);
+	let _this = this;
 	this.ingame = [];
 	this.selectedChat = null;
 	this.chatHistory = {};
+	this.endTime = null;
 
 	let WAIT_SCR = document.getElementById("wait");
 	let START_SCR = document.getElementById("start");
@@ -13,6 +15,7 @@ var DatingRoom = function(id) {
 			this.ingame = msg["*"].split(",");
 			this.ingame.forEach(function(o, i, a) { a[i] = parseInt(o), this.chatHistory[o] = ""; }, this);
 		} else if (msg[">"] == "begin") {
+			this.endTime = new Date().getTime() + parseInt(msg["!"]);
 			let ulist = CHAT_SCR.getElementsByTagName("div")[0].getElementsByTagName("div")[0];
 			ulist.innerHTML = "";
 			for (let i = 0; i < this.ingame.length; i++) {
@@ -52,4 +55,15 @@ var DatingRoom = function(id) {
 	this.onload = function() {
 		this.setScr(this.isOwner ? START_SCR : WAIT_SCR);
 	};
+
+	setInterval(function() {
+		let timers = document.getElementsByClassName("dtimer");
+		let time = new Date().getTime();
+		if (_this.endTime != null && time > _this.endTime) _this.endTime = null;
+		if (_this.endTime != null) {
+			for (let i = 0; i < timers.length; i++)
+				timers[i].innerHTML = (Math.floor((_this.endTime - time) / 100) / 10).toFixed(1);
+		} else for (let i = 0; i < timers.length; i++)
+			timers[i].innerHTML = "";
+	}, 100);
 }

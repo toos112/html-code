@@ -1,9 +1,10 @@
 <div class="center" style="display: none;" id="wait" f="f64">Waiting...</div>
 <button class="center" style="width: 256px; display: none;" id="start" f="f64" onclick="CLIENT.room.start()">Start</button>
 <div style="width: 100%; height: 100%; display: none;" id="dchat" >
-	<div class="_table" style="width: 100%; height: 40px;">
+	<div style="width: calc(100% - 128px);"><div class="_table" style="width: 100%; height: 40px;">
 		<div class="_row"></div>
-	</div><br>
+	</div></div>
+	<div f="f40" style="width: 128px; color: #840;" class="dtimer"></div><br>
 	<div style="width: 100%; height: calc(100% - 80px);" f="f48" id="dchath"></div><br>
     <input id="dchati" type="text" f="f40" style="width: calc(100% - 128px);" placeholder="type something"></input>
     <button f="f40" style="width: 128px;" onclick="CLIENT.room.chat();">submit</button>
