@@ -60,8 +60,12 @@ let updateUserList = function() {
 	}
 };
 
-let clientJoinRoom = function(func) {
-	setContent("room.html", func);
+let clientJoinRoom = function(mode, id) {
+	setContent("room.html", function() {
+		setContent("games/" + mode + ".html", function() {
+			CLIENT.room = constructRoom(mode, id);
+		}, document.getElementById("game"));
+	});
 };
 
 let d = function(msg) {
@@ -74,13 +78,31 @@ let Room = function(id) {
 	let _this = this;
 	this.id = id;
 	this.users = [];
+	this.isOwner = null;
+	this._lastScr = null;
+
+	this.onload = function() {};
+
+	this.setScr = function(elem) {
+		if (this._lastScr != null)
+			this._lastScr.style.display = "none";
+		this._lastScr = elem;
+		elem.style.display = "inline-block";
+	};
 
 	CLIENT.send("/?room #" + id, function(msg) {
+		_this.isOwner = (parseInt(msg["$"]) == CLIENT.id);
 		let users = msg["*"].split(",");
 		for (let i = 0; i < users.length; i++)
 			_this.users.push(parseInt(users[i]));
 		updateUserList();
+		_this.onload();
 	});
+};
+
+let constructRoom = function(mode, id) {
+	if (mode == "dating") return new DatingRoom(id);
+	return null
 };
 
 let Client = function(func) {
@@ -104,6 +126,8 @@ let Client = function(func) {
 		} else if (msg["/"] == "exit") {
 			this.room.users.splice(this.room.users.indexOf(parseInt(msg["#"])), 1);
 			updateUserList();
+		} else if (msg["/"] == "game") {
+			this.room.parse(msg);
 		}
 	};
 
@@ -130,8 +154,8 @@ let Client = function(func) {
 	this.joinRoom = function(id) {
 		this.send("/>room #" + id, function(msg) {
 			if (msg["/"] == "ok") {
-				clientJoinRoom(function() {
-					_this.room = new Room(id);
+				this.send("/?room #" + id, function(msg) {
+					clientJoinRoom(id, msg["!"]);
 				});
 			}
 		});
@@ -189,9 +213,7 @@ let actuallyMakeRoom = function() {
 	let mode = document.getElementById("mr#mode").value;
 	CLIENT.send("/+room @" + s2u(name) + " !" + mode, function(msg) {
 		if (msg["/"] == "err") return;
-		clientJoinRoom(function() {
-			CLIENT.room = new Room(parseInt(msg["#"]));
-		});
+		clientJoinRoom(mode, parseInt(msg["#"]));
 	});
 	alert.close();
 };
@@ -214,9 +236,7 @@ window.addEventListener("load", function() {
 					let rp = JSON.parse(qs("mr"));
 					CLIENT.send("/+room @" + s2u(rp.name) + " !" + rp.mode, function(msg) {
 						if (msg["/"] == "err") return;
-						clientJoinRoom(function(ms) {
-							CLIENT.room = new Room(parseInt(msg["#"]));
-						});
+						clientJoinRoom(rp.mode, parseInt(msg["#"]));
 					});
 				} else setContent("browse.html", loadRooms);
 			});
