@@ -19,6 +19,16 @@ let HTTP_GET = function(url, func) {
     req.send();
 };
 
+let qs = function(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+
 let s2u = function(str) {
 	return str.split(" ").join("_");
 };
@@ -73,9 +83,9 @@ let Room = function(id) {
 	});
 };
 
-let Client = function() {
-    if (location.protocol == "https:") this._ws = new WebSocket("wss://" + location.host, "chenbox");
-    else if (location.protocol == "http:") this._ws = new WebSocket("ws://" + location.host, "chenbox");
+let Client = function(func) {
+	if (location.protocol == "https:") this._ws = new WebSocket("wss://" + location.host, "chenbox");
+	else if (location.protocol == "http:") this._ws = new WebSocket("ws://" + location.host, "chenbox");
 	let _this = this;
 	this._Q = [];
 	this.id = null;
@@ -98,10 +108,10 @@ let Client = function() {
 	};
 
     this._ws.onmessage = function(e) {
-        var _msg = e.data.split(" ");
-        var msg = {};
-        for (var i = 0; i < _msg.length; i++)
-            msg[_msg[i].charAt(0)] = _msg[i].substr(1);
+		var _msg = e.data.split(" ");
+		var msg = {};
+		for (var i = 0; i < _msg.length; i++)
+			msg[_msg[i].charAt(0)] = _msg[i].substr(1);
 
 		if (msg["/"] == "err") console.error("E" + msg["#"]);
 		if (msg["/"] == "ok" || msg["/"] == "err") {
@@ -110,9 +120,11 @@ let Client = function() {
 		} else _this._parse(msg);
     };
 
-	this.setName = function(name) {
+	this.setName = function(name, func) {
 		this.name = name;
-		this.send("/name @" + s2u(name));
+		this.send("/name @" + s2u(name), function(msg) {
+			if (func) func();
+		});
 	};
 
 	this.joinRoom = function(id) {
@@ -126,9 +138,10 @@ let Client = function() {
 	};
 
 	this._ws.onopen = function(e) {
-		this.send("/me", function(msg) {
-			this.id = parseInt(msg["#"]);
+		_this.send("/me", function(msg) {
+			_this.id = parseInt(msg["#"]);
 		});
+		if (func) func();
 	};
 };
 
@@ -187,13 +200,26 @@ let login = function() {
     let userInput = document.getElementById("user");
     USERNAME = userInput.value;
     CLIENT.setName(USERNAME);
-    setContent("browse.html", function() {
-		loadRooms();
-	});
+    setContent("browse.html", loadRooms);
 };
 
 window.addEventListener("load", function() {
-    BODY = document.getElementsByTagName("body")[0];
-	setContent("login.html");
-    CLIENT = new Client();
+	BODY = document.getElementsByTagName("body")[0];
+	CLIENT = new Client(function() {
+		if (qs("u") != undefined) {
+			CLIENT.setName(qs("u"), function() {
+				if (qs("r") != undefined) {
+					client.joinRoom(parseInt(qs("r")));
+				} else if (qs("mr") != undefined) {
+					let rp = JSON.parse(qs("mr"));
+					CLIENT.send("/+room @" + s2u(rp.name) + " !" + rp.mode, function(msg) {
+						if (msg["/"] == "err") return;
+						clientJoinRoom(function(ms) {
+							CLIENT.room = new Room(parseInt(msg["#"]));
+						});
+					});
+				} else setContent("browse.html", loadRooms);
+			});
+		} else setContent("login.html");
+	});
 });
