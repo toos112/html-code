@@ -22,6 +22,7 @@ var DatingRoom = function(name, owner) {
 	this._skipChoice = [];
 
 	this._start = function() {
+		this.round = 0;
 		this.ingame = this.players.slice(0);
 		this.broadcast("/game >start *" + idList(this.ingame).join(","));
 		this.isStarted = true;

@@ -23,21 +23,28 @@ let s2u = function(str) {
 	return str.split(" ").join("_");
 };
 
-let setContent = function(url, func) {
+let u2s = function(str) {
+	return str.split("_").join(" ");
+};
+
+let setContent = function(url, func, element = BODY) {
     HTTP_GET(url, function(content) {
-		BODY.innerHTML = content;
+		element.innerHTML = content;
 		if (func) func();
 	});
 };
 
+let updateUserId = 0;
 let updateUserList = function() {
+	let thisId = ++updateUserId;
 	let userList = document.getElementById("userList");
 	if (userList != undefined) {
 		let list = userList.getElementsByTagName("ul")[0];
 		list.innerHTML = "";
 		for (let i = 0; i < CLIENT.room.users.length; i++) {
 			CLIENT.send("/?user #" + CLIENT.room.users[i], function(msg) {
-				list.innerHTML += "<li f='f24'>" + msg["@"] + "</li>";
+				if (thisId < updateUserId) return;
+				list.innerHTML += "<li f='f24'>" + u2s(msg["@"]) + "</li>";
 			});
 		}
 	}
@@ -105,7 +112,7 @@ let Client = function() {
 
 	this.setName = function(name) {
 		this.name = name;
-		this.send("/name @" + name);
+		this.send("/name @" + s2u(name));
 	};
 
 	this.joinRoom = function(id) {
@@ -125,7 +132,9 @@ let Client = function() {
 	};
 };
 
+let loadRoomsId = 0;
 let loadRooms = function() {
+	let thisId = ++loadRoomsId;
 	let roomList = document.getElementById("roomList");
 	let table = roomList.getElementsByTagName("table")[0];
 	let tbody = roomList.getElementsByTagName("tbody")[0];
@@ -141,11 +150,12 @@ let loadRooms = function() {
 				<td id='rj#" + ids[i] + "'></td>\
 			</tr>";
 			CLIENT.send("/?room #" + ids[i], function(msg) {
+				if (thisId < loadRoomsId) return;
 				let name = document.getElementById("rn#" + msg["#"]);
 				let mode = document.getElementById("rm#" + msg["#"]);
 				let join = document.getElementById("rj#" + msg["#"]);
-				name.innerHTML = msg["@"];
-				mode.innerHTML = msg["!"];
+				name.innerHTML = u2s(msg["@"]);
+				mode.innerHTML = u2s(msg["!"]);
 				join.innerHTML = "<button f='f32' style='width: 100%;' onclick='CLIENT.joinRoom(" + msg["#"] + ");'>Join</button>";
 			});
 		}
