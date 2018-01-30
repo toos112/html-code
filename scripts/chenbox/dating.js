@@ -59,6 +59,7 @@ var DatingRoom = function(name, owner) {
 			this._isDisplaying = false;
 			this._reset();
 			this._begin();
+			return;
 		}
 		for (var i = this._choiceIndex + 1; i < this.choices.length; i++) {
 			if (this.choices[this._choiceIndex].to == this.choices[i].from) {
