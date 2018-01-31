@@ -155,7 +155,7 @@ let Client = function(func) {
 		this.send("/>room #" + id, function(msg) {
 			if (msg["/"] == "ok") {
 				_this.send("/?room #" + id, function(msg) {
-					clientJoinRoom(id, msg["!"]);
+					clientJoinRoom(msg["!"], id);
 				});
 			}
 		});
