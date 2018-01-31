@@ -137,7 +137,7 @@ var DatingRoom = function(name, owner) {
 		} else if (msg[">"] == "choose") {
 			if (this.isChoosing && getUserById(user.id, this.ingame) != undefined) {
 				if (this.choices[user.id] != undefined) user._ws.write("/err #9");
-				else if (this.choose(user.id, parseInt(msg["#"]), msg["@"])) user._ws.write("/ok");
+				else if (this.choose(user.id, parseInt(msg["#"]))) user._ws.write("/ok");
 				else user._ws.write("/err #6");
 			} else user._ws.write("/err #9");
 		}
