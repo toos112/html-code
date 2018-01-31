@@ -154,7 +154,7 @@ let Client = function(func) {
 	this.joinRoom = function(id) {
 		this.send("/>room #" + id, function(msg) {
 			if (msg["/"] == "ok") {
-				this.send("/?room #" + id, function(msg) {
+				_this.send("/?room #" + id, function(msg) {
 					clientJoinRoom(id, msg["!"]);
 				});
 			}
@@ -231,7 +231,7 @@ window.addEventListener("load", function() {
 		if (qs("u") != undefined) {
 			CLIENT.setName(qs("u"), function() {
 				if (qs("r") != undefined) {
-					client.joinRoom(parseInt(qs("r")));
+					CLIENT.joinRoom(parseInt(qs("r")));
 				} else if (qs("mr") != undefined) {
 					let rp = JSON.parse(qs("mr"));
 					CLIENT.send("/+room @" + s2u(rp.name) + " !" + rp.mode, function(msg) {
