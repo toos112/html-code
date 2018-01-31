@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 	<head>
@@ -50,4 +51,58 @@
 			</div>
 		</div>
 	</body>
+=======
+<!DOCTYPE html>
+<html>
+	<head>
+		<title id = "titleT">
+			Register
+		</title>
+		<script src = "main.js"></script>
+		<script src = "register.js"></script>
+		<script src = "alert/alert.js"></script>
+		<link rel = "stylesheet" type = "text/css" href = "index.css">
+		<link rel = "stylesheet" type = "text/css" href = "alert/alert.css">
+	</head>
+	<body class = "center" style = "padding: 10px; background: linear-gradient(to bottom, #222, #234 20%, #235 50%, #234 80%, #222);">
+		<span class = "big center" id = "title" style = "width: calc(100% - 20px); color: #48c; margin-bottom: 5px;">
+			Register
+		</span><br/>
+		<div id = "input" class = "center" style = "width : calc(100% - 20px);">
+			<div id = "errorPlace">
+			</div><br/>
+			<div class = "center" style = "margin-top: 5px; width: calc(40% + 84px); padding: 2px; border : 2px solid #444;">
+				<span class = "center" style = "width : 160px; color: #ccc;">
+					Username: 
+				</span>
+				<input type = "text" id = "name" placeholder = "Type your Username here" style = "width: calc(100% - 164px);"/><br/>
+				<span class = "center" id = "nameText" style = "margin-top: 6px; width : 160px; color: #ccc;">
+					Email: 
+				</span>
+				<input type = "text" id = "email" placeholder = "Type your Email here" style = "margin-top: 6px; width: calc(100% - 164px);"/><br/>
+				<span class = "center" id = "nameText" style = "margin-top: 6px; width : 160px; color: #ccc;">
+					Password: 
+				</span>
+				<input type = "password" id = "password1" placeholder = "Type your Password here" style = "margin-top: 6px; width: calc(100% - 164px);"/><br/>
+				<span class = "center" id = "nameText" style = "margin-top: 6px; width : 160px; color: #ccc;">
+					Password: 
+				</span>
+				<input type = "password" id = "password2" placeholder = "Repeat your Password" style = "margin-top: 6px; width: calc(100% - 164px);"/><br/>
+				<span class = "center" id = "nameText" style = "margin-top: 6px; width : calc(100% - 4px); color: #ccc; height: 42px;">
+					By creating a account you agree to<br/>our <span onclick = "service();">terms of service</span>.
+				</span><br/>
+				<button onclick = "goTo('/main.html');" id = "button" style = "margin-top: 6px; width: 96px;">
+					<span>
+						Cancel
+					</span>
+				</button>
+				<button onclick = "commit();" id = "button" style = "margin-left: 6px; margin-top: 6px; width: 96px;">
+					<span>
+						Commit
+					</span>
+				</button>
+			</div>
+		</div>
+	</body>
+>>>>>>> 4b2981b1f5e49c7ae3116f1871822600d0be9324
 </html>
