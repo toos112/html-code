@@ -9,6 +9,7 @@ var DatingRoom = function(id) {
 	let WAIT_SCR = document.getElementById("wait");
 	let START_SCR = document.getElementById("start");
 	let CHAT_SCR = document.getElementById("dchat");
+	let VOTE_SCR = document.getElementById("dvote");
 
 	this.parse = function(msg) {
 		if (msg[">"] == "start") {
@@ -27,6 +28,16 @@ var DatingRoom = function(id) {
 		} else if (msg[">"] == "msg") {
 			this.chatHistory[parseInt(msg["#"])] += "&lt; " + u2s(msg["@"]) + "<br>";
 			if (parseInt(msg["#"]) == this.selectedChat) this.updateChat();
+		} else if (msg[">"] == "pick") {
+			this.endTime = new Date().getTime() + parseInt(msg["!"]);
+			let ulist = document.getElementById("dvotes");
+			ulist.innerHTML = "";
+			for (let i = 0; i < this.ingame.length; i++) {
+				CLIENT.send("/?user #" + this.ingame[i], function(msg) {
+					ulist.innerHTML += "<button f='f40' style='width: calc(33.333%)' onclick='CLIENT.room.vote(" + msg["#"] + ");'>" + u2s(msg["@"]) + "</button>";
+				});
+			}
+			this.setScr(VOTE_SCR);
 		}
 	};
 
@@ -46,6 +57,10 @@ var DatingRoom = function(id) {
 		this.chatHistory[this.selectedChat] += "&gt; " + chati.value + "<br>";
 		chati.value = "";
 		this.updateChat();
+	};
+
+	this.vote = function(id) {
+		CLIENT.send("/game >choose #" + id);
 	};
 
 	this.start = function() {
