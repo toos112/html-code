@@ -1,2 +1,2 @@
-java -jar server.jar 80
+java -jar server.jar 90
 pause
