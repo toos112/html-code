@@ -56,7 +56,7 @@ var DatingRoom = function(name, owner) {
 
 	this._showNext = function() {
 		if (this._choiceIndex >= this.choices.length) {
-			this._isDisplaying = false;
+			this.isDisplaying = false;
 			this._reset();
 			this._begin();
 			return;
