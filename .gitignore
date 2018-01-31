@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
 /data/chat/log/*.txt
 /start.bat
 *.bat
+=======
+/data/chat/log/*.txt
+>>>>>>> Stashed changes
