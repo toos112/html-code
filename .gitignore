@@ -1,6 +1,3 @@
 /data/chat/log/*.txt
-start.bat
-jave -jar server.jar 90
-java -jar server.jar 80
-start.bat
-start.bat
+/start.bat
+*.bat
