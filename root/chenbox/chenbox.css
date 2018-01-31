@@ -32,13 +32,16 @@ body {
 	text-align: left;
 }
 
+*[f=f16] { font-size: 12px; line-height: 16px; color: #1F1F3F; }
+*[f=f24] { font-size: 18px; line-height: 24px; color: #1F1F3F; }
+*[f=f32] { font-size: 24px; line-height: 32px; color: #1F1F3F; }
+*[f=f40] { font-size: 30px; line-height: 40px; color: #1F1F3F; }
+*[f=f48] { font-size: 36px; line-height: 48px; color: #1F1F3F; }
+*[f=f64] { font-size: 48px; line-height: 64px; color: #1F1F3F; }
+
 button, input[type=text], option, select {
 	outline: solid 2px #4F3F5F;
 	background-color: #4F4F6F;
-}
-
-button {
-	color: #1F1F3F;
 }
 
 button:hover, input[type=text]:hover, option:hover, select:hover {
@@ -52,12 +55,6 @@ button:hover, input[type=text], option, select {
 button:active {
 	outline-color: #2F1F5F;
 }
-
-*[f=f16] { font-size: 12px; line-height: 16px; }
-*[f=f24] { font-size: 18px; line-height: 24px; }
-*[f=f32] { font-size: 24px; line-height: 32px; }
-*[f=f48] { font-size: 36px; line-height: 48px; }
-*[f=f64] { font-size: 48px; line-height: 64px; }
 
 .center {
 	position: absolute;
@@ -109,4 +106,18 @@ li { display: list-item; }
 #browseButtons {
 	margin: 16px;
 	margin-top: 0px;
+}
+
+#game {
+	margin: 16px;
+	margin-left: 0px;
+}
+
+#dchath {
+	outline: solid 2px #4F3F5F;
+	background-color: #6F6F8F;
+}
+
+#dchati, #dchath {
+	text-align: left;
 }

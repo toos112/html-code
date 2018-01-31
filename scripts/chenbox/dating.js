@@ -1,5 +1,5 @@
-var ROUND_TIME = 30000;
-var CHOOSE_TIME = 30000;
+var ROUND_TIME = 2000;
+var CHOOSE_TIME = 2000;
 var DISPLAY_TIME = 2000;
 var ROUNDS = 5;
 
@@ -22,6 +22,7 @@ var DatingRoom = function(name, owner) {
 	this._skipChoice = [];
 
 	this._start = function() {
+		this.round = 0;
 		this.ingame = this.players.slice(0);
 		this.broadcast("/game >start *" + idList(this.ingame).join(","));
 		this.isStarted = true;
@@ -36,14 +37,14 @@ var DatingRoom = function(name, owner) {
 		}
 		this.isChatting = true;
 		this.beginTime = $.time();
-		this.broadcast("/game >begin");
+		this.broadcast("/game >begin !" + ROUND_TIME);
 	};
 
 	this._pick = function() {
 		this.isChatting = false;
 		this.isChoosing = true;
 		this.beginTime = $.time();
-		this.broadcast("/game >pick");
+		this.broadcast("/game >pick !" + CHOOSE_TIME);
 	};
 
 	this._end = function() {
@@ -58,12 +59,12 @@ var DatingRoom = function(name, owner) {
 			this._isDisplaying = false;
 			this._reset();
 			this._begin();
+			return;
 		}
 		for (var i = this._choiceIndex + 1; i < this.choices.length; i++) {
 			if (this.choices[this._choiceIndex].to == this.choices[i].from) {
-				if (this.choices[i].to == this.choices[this._choiceIndex].from) {
-					this._skipChoice.push(i);
-				}
+				if (this.choices[i].to == this.choices[this._choiceIndex].from)
+					if (this._skipChoice.indexOf(i) == -1) this._skipChoice.push(i);
 				break;
 			}
 		}
@@ -83,12 +84,17 @@ var DatingRoom = function(name, owner) {
 				this._choiceIndex++;
 			} while (this._choiceIndex < this.choices.length && this._skipChoice.indexOf(this.choices[this._choiceIndex].from) != -1);
 			this._messageIndex = 0;
+			if (this._choiceIndex < this.choices.length) {
+				this.beginTime = $.time();
+				this.broadcast("/game >rchoice #" + this.choices[this._choiceIndex].from + "," + this.choices[this._choiceIndex].to);
+				return;
+			}
 			this._showNext();
 		}
 	};
 
 	this._reset = function() {
-		this.choices = {};
+		this.choices = [];
 		this.messages = [];
 		this._choiceIndex = 0;
 		this._messageIndex = 0;
