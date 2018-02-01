@@ -12,17 +12,19 @@ var DatingRoom = function(id) {
 	let VOTE_SCR = document.getElementById("dvote");
 	let REP_SCR = document.getElementById("drchat");
 	let NOC_SCR = document.getElementById("drnovote");
+	let SCORE_SCR = document.getElementById("dscores");
 
 	this.parse = function(msg) {
 		if (msg[">"] == "start") {
 			this.ingame = msg["*"].split(",");
+			this.ingame.splice(this.ingame.indexOf("" + CLIENT.id), 1);
 			this.ingame.forEach(function(o, i, a) { a[i] = parseInt(o), this.chatHistory[o] = ""; }, this);
 		} else if (msg[">"] == "begin") {
 			this.endTime = new Date().getTime() + parseInt(msg["!"]);
 			let ulist = CHAT_SCR.getElementsByTagName("div")[0].getElementsByTagName("div")[0];
 			ulist.innerHTML = "";
 			for (let i = 0; i < this.ingame.length; i++) {
-				CLIENT.send("/?user #" + this.ingame[i], function(msg) {
+				getUserInfo(this.ingame[i], function(msg) {
 					ulist.innerHTML += "<div class='_cell'><button f='f40' style='width: 100%;' onclick='CLIENT.room.selectChat(" + msg["#"] + ");'>" + u2s(msg["@"]) + "</button></div>";
 				});
 			}
@@ -35,7 +37,7 @@ var DatingRoom = function(id) {
 			let ulist = document.getElementById("dvotes");
 			ulist.innerHTML = "";
 			for (let i = 0; i < this.ingame.length; i++) {
-				CLIENT.send("/?user #" + this.ingame[i], function(msg) {
+				getUserInfo(this.ingame[i], function(msg) {
 					ulist.innerHTML += "<button f='f40' style='width: calc(33.333%)' onclick='CLIENT.room.vote(" + msg["#"] + ");'>" + u2s(msg["@"]) + "</button>";
 				});
 			}
@@ -56,10 +58,10 @@ var DatingRoom = function(id) {
 			let p2d = document.getElementById("drreceive");
 			let msgd = document.getElementById("drmsg");
 			let matchd = document.getElementById("drmatch");
-			CLIENT.send("/?user #" + ppl[0], function(msg) {
+			getUserInfo(ppl[0], function(msg) {
 				p1d.innerHTML = u2s(msg["@"]);
 			});
-			CLIENT.send("/?user #" + ppl[1], function(msg) {
+			getUserInfo(ppl[1], function(msg) {
 				p2d.innerHTML = u2s(msg["@"]);
 			});
 			msgd.innerHTML = "";
@@ -67,7 +69,7 @@ var DatingRoom = function(id) {
 			this.setScr(REP_SCR);
 		} else if (msg[">"] == "rmsg") {
 			let msgd = document.getElementById("drmsg");
-			CLIENT.send("/?user #" + msg["#"].split(",")[0], function(msg2) {
+			getUserInfo(msg["#"].split(",")[0], function(msg2) {
 				msgd.innerHTML += u2s(msg2["@"]) + ": " + u2s(msg["@"]) + "<br>";
 			});
 		} else if (msg[">"] == "rtrue") {
@@ -79,10 +81,20 @@ var DatingRoom = function(id) {
 		} else if (msg[">"] == "rnochoice") {
 			let userd = document.getElementById("drnvuser");
 			userd.innerHTML = "";
-			CLIENT.send("/?user #" + msg["#"], function(msg) {
+			getUserInfo(msg["#"], function(msg) {
 				userd.innerHTML = u2s(msg["@"]);
 			});
 			this.setScr(NOC_SCR);
+		} else if (msg[">"] == "scores") {
+			SCORE_SCR.innerHTML = "";
+			let scores = msg["#"].split(",");
+			for (let i = 0; i < scores.length; i++) {
+				let tuple = scores[i].split(":")
+				getUserInfo(tuple[0], function(msg) {
+					SCORE_SCR.innerHTML += u2s(msg["@"]) + ": " + tuple[1];
+				});
+			}
+			this.setScr(SCORE_SCR);
 		}
 	};
 

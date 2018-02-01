@@ -44,6 +44,18 @@ let setContent = function(url, func, element = BODY) {
 	});
 };
 
+let userInfoCache = {};
+let getUserInfo = function(id, func) {
+	if (userInfoCache[id] != undefined) {
+		if (func) func(userInfoCache[id]);
+	} else {
+		CLIENT.send("/?user #" + id, function(msg) {
+			userInfoCache[id] = msg;
+			if (func) func(msg);
+		});
+	}
+};
+
 let updateUserId = 0;
 let updateUserList = function() {
 	let thisId = ++updateUserId;
@@ -52,7 +64,7 @@ let updateUserList = function() {
 		let list = userList.getElementsByTagName("ul")[0];
 		list.innerHTML = "";
 		for (let i = 0; i < CLIENT.room.users.length; i++) {
-			CLIENT.send("/?user #" + CLIENT.room.users[i], function(msg) {
+			getUserInfo(CLIENT.room.users[i], function(msg) {
 				if (thisId < updateUserId) return;
 				list.innerHTML += "<li f='f24'>" + u2s(msg["@"]) + "</li>";
 			});

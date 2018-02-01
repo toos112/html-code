@@ -1,6 +1,7 @@
 var ROUND_TIME = 30000;
 var CHOOSE_TIME = 15000;
 var DISPLAY_TIME = 3000;
+var SCORE_TIME = 10000;
 var ROUNDS = 5;
 
 var DatingRoom = function(name, owner) {
@@ -10,10 +11,9 @@ var DatingRoom = function(name, owner) {
 	this.ingame = [];
 	this.messages = [];
 	this.choices = [];
+	this.udata = {};
 	this.isStarted = false;
-	this.isChatting = false;
-	this.isChoosing = false;
-	this.isDisplaying = false;
+	this.phase = "none";
 	this.endTime = -1;
 	this.round = 0;
 
@@ -25,6 +25,8 @@ var DatingRoom = function(name, owner) {
 	this._start = function() {
 		this.round = 0;
 		this.ingame = this.players.slice(0);
+		this.udata = {};
+		this.ingame.forEach(function(o) { this.udata[o.id] = { score : 0 }; }, this);
 		this.broadcast("/game >start *" + idList(this.ingame).join(","));
 		this.isStarted = true;
 		this._begin();
@@ -36,23 +38,21 @@ var DatingRoom = function(name, owner) {
 			this._stop();
 			return;
 		}
-		this.isChatting = true;
+		this.phase = "chat";
 		this.endTime = $.time() + ROUND_TIME;
 		this.broadcast("/game >begin !" + ROUND_TIME);
 	};
 
 	this._pick = function() {
-		this.isChatting = false;
-		this.isChoosing = true;
+		this.phase = "choose";
 		this.endTime = $.time() + CHOOSE_TIME;
 		this.broadcast("/game >pick !" + CHOOSE_TIME);
 	};
 
 	this._end = function() {
-		this.isChoosing = false;
 		this.broadcast("/game >end");
 		this.endTime = $.time() + DISPLAY_TIME;
-		this.isDisplaying = true;
+		this.phase = "display";
 	};
 
 	this._showNext = function() {
@@ -80,8 +80,13 @@ var DatingRoom = function(name, owner) {
 				for (var i = 0; i < this.choices.length; i++)
 					if (this.choices[this._choiceIndex].to == this.choices[i].from && this.choices[i].to == this.choices[this._choiceIndex].from) isMatch = true;
 				this.endTime = $.time() + DISPLAY_TIME;
-				if (isMatch) this.broadcast("/game >rtrue #" + this.choices[this._choiceIndex].from + "," + this.choices[this._choiceIndex].to);
-				else this.broadcast("/game >rfalse #" + this.choices[this._choiceIndex].from + "," + this.choices[this._choiceIndex].to);
+				if (isMatch) {
+					this.udata[this.choices[this._choiceIndex].from].score++;
+					this.udata[this.choices[this._choiceIndex].to].score++;
+					this.broadcast("/game >rtrue #" + this.choices[this._choiceIndex].from + "," + this.choices[this._choiceIndex].to);
+				} else {
+					this.broadcast("/game >rfalse #" + this.choices[this._choiceIndex].from + "," + this.choices[this._choiceIndex].to);
+				}
 				this._displayPhase = 0;
 			} else {
 				this.endTime = $.time() + DISPLAY_TIME;
@@ -95,14 +100,22 @@ var DatingRoom = function(name, owner) {
 				return false;
 			}());
 			if (this._choiceIndex >= this.ingame.length) {
-				this.isDisplaying = false;
+				this._showScore();
 				this._reset();
-				this._begin();
 			} else {
 				this.endTime = $.time() + DISPLAY_TIME;
 				this.broadcast("/game >rnochoice #" + this._choiceIndex);
 			}
 		}
+	};
+
+	this._showScore = function() {
+		this.phase = "score";
+		this.endTime = $.time() + SCORE_TIME;
+		var str = [];
+		for (var i = 0; i < this.ingame.length; i++)
+			str.push("" + this.ingame[i].id + ":" + this.udata[this.ingame[i].id].score);
+		this.broadcast("/game >scores #" + str.join(","));
 	};
 
 	this._reset = function() {
@@ -136,7 +149,7 @@ var DatingRoom = function(name, owner) {
 
 	this.parse = function(user, msg) {
 		if (msg[">"] == "msg") {
-			if (this.isChatting && getUserById(user.id, this.ingame) != undefined) {
+			if (this.phase == "chat" && getUserById(user.id, this.ingame) != undefined) {
 				if (this.chat(user.id, parseInt(msg["#"]), msg["@"])) user._ws.write("/ok");
 				else user._ws.write("/err #6");
 			} else user._ws.write("/err #9");
@@ -148,7 +161,7 @@ var DatingRoom = function(name, owner) {
 				} else user._ws.write("/err #9");
 			} else user._ws.write("/err #8");
 		} else if (msg[">"] == "choose") {
-			if (this.isChoosing && getUserById(user.id, this.ingame) != undefined) {
+			if (this.phase == "choose" && getUserById(user.id, this.ingame) != undefined && parseInt(msg["#"]) != user.id) {
 				var alreadyVoted = false;
 				for (var i = 0; i < this.choices.length; i++)
 					if (this.choices[i].from == user.id) alreadyVoted = true;
@@ -160,12 +173,14 @@ var DatingRoom = function(name, owner) {
 	};
 
 	_.loop(100, function() {
-		if ($.time() >= thisRef.endTime && thisRef.isChatting) {
+		if ($.time() >= thisRef.endTime && thisRef.phase == "chat") {
 			thisRef._pick();
-		} else if ($.time() >= thisRef.endTime && thisRef.isChoosing) {
+		} else if ($.time() >= thisRef.endTime && thisRef.phase == "choose") {
 			thisRef._end();
-		} else if ($.time() >= thisRef.endTime && thisRef.isDisplaying) {
+		} else if ($.time() >= thisRef.endTime && thisRef.phase == "display") {
 			thisRef._showNext();
+		} else if ($.time() >= thisRef.endTime && thisRef.phase == "score") {
+			thisRef._begin();
 		}
 	});
 }
