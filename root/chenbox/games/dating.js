@@ -91,7 +91,7 @@ var DatingRoom = function(id) {
 			for (let i = 0; i < scores.length; i++) {
 				let tuple = scores[i].split(":")
 				getUserInfo(tuple[0], function(msg) {
-					SCORE_SCR.innerHTML += u2s(msg["@"]) + ": " + tuple[1];
+					SCORE_SCR.innerHTML += u2s(msg["@"]) + ": " + tuple[1] + "<br>";
 				});
 			}
 			this.setScr(SCORE_SCR);
