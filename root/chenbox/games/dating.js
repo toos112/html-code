@@ -10,6 +10,8 @@ var DatingRoom = function(id) {
 	let START_SCR = document.getElementById("start");
 	let CHAT_SCR = document.getElementById("dchat");
 	let VOTE_SCR = document.getElementById("dvote");
+	let REP_SCR = document.getElementById("drchat");
+	let NOC_SCR = document.getElementById("drnovote");
 
 	this.parse = function(msg) {
 		if (msg[">"] == "start") {
@@ -38,6 +40,49 @@ var DatingRoom = function(id) {
 				});
 			}
 			this.setScr(VOTE_SCR);
+		} else if (msg[">"] == "end") {
+			let p1d = document.getElementById("drsend");
+			let p2d = document.getElementById("drreceive");
+			let msgd = document.getElementById("drmsg");
+			let matchd = document.getElementById("drmatch");
+			p1d.innerHTML = "";
+			p2d.innerHTML = "";
+			msgd.innerHTML = "";
+			matchd.innerHTML = "";
+			this.setScr(REP_SCR);
+		} else if (msg[">"] == "rchoice") {
+			let ppl = msg["#"].split(",");
+			let p1d = document.getElementById("drsend");
+			let p2d = document.getElementById("drreceive");
+			let msgd = document.getElementById("drmsg");
+			let matchd = document.getElementById("drmatch");
+			CLIENT.send("/?user #" + ppl[0], function(msg) {
+				p1d.innerHTML = u2s(msg["@"]);
+			});
+			CLIENT.send("/?user #" + ppl[1], function(msg) {
+				p2d.innerHTML = u2s(msg["@"]);
+			});
+			msgd.innerHTML = "";
+			matchd.innerHTML = "";
+			this.setScr(REP_SCR);
+		} else if (msg[">"] == "rmsg") {
+			let msgd = document.getElementById("drmsg");
+			CLIENT.send("/?user #" + msg["#"].split(",")[0], function(msg2) {
+				msgd.innerHTML += u2s(msg2["@"]) + ": " + u2s(msg["@"]) + "<br>";
+			});
+		} else if (msg[">"] == "rtrue") {
+			let matchd = document.getElementById("drmatch");
+			matchd.innerHTML = "true";
+		} else if (msg[">"] == "rfalse") {
+			let matchd = document.getElementById("drmatch");
+			matchd.innerHTML = "false";
+		} else if (msg[">"] == "rnochoice") {
+			let userd = document.getElementById("drnvuser");
+			userd.innerHTML = "";
+			CLIENT.send("/?user #" + msg["#"], function(msg) {
+				userd.innerHTML = u2s(msg["@"]);
+			});
+			this.setScr(NOC_SCR);
 		}
 	};
 

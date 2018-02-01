@@ -1,6 +1,6 @@
 var ROUND_TIME = 30000;
-var CHOOSE_TIME = 30000;
-var DISPLAY_TIME = 2000;
+var CHOOSE_TIME = 15000;
+var DISPLAY_TIME = 3000;
 var ROUNDS = 5;
 
 var DatingRoom = function(name, owner) {
@@ -14,12 +14,13 @@ var DatingRoom = function(name, owner) {
 	this.isChatting = false;
 	this.isChoosing = false;
 	this.isDisplaying = false;
-	this.beginTime = -1;
+	this.endTime = -1;
 	this.round = 0;
 
-	this._choiceIndex = 0
+	this._choiceIndex = -1;
 	this._messageIndex = 0;
-	this._skipChoice = [];
+	this._displayPhase = 0;
+	this._skipChoice = {};
 
 	this._start = function() {
 		this.round = 0;
@@ -36,68 +37,80 @@ var DatingRoom = function(name, owner) {
 			return;
 		}
 		this.isChatting = true;
-		this.beginTime = $.time();
+		this.endTime = $.time() + ROUND_TIME;
 		this.broadcast("/game >begin !" + ROUND_TIME);
 	};
 
 	this._pick = function() {
 		this.isChatting = false;
 		this.isChoosing = true;
-		this.beginTime = $.time();
+		this.endTime = $.time() + CHOOSE_TIME;
 		this.broadcast("/game >pick !" + CHOOSE_TIME);
 	};
 
 	this._end = function() {
 		this.isChoosing = false;
 		this.broadcast("/game >end");
-		this.beginTime = $.time();
+		this.endTime = $.time() + DISPLAY_TIME;
 		this.isDisplaying = true;
 	};
 
 	this._showNext = function() {
-		if (this._choiceIndex >= this.choices.length) {
-			this.isDisplaying = false;
-			this._reset();
-			this._begin();
-			return;
-		}
-		for (var i = this._choiceIndex + 1; i < this.choices.length; i++) {
-			if (this.choices[this._choiceIndex].to == this.choices[i].from) {
-				if (this.choices[i].to == this.choices[this._choiceIndex].from)
-					if (this._skipChoice.indexOf(i) == -1) this._skipChoice.push(i);
-				break;
-			}
-		}
-		var validMessage = false;
-		for (var i = this._messageIndex; i < this.messages.length; i++) {
-			if (this.messages[i].from == this.choices[this._choiceIndex].from && this.messages[i].to == this.choices[this._choiceIndex].to) validMessage = true;
-			if (this.messages[i].to == this.choices[this._choiceIndex].from && this.messages[i].from == this.choices[this._choiceIndex].to) validMessage = true;
-			if (validMessage) {
-				this._messageIndex = i + 1;
-				this.beginTime = $.time();
-				this.broadcast("/game >rmsg #" + this.messages[i].from + "," + this.messages[i].to + " @" + this.messages[i].msg);
-				break;
-			}
-		}
-		if (!validMessage) {
-			do {
-				this._choiceIndex++;
-			} while (this._choiceIndex < this.choices.length && this._skipChoice.indexOf(this.choices[this._choiceIndex].from) != -1);
-			this._messageIndex = 0;
-			if (this._choiceIndex < this.choices.length) {
-				this.beginTime = $.time();
+		if (this._displayPhase == 0) {
+			this._messageIndex = -1;
+			do { this._choiceIndex++;
+			} while (this._choiceIndex < this.choices.length && this._skipChoice[this.choices[this._choiceIndex].from]);
+			if (this._choiceIndex >= this.choices.length) {
+				this._choiceIndex = -1;
+				this._displayPhase = 2;
+				this._showNext();
+			} else {
+				this.endTime = $.time() + DISPLAY_TIME;
 				this.broadcast("/game >rchoice #" + this.choices[this._choiceIndex].from + "," + this.choices[this._choiceIndex].to);
-				return;
+				for (var i = 0; i < this.choices.length; i++)
+					if (this.choices[this._choiceIndex].to == this.choices[i].from && this.choices[this._choiceIndex].from == this.choices[i].to) this._skipChoice[this.choices[i].from] = true;
+				this._displayPhase = 1;
 			}
-			this._showNext();
+		} else if (this._displayPhase == 1) {
+			do { this._messageIndex++;
+			} while (this._messageIndex < this.messages.length && !((this.messages[this._messageIndex].from == this.choices[this._choiceIndex].from && this.messages[this._messageIndex].to == this.choices[this._choiceIndex].to)
+				|| (this.messages[this._messageIndex].from == this.choices[this._choiceIndex].to && this.messages[this._messageIndex].to == this.choices[this._choiceIndex].from)));
+			if (this._messageIndex >= this.messages.length) {
+				var isMatch = false;
+				for (var i = 0; i < this.choices.length; i++)
+					if (this.choices[this._choiceIndex].to == this.choices[i].from && this.choices[i].to == this.choices[this._choiceIndex].from) isMatch = true;
+				this.endTime = $.time() + DISPLAY_TIME;
+				if (isMatch) this.broadcast("/game >rtrue #" + this.choices[this._choiceIndex].from + "," + this.choices[this._choiceIndex].to);
+				else this.broadcast("/game >rfalse #" + this.choices[this._choiceIndex].from + "," + this.choices[this._choiceIndex].to);
+				this._displayPhase = 0;
+			} else {
+				this.endTime = $.time() + DISPLAY_TIME;
+				this.broadcast("/game >rmsg #" + this.messages[this._messageIndex].from + "," + this.messages[this._messageIndex].to + " @" + this.messages[this._messageIndex].msg);
+			}
+		} else if (this._displayPhase == 2) {
+			do { this._choiceIndex++;
+			} while (this._choiceIndex < this.ingame.length && function() {
+				for (var i = 0; i < thisRef.choices.length; i++)
+					if (thisRef.choices[i].from == thisRef._choiceIndex) return true;
+				return false;
+			}());
+			if (this._choiceIndex >= this.ingame.length) {
+				this.isDisplaying = false;
+				this._reset();
+				this._begin();
+			} else {
+				this.endTime = $.time() + DISPLAY_TIME;
+				this.broadcast("/game >rnochoice #" + this._choiceIndex);
+			}
 		}
 	};
 
 	this._reset = function() {
 		this.choices = [];
 		this.messages = [];
-		this._choiceIndex = 0;
-		this._messageIndex = 0;
+		this._skipChoice = {};
+		this._choiceIndex = -1;
+		this._displayPhase = 0;
 	};
 
 	this._stop = function() {
@@ -136,7 +149,10 @@ var DatingRoom = function(name, owner) {
 			} else user._ws.write("/err #8");
 		} else if (msg[">"] == "choose") {
 			if (this.isChoosing && getUserById(user.id, this.ingame) != undefined) {
-				if (this.choices[user.id] != undefined) user._ws.write("/err #9");
+				var alreadyVoted = false;
+				for (var i = 0; i < this.choices.length; i++)
+					if (this.choices[i].from == user.id) alreadyVoted = true;
+				if (alreadyVoted) user._ws.write("/err #9");
 				else if (this.choose(user.id, parseInt(msg["#"]))) user._ws.write("/ok");
 				else user._ws.write("/err #6");
 			} else user._ws.write("/err #9");
@@ -144,11 +160,11 @@ var DatingRoom = function(name, owner) {
 	};
 
 	_.loop(100, function() {
-		if ($.time() - ROUND_TIME >= thisRef.beginTime && thisRef.isChatting) {
+		if ($.time() >= thisRef.endTime && thisRef.isChatting) {
 			thisRef._pick();
-		} else if ($.time() - CHOOSE_TIME >= thisRef.beginTime && thisRef.isChoosing) {
+		} else if ($.time() >= thisRef.endTime && thisRef.isChoosing) {
 			thisRef._end();
-		} else if ($.time() - DISPLAY_TIME >= thisRef.beginTime && thisRef.isDisplaying) {
+		} else if ($.time() >= thisRef.endTime && thisRef.isDisplaying) {
 			thisRef._showNext();
 		}
 	});
