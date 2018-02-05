@@ -5,6 +5,7 @@ var DatingRoom = function(id) {
 	this.selectedChat = null;
 	this.chatHistory = {};
 	this.endTime = null;
+	this.msgl = null;
 
 	let WAIT_SCR = document.getElementById("wait");
 	let START_SCR = document.getElementById("start");
@@ -20,6 +21,9 @@ var DatingRoom = function(id) {
 			this.ingame.splice(this.ingame.indexOf("" + CLIENT.id), 1);
 			this.ingame.forEach(function(o, i, a) { a[i] = parseInt(o), this.chatHistory[o] = ""; }, this);
 		} else if (msg[">"] == "begin") {
+			this.msgl = 4;
+			let msgld = document.getElementsByClassName("dmsgl")[0];
+			msgld.innerHTML = "4";
 			this.endTime = new Date().getTime() + parseInt(msg["!"]);
 			let ulist = CHAT_SCR.getElementsByTagName("div")[0].getElementsByTagName("div")[0];
 			ulist.innerHTML = "";
@@ -109,11 +113,16 @@ var DatingRoom = function(id) {
 	};
 
 	this.chat = function() {
-		let chati = document.getElementById("dchati");
-		CLIENT.send("/game >msg #" + this.selectedChat + " @" + s2u(chati.value));
-		this.chatHistory[this.selectedChat] += "&gt; " + chati.value + "<br>";
-		chati.value = "";
-		this.updateChat();
+		if (this.msgl > 0) {
+			let chati = document.getElementById("dchati");
+			CLIENT.send("/game >msg #" + this.selectedChat + " @" + s2u(chati.value));
+			this.chatHistory[this.selectedChat] += "&gt; " + chati.value + "<br>";
+			chati.value = "";
+			this.updateChat();
+			this.msgl--;
+			let msgld = document.getElementsByClassName("dmsgl")[0];
+			msgld.innerHTML = this.msgl;
+		}
 	};
 
 	this.vote = function(id) {
