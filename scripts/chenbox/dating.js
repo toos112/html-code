@@ -97,7 +97,7 @@ var DatingRoom = function(name, owner) {
 			do { this._choiceIndex++;
 			} while (this._choiceIndex < this.ingame.length && function() {
 				for (var i = 0; i < thisRef.choices.length; i++)
-					if (thisRef.choices[i].from == thisRef._choiceIndex) return true;
+					if (thisRef.choices[i].from == this.ingame[this._choiceIndex].id) return true;
 				return false;
 			}());
 			if (this._choiceIndex >= this.ingame.length) {
