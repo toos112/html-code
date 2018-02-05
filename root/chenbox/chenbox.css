@@ -53,7 +53,7 @@ button:hover, input[type=text], option, select {
 }
 
 button:active {
-	outline-color: #2F1F5F;
+	outline-color: #4F4F4F;
 }
 
 .center {
