@@ -1,6 +1,6 @@
 var ROUND_TIME = 60000;
 var CHOOSE_TIME = 15000;
-var DISPLAY_TIME = 2000;
+var DISPLAY_TIME = 3000;
 var SCORE_TIME = 10000;
 var ROUNDS = 5;
 
@@ -90,7 +90,7 @@ var DatingRoom = function(name, owner) {
 				}
 				this._displayPhase = 0;
 			} else {
-				this.endTime = $.time() + Math.max(500, this.messages[this._messageIndex].msg.length * 50);
+				this.endTime = $.time() + Math.max(500, this.messages[this._messageIndex].msg.length * 10);
 				this.broadcast("/game >rmsg #" + this.messages[this._messageIndex].from + "," + this.messages[this._messageIndex].to + " @" + this.messages[this._messageIndex].msg);
 			}
 		} else if (this._displayPhase == 2) {
