@@ -28,28 +28,28 @@ html, body {
 }
 
 body {
-	background: repeating-linear-gradient(-45deg, #2F1F3F 0%, #2F1F3F 12.5%, #1F0F2F 12.5%, #1F0F2F 37.5%, #2F1F3F 37.5%, #2F1F3F 50%);
+	background: linear-gradient(to bottom, #222, #242 20%, #252 50%, #242 80%, #222);
 	text-align: left;
 }
 
-*[f=f16] { font-size: 12px; line-height: 16px; color: #1F1F3F; }
-*[f=f24] { font-size: 18px; line-height: 24px; color: #1F1F3F; }
-*[f=f32] { font-size: 24px; line-height: 32px; color: #1F1F3F; }
-*[f=f40] { font-size: 30px; line-height: 40px; color: #1F1F3F; }
-*[f=f48] { font-size: 36px; line-height: 48px; color: #1F1F3F; }
-*[f=f64] { font-size: 48px; line-height: 64px; color: #1F1F3F; }
+*[f=f16] { font-size: 12px; line-height: 16px; color: #1F1F1F; }
+*[f=f24] { font-size: 18px; line-height: 24px; color: #1F1F1F; }
+*[f=f32] { font-size: 24px; line-height: 32px; color: #1F1F1F; }
+*[f=f40] { font-size: 30px; line-height: 40px; color: #1F1F1F; }
+*[f=f48] { font-size: 36px; line-height: 48px; color: #1F1F1F; }
+*[f=f64] { font-size: 48px; line-height: 64px; color: #1F1F1F; }
 
 button, input[type=text], option, select {
-	outline: solid 2px #4F3F5F;
-	background-color: #4F4F6F;
+	outline: solid 2px #2F3F2F;
+	background-color: #2F2F2F;
 }
 
 button:hover, input[type=text]:hover, option:hover, select:hover {
-	outline-color: #3F2F4F;
+	outline-color: #0F0F0F;
 }
 
 button:hover, input[type=text], option, select {
-	color: #0F0F2F;
+	color: #0F0F0F;
 }
 
 button:active {
