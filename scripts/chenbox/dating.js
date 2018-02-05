@@ -105,7 +105,6 @@ var DatingRoom = function(name, owner) {
 				this._reset();
 			} else {
 				this.endTime = $.time() + DISPLAY_TIME;
-				$.write(this._choiceIndex);
 				this.broadcast("/game >rnochoice #" + this.ingame[this._choiceIndex].id);
 			}
 		}
