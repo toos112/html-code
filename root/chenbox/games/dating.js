@@ -23,7 +23,9 @@ var DatingRoom = function(id) {
 		} else if (msg[">"] == "begin") {
 			this.msgl = 4;
 			let msgld = document.getElementsByClassName("dmsgl")[0];
+			let chath = document.getElementsById("dchath");
 			msgld.innerHTML = "4";
+			chath.innerHTML = "";
 			this.endTime = new Date().getTime() + parseInt(msg["!"]);
 			let ulist = CHAT_SCR.getElementsByTagName("div")[0].getElementsByTagName("div")[0];
 			ulist.innerHTML = "";
