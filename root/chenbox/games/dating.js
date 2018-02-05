@@ -23,12 +23,12 @@ var DatingRoom = function(id) {
 		} else if (msg[">"] == "begin") {
 			this.msgl = 4;
 			let msgld = document.getElementsByClassName("dmsgl")[0];
-			let chath = document.getElementById("dchath");
 			msgld.innerHTML = "4";
-			chath.innerHTML = "";
 			this.endTime = new Date().getTime() + parseInt(msg["!"]);
 			let ulist = CHAT_SCR.getElementsByTagName("div")[0].getElementsByTagName("div")[0];
 			ulist.innerHTML = "";
+			this.chatHistory = {};
+			this.ingame.forEach(function(o, i, a) { this.chatHistory[o] = ""; }, this);
 			for (let i = 0; i < this.ingame.length; i++) {
 				getUserInfo(this.ingame[i], function(msg) {
 					ulist.innerHTML += "<div class='_cell'><button f='f40' style='width: 100%;' onclick='CLIENT.room.selectChat(" + msg["#"] + ");'>" + u2s(msg["@"]) + "</button></div>";
