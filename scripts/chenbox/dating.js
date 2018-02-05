@@ -135,8 +135,7 @@ var DatingRoom = function(name, owner) {
 	};
 
 	this.chat = function(from, to, msg) {
-		var from = getUserById(from, this.ingame);
-		this.udata[from.id].msgl--;
+		this.udata[from].msgl--;
 		var player = getUserById(to, this.ingame);
 		if (player == undefined) return false;
 		player._ws.write("/game >msg #" + from + " @" + msg);
@@ -153,7 +152,7 @@ var DatingRoom = function(name, owner) {
 
 	this.parse = function(user, msg) {
 		if (msg[">"] == "msg") {
-			if (this.phase == "chat" && getUserById(user.id, this.ingame) != undefined) {
+			if (this.phase == "chat" && getUserById(user.id, this.ingame) != undefined && this.udata[user.id].msgl > 0) {
 				if (this.chat(user.id, parseInt(msg["#"]), msg["@"])) user._ws.write("/ok");
 				else user._ws.write("/err #6");
 			} else user._ws.write("/err #9");
