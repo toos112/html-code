@@ -72,7 +72,7 @@ table, ul {
 }
 
 tr:nth-child(odd), li:nth-child(odd) {
-	background-color: #F00FDF;
+	background-color: #9F9FDF;
 }
 
 thead th, tr:nth-child(even), li:nth-child(even) {
