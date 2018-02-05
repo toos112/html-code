@@ -1,6 +1,6 @@
-var ROUND_TIME = 30000;
+var ROUND_TIME = 60000;
 var CHOOSE_TIME = 15000;
-var DISPLAY_TIME = 3000;
+var DISPLAY_TIME = 2000;
 var SCORE_TIME = 10000;
 var ROUNDS = 5;
 
@@ -26,7 +26,7 @@ var DatingRoom = function(name, owner) {
 		this.round = 0;
 		this.ingame = this.players.slice(0);
 		this.udata = {};
-		this.ingame.forEach(function(o) { this.udata[o.id] = { score : 0 }; }, this);
+		this.ingame.forEach(function(o) { this.udata[o.id] = { score : 0, msgl : 0 }; }, this);
 		this.broadcast("/game >start *" + idList(this.ingame).join(","));
 		this.isStarted = true;
 		this._begin();
@@ -40,6 +40,7 @@ var DatingRoom = function(name, owner) {
 		}
 		this.phase = "chat";
 		this.endTime = $.time() + ROUND_TIME;
+		this.ingame.forEach(function(o) { this.udata[o.id].msgl = 4; }, this);
 		this.broadcast("/game >begin !" + ROUND_TIME);
 	};
 
@@ -51,8 +52,8 @@ var DatingRoom = function(name, owner) {
 
 	this._end = function() {
 		this.broadcast("/game >end");
-		this.endTime = $.time() + DISPLAY_TIME;
 		this.phase = "display";
+		this._showNext();
 	};
 
 	this._showNext = function() {
@@ -89,7 +90,7 @@ var DatingRoom = function(name, owner) {
 				}
 				this._displayPhase = 0;
 			} else {
-				this.endTime = $.time() + DISPLAY_TIME;
+				this.endTime = $.time() + Math.max(500, this.messages[this._messageIndex].msg.length * 50);
 				this.broadcast("/game >rmsg #" + this.messages[this._messageIndex].from + "," + this.messages[this._messageIndex].to + " @" + this.messages[this._messageIndex].msg);
 			}
 		} else if (this._displayPhase == 2) {
@@ -104,7 +105,8 @@ var DatingRoom = function(name, owner) {
 				this._reset();
 			} else {
 				this.endTime = $.time() + DISPLAY_TIME;
-				this.broadcast("/game >rnochoice #" + this._choiceIndex);
+				$.write(this._choiceIndex);
+				this.broadcast("/game >rnochoice #" + this.ingame[this._choiceIndex].id);
 			}
 		}
 	};
@@ -133,6 +135,8 @@ var DatingRoom = function(name, owner) {
 	};
 
 	this.chat = function(from, to, msg) {
+		var from = getUserById(from, this.ingame);
+		this.udata[from.id].msgl--;
 		var player = getUserById(to, this.ingame);
 		if (player == undefined) return false;
 		player._ws.write("/game >msg #" + from + " @" + msg);
