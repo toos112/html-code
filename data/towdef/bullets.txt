@@ -107,6 +107,18 @@
 		"homing": true,
 		"aoe": 1.5
 	},
+	"A0.0.2.1" : {
+		"name": "Bit Bigger Rocket",
+		"texture": "data/gfx/bullets/A0.0.2.1.png",
+		"damage": 1.2,
+		"penetration": 0,
+		"range": 1,
+		"speed": 7.5,
+		"pierce": false,
+		"effects":[],
+		"homing": true,
+		"aoe": 1.75
+	},
 	"A0.0.3.0" : {
 		"name": "Snowball",
 		"texture": "data/gfx/bullets/A0.0.3.0.png",

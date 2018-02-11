@@ -63,7 +63,7 @@
 		"height": 3,
 		"hp": 20,
 		"armor": 0,
-		"damage": 20,
+		"damage": 15,
 		"attackSpeed":0.2,
 		"range": 8,
 		"attackGround": true,
