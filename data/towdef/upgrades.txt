@@ -129,7 +129,7 @@
 			"+upgr" : ["U0.0.1.7","U0.0.1.6"],
 			"+lock" : ["U0.0.1.2","U0.0.1.3"],
 			"=texture" : {
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.1.3.png"
+				"gun": "data/gfx/towers/TG0.0.1.3.png"
 			}
 		}
 	},
@@ -145,7 +145,7 @@
 			"+upgr" : ["U0.0.1.8","U0.0.1.6"],
 			"+lock" : ["U0.0.1.2","U0.0.1.3"],
 			"=texture" : {
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.1.4.png"
+				"gun": "data/gfx/towers/TG0.0.1.4.png"
 			}
 		}
 	},
@@ -160,7 +160,7 @@
 			"+upgr" : ["U0.0.1.9","U0.0.1.6"],
 			"+lock" : ["U0.0.1.4","U0.0.1.5"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.1.5.png"
+				"base": "data/gfx/towers/TB0.0.1.5.png"
 			}
 		}
 	},
@@ -175,7 +175,7 @@
 			"+upgr" : ["U0.0.1.10","U0.0.1.6"],
 			"+lock" : ["U0.0.1.4","U0.0.1.5"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.1.6.png"
+				"base": "data/gfx/towers/TB0.0.1.6.png"
 			}
 		}
 	},
@@ -202,7 +202,7 @@
 			"-as" : 5,
 			"+lock" : ["U0.0.1.7"],
 			"=texture" : {
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.1.8.png"
+				"gun": "data/gfx/towers/TG0.0.1.8.png"
 			}
 		}
 	},
@@ -217,7 +217,7 @@
 			"+as" : 10,
 			"+lock" : ["U0.0.1.8"],
 			"=texture" : {
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.1.9.png"
+				"gun": "data/gfx/towers/TG0.0.1.9.png"
 			}
 		}
 	},
@@ -231,7 +231,7 @@
 			"=ammo" : ["A0.0.1.3"],
 			"+lock" : ["U0.0.1.9"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.1.10.png"
+				"base": "data/gfx/towers/TB0.0.1.10.png"
 			}
 		}
 	},
@@ -245,7 +245,7 @@
 			"=ammo" : ["A0.0.1.2"],
 			"+lock" : ["U0.0.1.10"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.1.11.png"
+				"base": "data/gfx/towers/TB0.0.1.11.png"
 			}
 		}
 	},
@@ -261,23 +261,64 @@
 		}
 	},
 	"U0.0.2.0" : {
-		"name" : "place holder",
+		"name" : "Bigger rockets",
 		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
-		"description" : "place holder",
-		"cost" : 1,
+		"description" : "The bigger the rocket the bigger the boom.",
+		"cost" : 150,
+		"upgrades" : {
+			"=ammo" : ["A0.0.2.1"],
+			"+upgr" : ["U0.0.2.2","U0.0.2.3"],
+			"+lock" : ["U0.0.2.0"]
+		}
+	},
+	"U0.0.2.1" : {
+		"name" : "Stronger Base",
+		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
+		"description" : "Makes the base more resistant against the launch forces.",
+		"cost" : 175,
 		"upgrades" : {
 			"+shp" : 10,
-			"%dmg" : 2,
-			"=ra" : 8,
-			"=ammo" : ["A0.0.0.1"],
-			"+upgr" : [],
-			"+lock" : ["U0.0.2.0"],
+			"+upgr" : ["U0.0.2.4","U0.0.2.5"],
+			"+lock" : ["U0.0.2.1"],
 			"=texture" : {
-				"base": "data/gfx/towers/base_machineGun_U0.0.2.0.png",
-				"gun": "data/gfx/towers/gun_machineGun_U0.0.2.0.png"
+				"turret" : ""
 			}
 		}
 	},
+	"U0.0.2.0" : {
+		"name" : "Bigger rockets",
+		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
+		"description" : "The bigger the rocket the bigger the boom.",
+		"cost" : 150,
+		"upgrades" : {
+			"=ammo" : ["A0.0.2.1"],
+			"+upgr" : ["U0.0.2.2","U0.0.2.3"],
+			"+lock" : ["U0.0.2.0"]
+		}
+	},
+	"U0.0.2.0" : {
+		"name" : "Bigger rockets",
+		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
+		"description" : "The bigger the rocket the bigger the boom.",
+		"cost" : 150,
+		"upgrades" : {
+			"=ammo" : ["A0.0.2.1"],
+			"+upgr" : ["U0.0.2.2","U0.0.2.3"],
+			"+lock" : ["U0.0.2.0"]
+		}
+	},
+	"U0.0.2.0" : {
+		"name" : "Bigger rockets",
+		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
+		"description" : "The bigger the rocket the bigger the boom.",
+		"cost" : 150,
+		"upgrades" : {
+			"=ammo" : ["A0.0.2.1"],
+			"+upgr" : ["U0.0.2.2","U0.0.2.3"],
+			"+lock" : ["U0.0.2.0"]
+		}
+	},
+
 	"U0.0.3.0" : {
 		"name" : "place holder",
 		"texture" : "data/gfx/upgrades/U0.0.0.0.png",
